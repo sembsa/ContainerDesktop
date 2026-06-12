@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Container Desktop — native macOS GUI for Apple's container CLI</title>
+<meta name="description" content="A native, Docker Desktop-style macOS app for Apple's container CLI. Containers, images, volumes, networks and machines — free and open source.">
+<meta property="og:title" content="Container Desktop">
+<meta property="og:description" content="Native macOS GUI for Apple's container CLI. Free, open source, MIT.">
+<meta property="og:image" content="https://sembsa.github.io/ContainerDesktop/og-icon.png">
+<meta property="og:url" content="https://sembsa.github.io/ContainerDesktop/">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: oklch(16% 0.012 250);
+    --bg-raised: oklch(20% 0.014 250);
+    --ink: oklch(93% 0.006 250);
+    --ink-dim: oklch(70% 0.012 250);
+    --ink-faint: oklch(52% 0.014 250);
+    --blue: oklch(62% 0.17 255);
+    --blue-bright: oklch(72% 0.15 250);
+    --line: oklch(28% 0.014 250);
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .display { font-family: "Bricolage Grotesque", -apple-system, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+  a { color: var(--blue-bright); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- hero ---------- */
+  header {
+    padding: clamp(56px, 10vh, 120px) 0 clamp(40px, 6vh, 72px);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: clamp(24px, 5vw, 64px);
+    align-items: center;
+  }
+  .hero-icon {
+    width: clamp(120px, 16vw, 196px);
+    height: auto;
+    filter: drop-shadow(0 18px 40px oklch(62% 0.17 255 / 0.25));
+  }
+  .eyebrow {
+    color: var(--blue-bright);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-size: clamp(40px, 6.5vw, 72px);
+    line-height: 1.02;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+  .tagline {
+    color: var(--ink-dim);
+    font-size: clamp(17px, 2vw, 21px);
+    max-width: 34em;
+    margin-bottom: 32px;
+  }
+  .tagline strong { color: var(--ink); font-weight: 600; }
+  .cta-row { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px;
+    background: var(--blue);
+    color: oklch(98% 0 0);
+    font-weight: 600; font-size: 16px;
+    padding: 13px 24px;
+    border-radius: 12px;
+    transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s;
+  }
+  .btn:hover { background: var(--blue-bright); transform: translateY(-1px); text-decoration: none; }
+  .btn svg { width: 17px; height: 17px; }
+  .btn-ghost {
+    color: var(--ink-dim); font-weight: 500; font-size: 16px;
+    padding: 13px 10px;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .fineprint { margin-top: 16px; color: var(--ink-faint); font-size: 13.5px; max-width: 40em; }
+  .fineprint code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 12.5px;
+    background: var(--bg-raised);
+    padding: 1px 6px; border-radius: 5px;
+  }
+
+  /* ---------- hero screenshot ---------- */
+  .hero-shot { padding-bottom: clamp(48px, 8vh, 96px); }
+  .hero-shot img {
+    width: 100%; height: auto; display: block;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 80px oklch(8% 0.01 250 / 0.6);
+  }
+
+  /* ---------- features ---------- */
+  section { padding: clamp(40px, 7vh, 88px) 0; border-top: 1px solid var(--line); }
+  h2 {
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 700; letter-spacing: -0.015em;
+    margin-bottom: clamp(28px, 4vh, 44px);
+    max-width: 18em;
+  }
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 36px 48px;
+  }
+  .feature { display: grid; grid-template-columns: 14px 1fr; gap: 14px; align-items: start; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 8px; }
+  .feature h3 { font-size: 17px; font-weight: 650; margin-bottom: 5px; }
+  .feature p { color: var(--ink-dim); font-size: 15.5px; }
+  .feature code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px; color: var(--ink);
+  }
+
+  /* ---------- gallery ---------- */
+  .shots { display: grid; gap: clamp(28px, 4vh, 48px); }
+  .shot { display: grid; grid-template-columns: minmax(200px, 0.85fr) 2fr; gap: clamp(20px, 3vw, 44px); align-items: center; }
+  .shot:nth-child(even) { grid-template-columns: 2fr minmax(200px, 0.85fr); }
+  .shot:nth-child(even) figcaption { order: 2; }
+  .shot img {
+    width: 100%; height: auto; display: block;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    box-shadow: 0 18px 50px oklch(8% 0.01 250 / 0.5);
+  }
+  figcaption h3 { font-size: 19px; font-weight: 650; margin-bottom: 8px; }
+  figcaption p { color: var(--ink-dim); font-size: 15.5px; }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 36px 0 56px;
+    color: var(--ink-faint); font-size: 14.5px;
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+
+  /* ---------- reveal ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    .reveal.in { opacity: 1; transform: none; }
+  }
+
+  @media (max-width: 760px) {
+    header { grid-template-columns: 1fr; }
+    .hero-icon { order: -1; width: 96px; }
+    .shot, .shot:nth-child(even) { grid-template-columns: 1fr; }
+    .shot:nth-child(even) figcaption { order: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <p class="eyebrow">Free &amp; open source · macOS 26 · Apple Silicon</p>
+      <h1 class="display">Container Desktop</h1>
+      <p class="tagline">A native macOS app for Apple's <a href="https://github.com/apple/container"><code>container</code></a> CLI.
+        Think Docker Desktop — but built with SwiftUI, and <strong>reimplementing nothing</strong>:
+        every action runs the official CLI, so the app always shows exactly what the CLI sees.</p>
+      <div class="cta-row">
+        <a class="btn" href="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download DMG
+        </a>
+        <a class="btn-ghost" href="https://github.com/sembsa/ContainerDesktop">View on GitHub →</a>
+      </div>
+      <p class="fineprint">Not notarized yet — on first launch use System Settings → Privacy &amp; Security → <em>Open Anyway</em>,
+        or build from source with <code>xcodegen generate &amp;&amp; xcodebuild</code>.</p>
+    </div>
+    <img class="hero-icon" src="icon.png" alt="" width="196" height="196">
+  </header>
+
+  <div class="hero-shot reveal">
+    <img src="screenshots/containers.png" alt="Container Desktop main window — containers list with a colorful sidebar" loading="eager">
+  </div>
+
+  <section>
+    <h2 class="display reveal">Everything the CLI can do, one window away</h2>
+    <div class="features">
+      <div class="feature reveal"><span class="dot" style="background:oklch(65% 0.17 255)"></span>
+        <div><h3>Containers</h3><p>Run, stop, restart, recreate with edited configuration. Logs, file browser, inspect and an embedded terminal (<code>exec&nbsp;-it</code>) per container.</p></div></div>
+      <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.14 160)"></span>
+        <div><h3>Live statistics</h3><p>CPU, memory, network and disk charts refreshed every second, with time windows and hover tooltips. Native Swift Charts.</p></div></div>
+      <div class="feature reveal"><span class="dot" style="background:oklch(68% 0.18 300)"></span>
+        <div><h3>Images</h3><p>Pull and build from a Dockerfile with progress streamed live into the dialog. Run a container straight from any image.</p></div></div>
+      <div class="feature reveal"><span class="dot" style="background:oklch(72% 0.15 60)"></span>
+        <div><h3>Volumes &amp; networks</h3><p>Create, inspect, prune. Mount a named volume or any local folder in the run dialog.</p></div></div>
+      <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.17 0)"></span>
+        <div><h3>Registries &amp; machines</h3><p>Private registry logins (password via stdin) and full container-machine lifecycle.</p></div></div>
+      <div class="feature reveal"><span class="dot" style="background:oklch(60% 0.03 250)"></span>
+        <div><h3>System &amp; menu bar</h3><p>Service control with verified stop, disk usage, service logs, local DNS — plus a menu bar extra with one-click actions. English &amp; Polish.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="display reveal">A quick look</h2>
+    <div class="shots">
+      <figure class="shot reveal">
+        <figcaption><h3>Live charts</h3><p>Per-second CPU, memory, network and disk throughput with a selectable time window — hover any chart to inspect a sample.</p></figcaption>
+        <img src="screenshots/stats.png" alt="Live statistics charts" loading="lazy">
+      </figure>
+      <figure class="shot reveal">
+        <figcaption><h3>Run dialog</h3><p>Ports, env, volumes, resources, amd64 + Rosetta — with a copy-pasteable preview of the exact CLI command it will run.</p></figcaption>
+        <img src="screenshots/run-sheet.png" alt="Run container dialog" loading="lazy">
+      </figure>
+      <figure class="shot reveal">
+        <figcaption><h3>System at a glance</h3><p>Service and builder status explained in plain words, disk usage with reclaimable space, readable system properties and service logs.</p></figcaption>
+        <img src="screenshots/system.png" alt="System view" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <span>MIT licensed · © 2026 Sebastian Trześniewski</span>
+    <span><a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · <a href="https://github.com/sembsa/ContainerDesktop/releases">Releases</a> · <a href="https://github.com/apple/container">apple/container</a></span>
+  </footer>
+</div>
+
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach((el, i) => {
+    el.style.transitionDelay = `${Math.min(i % 6, 3) * 60}ms`;
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
