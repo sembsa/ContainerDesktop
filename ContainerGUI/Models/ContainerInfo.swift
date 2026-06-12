@@ -11,6 +11,12 @@ struct ContainerInfo: Codable, Identifiable, Sendable, Hashable {
     var imageReference: String { configuration.image.reference }
     var primaryIPv4: String? { status?.networks?.first?.ipv4Address }
 
+    // MARK: - Grouping helpers
+
+    var composeProject: String? { configuration.labels?["compose.project"] }
+    var composeService: String? { configuration.labels?["compose.service"] }
+    var architecture: String? { configuration.platform?.architecture }
+
     struct Configuration: Codable, Sendable, Hashable {
         let id: String
         let image: ImageRef

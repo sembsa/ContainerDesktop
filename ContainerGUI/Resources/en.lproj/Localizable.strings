@@ -378,3 +378,56 @@
 
 /* Common/InfoTip.swift — toolbar button label */
 "Informacje" = "Info";
+
+/* Compose/ComposeParser.swift — parser errors and warnings */
+"Nieprawidłowy YAML: %@" = "Invalid YAML: %@";
+"dokument najwyższego poziomu nie jest mapą" = "the top-level document is not a mapping";
+"Plik compose nie zawiera sekcji services:." = "The compose file has no services: section.";
+"Usługa „%@”: %@" = "Service “%@”: %@";
+"zadeklarowane wolumeny muszą istnieć: %@" = "declared volumes must already exist: %@";
+"definicja usługi nie jest mapą" = "the service definition is not a mapping";
+"usługa używa build: — wskaż gotowy obraz (image:), budowanie z compose nie jest wspierane" = "the service uses build: — point to a prebuilt image (image:); building from compose is not supported";
+"brak wymaganego pola image:" = "missing required field image:";
+"pominięto nieobsługiwane pole: %1$@ (usługa %2$@)" = "skipped unsupported field: %1$@ (service %2$@)";
+"pominięto wpis portu bez pola target (usługa %@)" = "skipped a port entry with no target field (service %@)";
+"pominięto port bez pola published (usługa %@)" = "skipped a port with no published field (service %@)";
+"pominięto wolumen typu %1$@ (usługa %2$@)" = "skipped a volume of type %1$@ (service %2$@)";
+"pominięto wolumen bez source/target (usługa %@)" = "skipped a volume with no source/target (service %@)";
+"zignorowano warunek depends_on „%1$@” dla %2$@ (obsługiwane jest tylko uruchomienie)" = "ignored depends_on condition “%1$@” for %2$@ (only start-up is supported)";
+"cykl zależności: %@" = "dependency cycle: %@";
+"usługa init nie może zależeć od zwykłej usługi: %@" = "an init service cannot depend on a regular service: %@";
+
+/* Features/Containers/ComposeSheet.swift + ContainersView.swift — Compose UI */
+"Uruchom Docker Compose" = "Run Docker Compose";
+"Compose…" = "Compose…";
+"Projekt" = "Project";
+"Zastąp istniejące kontenery o tych samych nazwach" = "Replace existing containers with the same names";
+"Nazwa grupuje kontenery na liście i tworzy wspólną sieć — kontenery widzą się po swoich nazwach (hostname = nazwa kontenera)." = "The name groups containers in the list and creates a shared network — containers see each other by their names (hostname = container name).";
+"Wykryte usługi (%lld)" = "Detected services (%lld)";
+"Uruchom (%lld usług)" = "Run (%lld services)";
+"zależy od: %@" = "depends on: %@";
+"%lld/%lld działa" = "%lld/%lld running";
+"Uruchom wszystkie" = "Start all";
+"Zatrzymaj wszystkie" = "Stop all";
+"Usuń projekt…" = "Remove project…";
+"Usunąć projekt?" = "Remove project?";
+"Arch" = "Arch";
+"Akcje" = "Actions";
+"Rosetta włączona" = "Rosetta enabled";
+"%lld port" = "%lld port";
+"%lld porty" = "%lld ports";
+"port" = "port";
+"porty" = "ports";
+"init" = "init";
+"zadanie jednorazowe — wykona się przed startem usług" = "one-off task — runs before the services start";
+"Rozszerzenie x-init: true oznacza zadanie jednorazowe (np. utworzenie bazy danych) — uruchamiane tym samym lub innym obrazem przed startem pozostałych usług; usługi wystartują dopiero po jego pomyślnym zakończeniu." = "The x-init: true extension marks a one-off task (e.g. creating a database) — run with the same or a different image before the other services start; the services start only after it finishes successfully.";
+
+/* Compose/ComposeStore.swift — progress and error messages */
+"utworzono sieć %@" = "created network %@";
+"sieć %@ już istnieje" = "network %@ already exists";
+"nieznany błąd sieci" = "unknown network error";
+"nie udało się utworzyć sieci: %@" = "failed to create network: %@";
+"sieć %@ niedostępna" = "network %@ unavailable";
+"zależność %@ nie wystartowała" = "dependency %@ did not start";
+"nieznany błąd" = "unknown error";
+"przerwano: zadanie init %@ nie powiodło się" = "aborted: init task %@ failed";

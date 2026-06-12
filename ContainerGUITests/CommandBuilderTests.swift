@@ -48,6 +48,26 @@ final class CommandBuilderTests: XCTestCase {
         XCTAssertEqual(args.last, "alpine:latest")
     }
 
+    // MARK: - Detach flag tests
+
+    func testDetachDefaultsToTrue() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+
+        let args = RunCommandBuilder.arguments(for: config)
+        XCTAssertEqual(args.first, "run")
+        XCTAssertTrue(args.contains("--detach"), "Domyślnie --detach powinno być obecne")
+    }
+
+    func testDetachFalseOmitsDetachFlag() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+
+        let args = RunCommandBuilder.arguments(for: config, detach: false)
+        XCTAssertEqual(args.first, "run", "Pierwszy element musi być samym \"run\"")
+        XCTAssertFalse(args.contains("--detach"), "Przy detach: false nie powinno być --detach")
+    }
+
     // MARK: - Tokenizer tests
 
     func testTokenizeDoubleQuotedGroup() {

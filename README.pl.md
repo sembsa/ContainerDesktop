@@ -16,6 +16,7 @@ Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje 
 - Rozbudowany dialog **Uruchom kontener**: porty, zmienne środowiskowe, wolumeny (wybór istniejącego wolumenu albo lokalnego folderu), zasoby, sieć, architektura (arm64 / amd64 z automatyczną Rosettą), entrypoint, `--rm` — z podglądem dokładnego polecenia shell gotowym do skopiowania
 - **Zmiana polecenia / konfiguracji** istniejącego kontenera: aplikacja odtwarza go z tą samą konfiguracją wstępnie wypełnioną do edycji (dane w wolumenach przetrwają)
 - Postęp pobierania obrazu streamowany prosto do dialogu
+- **Docker Compose**: wklejasz `docker-compose.yml`, a aplikacja tłumaczy go na wywołania `container run` — wspólna sieć projektu, kolejność wg zależności, grupowanie kontenerów na liście ze zbiorczym start/stop. Zadania jednorazowe (np. utworzenie bazy danych) przez rozszerzenie `x-init: true` wykonują się do końca przed startem pozostałych usług
 
 ### Statystyki na żywo
 ![Statystyki](docs/screenshots/stats.png)

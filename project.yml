@@ -11,6 +11,9 @@ packages:
   SwiftTerm:
     url: https://github.com/migueldeicaza/SwiftTerm
     from: 1.0.0
+  Yams:
+    url: https://github.com/jpsim/Yams
+    from: 5.0.0
 
 schemes:
   ContainerGUI:
@@ -46,6 +49,8 @@ targets:
     dependencies:
       - package: SwiftTerm
         product: SwiftTerm
+      - package: Yams
+        product: Yams
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
@@ -75,9 +80,16 @@ targets:
       - path: ContainerGUI/Common/JSONValue.swift
       - path: ContainerGUI/CLI/RunCommandBuilder.swift
       - path: ContainerGUI/CLI/CLIError.swift
+      - path: ContainerGUI/CLI/ContainerCLI.swift
+      - path: ContainerGUI/CLI/ProcessLineReader.swift
+      - path: ContainerGUI/CLI/BinaryResolver.swift
+      - path: ContainerGUI/Compose
       - path: Fixtures
         buildPhase: resources
         type: folder
+    dependencies:
+      - package: Yams
+        product: Yams
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

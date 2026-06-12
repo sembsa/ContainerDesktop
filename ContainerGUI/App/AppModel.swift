@@ -56,6 +56,7 @@ final class AppModel {
     let networks = NetworkStore()
     let registries = RegistryStore()
     let machines = MachineStore()
+    let compose = ComposeStore()
 
     private var pollTask: Task<Void, Never>?
     var pollInterval: TimeInterval = 3

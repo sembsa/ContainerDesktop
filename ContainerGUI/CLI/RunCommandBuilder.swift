@@ -45,8 +45,9 @@ struct RunConfiguration {
 /// The GUI always runs detached (`-d`) so the calling Task never blocks on a
 /// foreground process; interactive shells are provided via the Terminal tab.
 enum RunCommandBuilder {
-    static func arguments(for config: RunConfiguration, progress: String? = nil) -> [String] {
-        var args = ["run", "--detach"]
+    static func arguments(for config: RunConfiguration, progress: String? = nil, detach: Bool = true) -> [String] {
+        var args = ["run"]
+        if detach { args.append("--detach") }
 
         if config.removeOnExit { args.append("--rm") }
         if config.rosetta { args.append("--rosetta") }
