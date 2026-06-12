@@ -450,3 +450,7 @@
 
 /* Porty — otwieranie w przeglądarce */
 "Otwórz http://localhost:%lld w przeglądarce" = "Otwórz http://localhost:%lld w przeglądarce";
+
+/* Compose — obejście DNS przez /etc/hosts */
+"nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts" = "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts";
+"%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)" = "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)";

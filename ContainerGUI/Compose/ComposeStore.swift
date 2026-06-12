@@ -137,6 +137,12 @@ final class ComposeStore {
             }
         }
 
+        // container 1.0.0 does not resolve container names via its DNS (the
+        // hostname table registers bare names while DNS queries arrive as
+        // canonical FQDNs with a trailing dot), so cross-service hostnames
+        // are wired up via /etc/hosts after each service starts.
+        var hostEntries: [(name: String, ip: String)] = []
+
         // 3. Run regular services in dependency order (detached).
         for service in regularServices {
             // If a dependency failed, mark this service failed without starting it.
@@ -164,6 +170,10 @@ final class ComposeStore {
                     appendLog(prefix: service.name, line: line)
                 }
                 setPhase(.running, for: service.name)
+                await wireUpHosts(
+                    newService: resolvedName,
+                    entries: &hostEntries
+                )
             } catch let error as CLIError {
                 let message = error.errorDescription ?? String(localized: "nieznany błąd")
                 setPhase(.failed(summarizeFailure(message)), for: service.name)
@@ -263,6 +273,48 @@ final class ComposeStore {
         }
     }
 
+
+    /// Workaround for missing container-name DNS in container 1.0.0:
+    /// after a service starts, exchange /etc/hosts entries between it and the
+    /// previously started services of this project.
+    private func wireUpHosts(newService: String, entries: inout [(name: String, ip: String)]) async {
+        guard let ip = await containerIPv4(newService) else {
+            appendLog(prefix: newService, line: String(localized: "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts"))
+            return
+        }
+
+        // Older services learn about the new one…
+        for entry in entries {
+            _ = try? await cli.run([
+                "exec", "--user", "root", entry.name, "sh", "-c",
+                "echo '\(ip) \(newService)' >> /etc/hosts",
+            ])
+        }
+        // …and the new one learns about all the older services.
+        if !entries.isEmpty {
+            let lines = entries.map { "echo '\($0.ip) \($0.name)' >> /etc/hosts" }.joined(separator: "; ")
+            _ = try? await cli.run(["exec", "--user", "root", newService, "sh", "-c", lines])
+        }
+
+        entries.append((name: newService, ip: ip))
+        appendLog(
+            prefix: nil,
+            line: String(format: String(localized: "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)"), newService, ip)
+        )
+    }
+
+    /// Reads the container's IPv4 from `container ls`, retrying briefly —
+    /// the address can appear a moment after start.
+    private func containerIPv4(_ name: String) async -> String? {
+        for _ in 0..<5 {
+            if let items = try? await cli.json(["ls"], as: [ContainerInfo].self),
+               let ip = items.first(where: { $0.id == name })?.primaryIPv4 {
+                return ip.split(separator: "/").first.map(String.init)
+            }
+            try? await Task.sleep(for: .seconds(1))
+        }
+        return nil
+    }
 
     /// CLIError.command carries the last ~10 merged output lines, which are
     /// often progress noise — surface the actual "Error:" line in the phase.
