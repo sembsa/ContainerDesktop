@@ -278,9 +278,26 @@ private struct PortsCard: View {
             SectionCard(title: String(format: String(localized: "Porty (%lld)"), ports.count), headerIcon: "network", headerTint: .purple) {
                 VStack(alignment: .leading, spacing: 2) {
                     ForEach(ports) { port in
-                        Text(port.display)
-                            .font(.system(.body, design: .monospaced))
-                            .textSelection(.enabled)
+                        HStack(spacing: 4) {
+                            Text(port.display)
+                                .font(.system(.body, design: .monospaced))
+                                .textSelection(.enabled)
+                            if container.isRunning,
+                               let hostPort = port.hostPort,
+                               (port.proto ?? "tcp") == "tcp" {
+                                Button {
+                                    if let url = URL(string: "http://localhost:\(hostPort)") {
+                                        NSWorkspace.shared.open(url)
+                                    }
+                                } label: {
+                                    Image(systemName: "arrow.up.forward")
+                                        .font(.system(size: 10, weight: .bold))
+                                }
+                                .buttonStyle(.borderless)
+                                .controlSize(.mini)
+                                .help(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
+                            }
+                        }
                     }
                 }
             }

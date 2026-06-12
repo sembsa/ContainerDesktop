@@ -447,3 +447,6 @@
 "Kopiuj wszystko" = "Copy all";
 "Znaczniki czasu" = "Timestamps";
 "Kopiuje wszystkie widoczne linie logu do schowka" = "Copies every visible log line to the clipboard";
+
+/* Ports — open in browser */
+"Otwórz http://localhost:%lld w przeglądarce" = "Open http://localhost:%lld in the browser";

@@ -246,8 +246,7 @@ struct ContainersView: View {
 
                 TableColumn("Porty") { row in
                     if let container = row.container {
-                        Text(container.configuration.publishedPorts?.map(\.display).joined(separator: ", ") ?? "—")
-                            .foregroundStyle(.secondary)
+                        portsCell(for: container)
                     }
                 }
 
@@ -408,6 +407,39 @@ struct ContainersView: View {
             .disabled(isPending)
         Button("Usuń…", role: .destructive) { confirmation = .remove(container) }
             .disabled(isPending)
+    }
+
+    /// Ports with a tiny open-in-browser arrow for reachable (running, tcp,
+    /// host-published) mappings.
+    @ViewBuilder
+    private func portsCell(for container: ContainerInfo) -> some View {
+        if let ports = container.configuration.publishedPorts, !ports.isEmpty {
+            HStack(spacing: 8) {
+                ForEach(ports) { port in
+                    HStack(spacing: 2) {
+                        Text(port.display)
+                            .foregroundStyle(.secondary)
+                        if container.isRunning,
+                           let hostPort = port.hostPort,
+                           (port.proto ?? "tcp") == "tcp" {
+                            Button {
+                                if let url = URL(string: "http://localhost:\(hostPort)") {
+                                    NSWorkspace.shared.open(url)
+                                }
+                            } label: {
+                                Image(systemName: "arrow.up.forward")
+                                    .font(.system(size: 9, weight: .bold))
+                            }
+                            .buttonStyle(.borderless)
+                            .controlSize(.mini)
+                            .help(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
+                        }
+                    }
+                }
+            }
+        } else {
+            Text("—").foregroundStyle(.secondary)
+        }
     }
 
     private func exportContainer(_ container: ContainerInfo) {
