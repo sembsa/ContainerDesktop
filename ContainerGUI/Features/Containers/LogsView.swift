@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct LogsView: View {
@@ -5,6 +6,7 @@ struct LogsView: View {
 
     @State private var lines: [LogLine] = []
     @State private var autoscroll = true
+    @State private var showTimestamps = false
     @State private var streamEnded = false
 
     var body: some View {
@@ -29,7 +31,7 @@ struct LogsView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 0) {
                             ForEach(lines) { line in
-                                Text(line.text.isEmpty ? " " : line.text)
+                                Text(display(line))
                                     .font(.system(.caption, design: .monospaced))
                                     .textSelection(.enabled)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,10 +47,24 @@ struct LogsView: View {
                     }
                 }
                 .overlay(alignment: .bottomTrailing) {
-                    Toggle("Autoprzewijanie", isOn: $autoscroll)
-                        .toggleStyle(.button)
+                    HStack(spacing: 6) {
+                        Button {
+                            copyAll()
+                        } label: {
+                            Label("Kopiuj wszystko", systemImage: "doc.on.doc")
+                        }
                         .controlSize(.small)
-                        .padding(8)
+                        .help(String(localized: "Kopiuje wszystkie widoczne linie logu do schowka"))
+
+                        Toggle("Znaczniki czasu", isOn: $showTimestamps)
+                            .toggleStyle(.button)
+                            .controlSize(.small)
+
+                        Toggle("Autoprzewijanie", isOn: $autoscroll)
+                            .toggleStyle(.button)
+                            .controlSize(.small)
+                    }
+                    .padding(8)
                 }
             }
         }
@@ -56,6 +72,26 @@ struct LogsView: View {
             await streamLogs()
         }
     }
+
+    /// Receipt-time timestamp: `container logs` does not emit timestamps, so
+    /// lines from the initial backlog all carry the moment they were read.
+    private func display(_ line: LogLine) -> String {
+        let text = line.text.isEmpty ? " " : line.text
+        guard showTimestamps else { return text }
+        return "[\(Self.timeFormatter.string(from: line.date))] \(text)"
+    }
+
+    private func copyAll() {
+        let content = lines.map(display).joined(separator: "\n")
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(content, forType: .string)
+    }
+
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter
+    }()
 
     private func streamLogs() async {
         lines = []
@@ -77,5 +113,6 @@ struct LogsView: View {
 
 struct LogLine: Identifiable, Hashable {
     let id = UUID()
+    let date = Date()
     let text: String
 }

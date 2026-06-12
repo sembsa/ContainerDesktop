@@ -442,3 +442,8 @@
 "Pomiń zadania init (x-init)" = "Skip init tasks (x-init)";
 "pominięto zadanie init" = "init task skipped";
 "kontener %@ zachowany do wglądu logów" = "container %@ kept for log inspection";
+
+/* Features/Containers/LogsView.swift — logs toolbar */
+"Kopiuj wszystko" = "Copy all";
+"Znaczniki czasu" = "Timestamps";
+"Kopiuje wszystkie widoczne linie logu do schowka" = "Copies every visible log line to the clipboard";
