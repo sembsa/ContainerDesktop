@@ -5,6 +5,7 @@ struct ImagesView: View {
     @State private var selection: ImageInfo.ID?
     @State private var activeSheet: ImageSheet?
     @State private var confirmation: ImageConfirmation?
+    @State private var detailTarget: ImageInfo?
 
     private var store: ImageStore { model.images }
 
@@ -55,6 +56,9 @@ struct ImagesView: View {
             case .run(let reference): RunContainerSheet(presetImage: reference).environment(model)
             }
         }
+        .sheet(item: $detailTarget) { img in
+            ImageDetailSheet(image: img).environment(model)
+        }
         .confirmationDialog(
             confirmationTitle,
             isPresented: Binding(get: { confirmation != nil }, set: { if !$0 { confirmation = nil } }),
@@ -79,9 +83,15 @@ struct ImagesView: View {
         }
         .contextMenu(forSelectionType: ImageInfo.ID.self) { ids in
             if let id = ids.first, let image = store.items.first(where: { $0.id == id }) {
+                Button(String(localized: "Szczegóły obrazu…"), systemImage: "info.circle") { detailTarget = image }
+                Divider()
                 Button("Uruchom kontener…") { activeSheet = .run(image.reference) }
                 Divider()
                 Button("Usuń…", role: .destructive) { confirmation = .remove(image) }
+            }
+        } primaryAction: { ids in
+            if let id = ids.first, let image = store.items.first(where: { $0.id == id }) {
+                detailTarget = image
             }
         }
     }

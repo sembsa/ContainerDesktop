@@ -40,7 +40,7 @@ final class ImageStore {
         await refresh()
     }
 
-    func inspect(_ reference: String) async throws -> String {
-        try await cli.run(["image", "inspect", reference])
+    func inspect(_ reference: String) async throws -> [ImageInspect] {
+        try await cli.json(["image", "inspect", reference], as: [ImageInspect].self, appendFormat: false)
     }
 }

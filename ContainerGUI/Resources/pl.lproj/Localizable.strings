@@ -246,6 +246,16 @@
 "Obraz %@ zostanie usunięty." = "Obraz %@ zostanie usunięty.";
 "Usunięte zostaną wszystkie nieużywane obrazy." = "Usunięte zostaną wszystkie nieużywane obrazy.";
 
+/* Features/Images/ImageDetailSheet.swift */
+"Szczegóły obrazu…" = "Szczegóły obrazu…";
+"Brak danych obrazu." = "Brak danych obrazu.";
+"Wariant" = "Wariant";
+"Referencja" = "Referencja";
+"Digest wariantu" = "Digest wariantu";
+"Warstwy (%lld)" = "Warstwy (%lld)";
+"Warstwy systemu plików: %lld" = "Warstwy systemu plików: %lld";
+"pusta" = "pusta";
+
 /* Features/Images/PullImageSheet.swift */
 "Format: [rejestr/]repozytorium[:tag], np. nginx:latest albo ghcr.io/uzytkownik/app:1.0. Bez rejestru → docker.io, bez taga → latest." = "Format: [rejestr/]repozytorium[:tag], np. nginx:latest albo ghcr.io/uzytkownik/app:1.0. Bez rejestru → docker.io, bez taga → latest.";
 "Pobierz obraz" = "Pobierz obraz";
