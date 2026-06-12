@@ -153,10 +153,10 @@
     display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   }
 
-  /* ---------- reveal ---------- */
+  /* ---------- reveal (only when JS is running — content must never depend on it) ---------- */
   @media (prefers-reduced-motion: no-preference) {
-    .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
-    .reveal.in { opacity: 1; transform: none; }
+    html.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+    html.js .reveal.in { opacity: 1; transform: none; }
   }
 
   @media (max-width: 760px) {
@@ -237,6 +237,7 @@
 </div>
 
 <script>
+  document.documentElement.classList.add("js");
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
   }), { threshold: 0.12 });
