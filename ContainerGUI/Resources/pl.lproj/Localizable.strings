@@ -454,3 +454,8 @@
 /* Compose — obejście DNS przez /etc/hosts */
 "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts" = "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts";
 "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)" = "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)";
+
+/* ComposeSheet — link do dokumentacji; toolbar Compose bez wielokropka */
+"Dokumentacja" = "Dokumentacja";
+"Otwiera dokumentację Compose w przeglądarce" = "Otwiera dokumentację Compose w przeglądarce";
+"Compose" = "Compose";

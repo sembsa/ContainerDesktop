@@ -8,6 +8,8 @@ Container Desktop does not reimplement any container logic: every action shells 
 
 ![Containers](docs/screenshots/containers.png)
 
+📘 **[Documentation](https://sembsa.github.io/ContainerDesktop/docs.html)** — Compose guide, `x-init` tasks, `host.containers.internal`, troubleshooting.
+
 ## Features
 
 ### Containers

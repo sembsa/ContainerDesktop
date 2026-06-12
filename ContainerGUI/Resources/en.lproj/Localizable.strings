@@ -454,3 +454,8 @@
 /* Compose — DNS workaround via /etc/hosts */
 "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts" = "could not determine the IP address — skipping /etc/hosts entries";
 "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)" = "%@ → %@ (/etc/hosts entry — works around missing name DNS)";
+
+/* ComposeSheet — documentation link; Compose toolbar label */
+"Dokumentacja" = "Documentation";
+"Otwiera dokumentację Compose w przeglądarce" = "Opens the Compose documentation in your browser";
+"Compose" = "Compose";

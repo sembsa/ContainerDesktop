@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documentation — Container Desktop</title>
+<meta name="description" content="Container Desktop documentation: Docker Compose support, x-init tasks, host.containers.internal, networking and troubleshooting.">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: oklch(16% 0.012 250);
+    --bg-raised: oklch(20% 0.014 250);
+    --ink: oklch(93% 0.006 250);
+    --ink-dim: oklch(72% 0.012 250);
+    --ink-faint: oklch(54% 0.014 250);
+    --blue: oklch(62% 0.17 255);
+    --blue-bright: oklch(72% 0.15 250);
+    --line: oklch(28% 0.014 250);
+    --orange: oklch(75% 0.15 60);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    font-size: 16.5px; line-height: 1.65; -webkit-font-smoothing: antialiased;
+  }
+  .display { font-family: "Bricolage Grotesque", -apple-system, sans-serif; }
+  .wrap { max-width: 800px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px) 80px; }
+  a { color: var(--blue-bright); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header { padding: 40px 0 8px; display: flex; align-items: center; gap: 14px; }
+  header img { width: 44px; height: 44px; }
+  header .crumbs { font-size: 14px; color: var(--ink-faint); }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 6px; }
+  .lang { font-size: 14px; color: var(--ink-faint); margin-bottom: 28px; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17.5px; font-weight: 650; margin: 26px 0 8px; }
+  p, li { color: var(--ink-dim); }
+  p strong, li strong { color: var(--ink); }
+  ul { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13.5px;
+    background: var(--bg-raised); color: var(--ink);
+    padding: 1px 6px; border-radius: 5px;
+  }
+  pre {
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; margin: 12px 0 18px;
+  }
+  pre code { background: none; padding: 0; font-size: 13px; line-height: 1.55; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 18px; font-size: 15px; }
+  th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); color: var(--ink-dim); }
+  th { color: var(--ink); font-weight: 650; }
+  td code { font-size: 12.5px; }
+  .note {
+    border-left: 3px solid var(--blue); background: var(--bg-raised);
+    padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 14px 0; font-size: 15px;
+  }
+  .warn { border-left-color: var(--orange); }
+  nav.toc { font-size: 15px; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 18px 0 8px; }
+  nav.toc a { display: inline-block; margin-right: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="index.html"><img src="icon.png" alt="Container Desktop"></a>
+    <div class="crumbs"><a href="index.html">Container Desktop</a> / Documentation</div>
+  </header>
+  <h1 class="display">Documentation</h1>
+  <p class="lang"><strong>English</strong> · <a href="docs.pl.html">Polski</a></p>
+
+  <nav class="toc">
+    <a href="#compose">Docker Compose</a>
+    <a href="#host-alias">host.containers.internal</a>
+    <a href="#hostnames">Service hostnames</a>
+    <a href="#x-init">x-init tasks</a>
+    <a href="#limitations">Limitations</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </nav>
+
+  <h2 id="compose">Docker Compose</h2>
+  <p>Container Desktop runs <code>docker-compose.yml</code> stacks on top of Apple's <code>container</code> CLI, which has no compose support of its own. The app parses your YAML and translates every service into a plain <code>container run</code> invocation — there is no extra daemon and no hidden state. Open it via <strong>Containers → Compose…</strong>, paste the YAML and press Run.</p>
+  <p>For each project the app:</p>
+  <ul>
+    <li>creates a <strong>project network</strong> named after the project (top-level <code>name:</code> or the field in the dialog),</li>
+    <li>starts services in <code>depends_on</code> order, streaming each service's output live,</li>
+    <li>labels containers with <code>compose.project</code> / <code>compose.service</code>, so they appear <strong>grouped</strong> on the containers list with collective start / stop / delete.</li>
+  </ul>
+
+  <h3>Supported service keys</h3>
+  <table>
+    <tr><th>Key</th><th>Notes</th></tr>
+    <tr><td><code>image</code></td><td>Required. <code>build:</code> is not supported — point at a ready image.</td></tr>
+    <tr><td><code>container_name</code></td><td>Overrides the default <code>&lt;project&gt;-&lt;service&gt;</code> name.</td></tr>
+    <tr><td><code>command</code> / <code>entrypoint</code></td><td>String or list. Multi-token entrypoints (e.g. <code>["dotnet", "dbmgr.dll"]</code>) are translated correctly.</td></tr>
+    <tr><td><code>environment</code></td><td>Map or list form.</td></tr>
+    <tr><td><code>ports</code></td><td>Short syntax (<code>"8080:80"</code>, optionally <code>/udp</code>) and long syntax.</td></tr>
+    <tr><td><code>volumes</code></td><td><code>source:target[:ro]</code>; named volumes must already exist.</td></tr>
+    <tr><td><code>depends_on</code></td><td>List or map (conditions other than <em>service_started</em> are ignored with a warning).</td></tr>
+    <tr><td><code>x-init</code></td><td>Container Desktop extension — see <a href="#x-init">x-init tasks</a>.</td></tr>
+  </table>
+
+  <h2 id="host-alias">host.containers.internal</h2>
+  <p>Use the hostname <code>host.containers.internal</code> anywhere in <code>environment</code> values or <code>command</code> to reach <strong>your Mac</strong> from inside the containers (the equivalent of Docker's <code>host.docker.internal</code>).</p>
+  <pre><code>environment:
+  DB_SERVER: "host.containers.internal,1433"   # SQL Server running on the host</code></pre>
+  <p>Why an alias instead of an IP: every compose project gets its <em>own</em> vmnet network with its <em>own</em> subnet, so the host's gateway address differs per project and can even change between restarts of the <code>container</code> service (e.g. <code>192.168.64.1</code> vs <code>192.168.65.1</code>). The app inspects the project network right after creating it and substitutes the alias with the actual gateway IP — the mapping is printed in the progress log.</p>
+  <div class="note">The host service must listen on all interfaces (<code>0.0.0.0</code>), not just <code>127.0.0.1</code>, to be reachable from the vmnet subnet. Ports published by other Container Desktop projects or by Docker Desktop on the host are reachable the same way.</div>
+
+  <h2 id="hostnames">Service hostnames (/etc/hosts wiring)</h2>
+  <p>Services reach each other by <strong>container name</strong> — e.g. with the default naming, service <code>server</code> in project <code>shop</code> is <code>shop-server</code>:</p>
+  <pre><code>environment:
+  API_URL: "http://shop-server:22000"</code></pre>
+  <p><code>container</code> 1.0.0 ships a DNS resolver for container names, but it never matches: names are registered without the FQDN trailing dot while DNS queries arrive canonicalized, so every lookup fails with SERVFAIL. Container Desktop works around this: after each service starts, the app reads its IP and exchanges <code>/etc/hosts</code> entries between all services of the project (the progress log shows each mapping).</p>
+  <div class="note warn">The entries live inside the containers, so they survive until a container is <em>recreated</em>. If you stop and start a single container by hand and its IP changes, re-run the compose with “Replace existing” to refresh the wiring.</div>
+
+  <h2 id="x-init">x-init tasks</h2>
+  <p>Mark a service with <code>x-init: true</code> to run it as a <strong>one-off setup task</strong> — for example creating a database with the same image but a different entrypoint. Init tasks run <em>before</em> all regular services, sequentially and to completion; regular services start only after every init task exits successfully.</p>
+  <pre><code>services:
+  dbinit:
+    image: registry.example.com/server:1.0
+    x-init: true
+    entrypoint: ["dotnet", "dbmgr.dll"]
+    command: create mydb --sqlserver "host.containers.internal,1433" --recreate
+
+  server:
+    image: registry.example.com/server:1.0
+    # starts only after dbinit exits with code 0</code></pre>
+  <ul>
+    <li>A failed init task aborts the whole run; its container is <strong>kept</strong> so you can inspect the logs (successful init containers are cleaned up automatically).</li>
+    <li>The <strong>“Skip init tasks”</strong> toggle reruns a stack without repeating the setup — handy when the database already exists.</li>
+    <li>Init tasks may depend on other init tasks, but not on regular services (they always run first).</li>
+  </ul>
+
+  <h2 id="limitations">Limitations</h2>
+  <ul>
+    <li><code>build:</code> is not supported — build the image first (the app's <em>Build</em> dialog can do it) and reference it by tag.</li>
+    <li><code>healthcheck</code>, <code>restart</code>, <code>profiles</code> and other unsupported keys are ignored — each one is surfaced as a warning during parsing, never silently.</li>
+    <li><code>depends_on</code> waits for the dependency to <em>start</em>, not to become healthy. If a service connects to its dependency at boot and has no retry, restart it once with the ↻ button.</li>
+    <li>Top-level <code>volumes:</code> declarations are not created automatically — create named volumes in the Volumes tab first.</li>
+  </ul>
+
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <ul>
+    <li><strong>A service can't reach the host</strong> — verify the host process listens on <code>0.0.0.0</code> and that you used <code>host.containers.internal</code> rather than <code>localhost</code> (inside a container, <code>localhost</code> is the container itself).</li>
+    <li><strong>Names stopped resolving after restarting containers</strong> — re-run the compose with “Replace existing” to refresh the <code>/etc/hosts</code> wiring.</li>
+    <li><strong>Binding a port below 1024 fails with <code>Permission denied</code></strong> — images running as a non-root user can't bind privileged ports; listen on a high port (e.g. 8080) and publish <code>60000:8080</code>.</li>
+    <li><strong>Everything times out on a project network</strong> — the vmnet helper may have restarted under the containers; recreate the stack (Replace existing), and if that's not enough restart the service in the System tab.</li>
+    <li><strong>Service logs</strong> — the System tab has a built-in viewer for the <code>container</code> service logs (5 min / 30 min / 1 h windows).</li>
+  </ul>
+
+  <p style="margin-top:48px; color: var(--ink-faint); font-size: 14px;">
+    <a href="index.html">← Container Desktop</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · MIT
+  </p>
+</div>
+</body>
+</html>

@@ -8,6 +8,8 @@ Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje 
 
 ![Kontenery](docs/screenshots/containers.png)
 
+📘 **[Dokumentacja](https://sembsa.github.io/ContainerDesktop/docs.pl.html)** — przewodnik po Compose, zadania `x-init`, `host.containers.internal`, rozwiązywanie problemów.
+
 ## Możliwości
 
 ### Kontenery
