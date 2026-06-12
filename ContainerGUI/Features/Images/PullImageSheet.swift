@@ -94,28 +94,12 @@ struct PullImageSheet: View {
 }
 
 /// Scrolling, autoscrolled, monospaced output box used by streaming sheets.
+/// Backed by LogTextView: continuous selection + log-level colorizing.
 struct StreamLogBox: View {
     let lines: [LogLine]
 
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 0) {
-                    ForEach(lines) { line in
-                        Text(line.text.isEmpty ? " " : line.text)
-                            .font(.system(.caption, design: .monospaced))
-                            .textSelection(.enabled)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .id(line.id)
-                    }
-                }
-                .padding(8)
-            }
-            .background(Color(nsColor: .textBackgroundColor))
-            .onChange(of: lines.count) {
-                if let last = lines.last { proxy.scrollTo(last.id, anchor: .bottom) }
-            }
-        }
-        .frame(maxHeight: .infinity)
+        LogTextView(lines: lines, showTimestamps: false, autoscroll: true, colorize: true)
+            .frame(maxHeight: .infinity)
     }
 }

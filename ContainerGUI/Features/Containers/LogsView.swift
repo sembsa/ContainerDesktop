@@ -27,25 +27,12 @@ struct LogsView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 0) {
-                            ForEach(lines) { line in
-                                Text(display(line))
-                                    .font(.system(.caption, design: .monospaced))
-                                    .textSelection(.enabled)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .id(line.id)
-                            }
-                        }
-                        .padding(8)
-                    }
-                    .background(Color(nsColor: .textBackgroundColor))
-                    .onChange(of: lines.count) {
-                        guard autoscroll, let last = lines.last else { return }
-                        proxy.scrollTo(last.id, anchor: .bottom)
-                    }
-                }
+                LogTextView(
+                    lines: lines,
+                    showTimestamps: showTimestamps,
+                    autoscroll: autoscroll,
+                    colorize: true
+                )
                 .overlay(alignment: .bottomTrailing) {
                     HStack(spacing: 6) {
                         Button {
