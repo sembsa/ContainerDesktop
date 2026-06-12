@@ -434,3 +434,6 @@
 
 /* Features/Containers/ComposeSheet.swift */
 "Kopiuj logi" = "Kopiuj logi";
+
+/* Compose/ComposeStore.swift — alias hosta */
+"host.containers.internal → %@" = "host.containers.internal → %@";

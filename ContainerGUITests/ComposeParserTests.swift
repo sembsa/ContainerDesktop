@@ -336,4 +336,18 @@ final class ComposeParserTests: XCTestCase {
                           "Komunikat powinien wspominać init i web: \(problem)")
         }
     }
+
+    func testHostAliasSubstitution() {
+        XCTAssertEqual(
+            ComposeStore.substituteHostAlias("host.containers.internal,1433", gateway: "192.168.65.1"),
+            "192.168.65.1,1433"
+        )
+        XCTAssertEqual(
+            ComposeStore.substituteHostAlias("http://host.containers.internal:8080", gateway: "192.168.65.1"),
+            "http://192.168.65.1:8080"
+        )
+        XCTAssertEqual(ComposeStore.substituteHostAlias("bez aliasu", gateway: "192.168.65.1"), "bez aliasu")
+        XCTAssertEqual(ComposeStore.substituteHostAlias("host.containers.internal", gateway: nil), "host.containers.internal")
+    }
+
 }

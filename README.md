@@ -16,7 +16,7 @@ Container Desktop does not reimplement any container logic: every action shells 
 - Rich **Run container** dialog: ports, environment variables, volumes (pick an existing volume or a local folder), resources, network, architecture (arm64 / amd64 with automatic Rosetta), entrypoint, `--rm` — with a live, copy-pasteable shell preview of the exact command
 - **Change command / configuration** of an existing container: the app recreates it with the same configuration pre-filled for editing (volume data survives)
 - Live image-pull progress streamed straight into the dialog
-- **Docker Compose**: paste a `docker-compose.yml` and the app translates it into `container run` calls — project network, dependency ordering, grouped containers on the list with start/stop-all. One-off setup tasks (e.g. database creation) via the `x-init: true` service extension run to completion before the other services start
+- **Docker Compose**: paste a `docker-compose.yml` and the app translates it into `container run` calls — project network, dependency ordering, grouped containers on the list with start/stop-all. One-off setup tasks (e.g. database creation) via the `x-init: true` service extension run to completion before the other services start. The `host.containers.internal` alias resolves to the project network's gateway (your Mac as seen from containers)
 
 ### Live statistics
 ![Statistics](docs/screenshots/stats.png)

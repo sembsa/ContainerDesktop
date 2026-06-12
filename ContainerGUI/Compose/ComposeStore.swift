@@ -69,6 +69,14 @@ final class ComposeStore {
             return false
         }
 
+        // Resolve the project network gateway so services can reach the HOST
+        // via the `host.containers.internal` alias (each network has its own
+        // subnet, so the gateway IP differs per project).
+        let gateway = await networkGateway(project.name)
+        if let gateway {
+            appendLog(prefix: nil, line: String(format: String(localized: "host.containers.internal → %@"), gateway))
+        }
+
         // Track services that failed so we can fail their (transitive) dependents.
         var failedServices: Set<String> = []
         var allSucceeded = true
@@ -87,7 +95,7 @@ final class ComposeStore {
                 _ = try? await cli.run(["rm", "--force", resolvedName])
             }
 
-            var config = makeConfiguration(for: service, project: project)
+            var config = makeConfiguration(for: service, project: project, gateway: gateway)
             config.removeOnExit = true
             let arguments = RunCommandBuilder.arguments(for: config, progress: "plain", detach: false)
 
@@ -134,7 +142,7 @@ final class ComposeStore {
                 _ = try? await cli.run(["rm", "--force", resolvedName])
             }
 
-            let config = makeConfiguration(for: service, project: project)
+            let config = makeConfiguration(for: service, project: project, gateway: gateway)
             let arguments = RunCommandBuilder.arguments(for: config, progress: "plain")
 
             do {
@@ -162,17 +170,17 @@ final class ComposeStore {
 
     // MARK: - Configuration mapping
 
-    private func makeConfiguration(for service: ComposeService, project: ComposeProject) -> RunConfiguration {
+    private func makeConfiguration(for service: ComposeService, project: ComposeProject, gateway: String?) -> RunConfiguration {
         var config = RunConfiguration()
         config.image = service.image
         config.name = service.resolvedName(project: project.name)
-        config.command = service.command
+        config.command = Self.substituteHostAlias(service.command, gateway: gateway)
         config.entrypoint = service.entrypoint
         config.workdir = service.workdir
         config.user = service.user
         config.network = project.name
         config.environment = service.environment.map {
-            RunConfiguration.KeyValue(key: $0.key, value: $0.value)
+            RunConfiguration.KeyValue(key: $0.key, value: Self.substituteHostAlias($0.value, gateway: gateway))
         }
         config.ports = service.ports.compactMap(Self.parsePort)
         config.volumes = service.volumes.compactMap(Self.parseVolume)
@@ -250,6 +258,19 @@ final class ComposeStore {
             return errorLine
         }
         return lines.last(where: { !$0.isEmpty }) ?? message
+    }
+
+
+    /// Replaces the `host.containers.internal` alias with the project
+    /// network's gateway IP (the Mac as seen from inside the containers).
+    nonisolated static func substituteHostAlias(_ value: String, gateway: String?) -> String {
+        guard let gateway, value.contains("host.containers.internal") else { return value }
+        return value.replacingOccurrences(of: "host.containers.internal", with: gateway)
+    }
+
+    private func networkGateway(_ name: String) async -> String? {
+        let networks = try? await cli.json(["network", "inspect", name], as: [NetworkInfo].self, appendFormat: false)
+        return networks?.first?.status?.ipv4Gateway
     }
 
     private func appendLog(prefix: String?, line: String) {
