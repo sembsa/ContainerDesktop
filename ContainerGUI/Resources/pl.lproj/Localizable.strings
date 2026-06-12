@@ -459,3 +459,8 @@
 "Dokumentacja" = "Dokumentacja";
 "Otwiera dokumentację Compose w przeglądarce" = "Otwiera dokumentację Compose w przeglądarce";
 "Compose" = "Compose";
+
+/* App — menu Pomoc */
+"Pomoc Container Desktop" = "Pomoc Container Desktop";
+"Dokumentacja Compose" = "Dokumentacja Compose";
+"Zgłoś problem…" = "Zgłoś problem…";

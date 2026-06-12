@@ -31,6 +31,20 @@ struct ContainerGUIApp: App {
         .windowResizability(.contentMinSize)
         .defaultSize(width: 1100, height: 720)
         .defaultPosition(.center)
+        .commands {
+            CommandGroup(replacing: .help) {
+                Button("Pomoc Container Desktop") {
+                    NSWorkspace.shared.open(AppDocs.url())
+                }
+                .keyboardShortcut("?", modifiers: .command)
+                Button("Dokumentacja Compose") {
+                    NSWorkspace.shared.open(AppDocs.url(anchor: "compose"))
+                }
+                Button("Zgłoś problem…") {
+                    NSWorkspace.shared.open(URL(string: "https://github.com/sembsa/ContainerDesktop/issues")!)
+                }
+            }
+        }
 
         MenuBarExtra {
             MenuBarContent()

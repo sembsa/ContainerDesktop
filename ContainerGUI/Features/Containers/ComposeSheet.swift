@@ -17,13 +17,6 @@ struct ComposeSheet: View {
 
     private var store: ComposeStore { model.compose }
 
-    /// Locale-aware documentation page on the project site.
-    private static var documentationURL: URL {
-        let isPolish = Locale.preferredLanguages.first?.hasPrefix("pl") ?? false
-        let page = isPolish ? "docs.pl.html" : "docs.html"
-        return URL(string: "https://sembsa.github.io/ContainerDesktop/\(page)#compose")!
-    }
-
     var body: some View {
         VStack(spacing: 0) {
             header
@@ -44,7 +37,7 @@ struct ComposeSheet: View {
             Text("Uruchom Docker Compose")
                 .font(.headline)
             Spacer()
-            Link(destination: Self.documentationURL) {
+            Link(destination: AppDocs.url(anchor: "compose")) {
                 Label("Dokumentacja", systemImage: "book")
                     .font(.subheadline)
             }
