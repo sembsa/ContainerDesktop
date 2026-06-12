@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 /// Arkusz uruchamiania docker-compose — wg wzorca RunContainerSheet.
@@ -194,13 +195,24 @@ struct ComposeSheet: View {
             }
             if !store.logLines.isEmpty {
                 StreamLogBox(lines: store.logLines.map { LogLine(text: $0) })
-                    .frame(height: 140)
+                    .frame(height: 220)
             }
         } header: {
             HStack(spacing: 5) {
                 Image(systemName: "chart.bar.fill")
                     .foregroundStyle(Color.cyan.gradient)
                 Text("Postęp")
+                Spacer()
+                if !store.logLines.isEmpty {
+                    Button {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(store.logLines.joined(separator: "\n"), forType: .string)
+                    } label: {
+                        Label("Kopiuj logi", systemImage: "doc.on.doc")
+                    }
+                    .buttonStyle(.borderless)
+                    .controlSize(.small)
+                }
             }
         }
     }

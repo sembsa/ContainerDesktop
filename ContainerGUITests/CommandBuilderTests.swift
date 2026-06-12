@@ -246,4 +246,30 @@ final class CommandBuilderTests: XCTestCase {
         XCTAssertLessThan(index + 1, args.count, "Flaga \(flag) bez wartości", file: file, line: line)
         XCTAssertEqual(args[index + 1], value, file: file, line: line)
     }
+
+    func testMultiTokenEntrypointSplitsIntoExecutableAndLeadingArgs() {
+        var config = RunConfiguration()
+        config.image = "registry.example/server:1"
+        config.entrypoint = "dotnet dbmgr.dll"
+        config.command = "create sttest --verbose"
+        let args = RunCommandBuilder.arguments(for: config)
+
+        let entrypointIndex = args.firstIndex(of: "--entrypoint")!
+        XCTAssertEqual(args[entrypointIndex + 1], "dotnet")
+        XCTAssertFalse(args.contains("dotnet dbmgr.dll"))
+
+        let imageIndex = args.firstIndex(of: "registry.example/server:1")!
+        XCTAssertEqual(Array(args[(imageIndex + 1)...]), ["dbmgr.dll", "create", "sttest", "--verbose"])
+    }
+
+    func testSingleTokenEntrypointStaysOnFlag() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+        config.entrypoint = "/bin/sh"
+        let args = RunCommandBuilder.arguments(for: config)
+        let entrypointIndex = args.firstIndex(of: "--entrypoint")!
+        XCTAssertEqual(args[entrypointIndex + 1], "/bin/sh")
+        XCTAssertEqual(args.last, "alpine:latest")
+    }
+
 }

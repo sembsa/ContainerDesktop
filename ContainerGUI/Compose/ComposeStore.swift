@@ -99,7 +99,7 @@ final class ComposeStore {
                 setPhase(.completed, for: service.name)
             } catch {
                 let message = (error as? CLIError)?.errorDescription ?? error.localizedDescription
-                setPhase(.failed(message), for: service.name)
+                setPhase(.failed(summarizeFailure(message)), for: service.name)
                 appendLog(prefix: service.name, line: message)
 
                 // An init task failed: abort everything that has not run yet.
@@ -144,7 +144,7 @@ final class ComposeStore {
                 setPhase(.running, for: service.name)
             } catch let error as CLIError {
                 let message = error.errorDescription ?? String(localized: "nieznany błąd")
-                setPhase(.failed(message), for: service.name)
+                setPhase(.failed(summarizeFailure(message)), for: service.name)
                 failedServices.insert(service.name)
                 allSucceeded = false
                 appendLog(prefix: service.name, line: message)
@@ -239,6 +239,17 @@ final class ComposeStore {
         if let index = statuses.firstIndex(where: { $0.id == name }) {
             statuses[index].phase = phase
         }
+    }
+
+
+    /// CLIError.command carries the last ~10 merged output lines, which are
+    /// often progress noise — surface the actual "Error:" line in the phase.
+    private func summarizeFailure(_ message: String) -> String {
+        let lines = message.split(separator: "\n").map { $0.trimmingCharacters(in: .whitespaces) }
+        if let errorLine = lines.last(where: { $0.localizedCaseInsensitiveContains("error") }) {
+            return errorLine
+        }
+        return lines.last(where: { !$0.isEmpty }) ?? message
     }
 
     private func appendLog(prefix: String?, line: String) {

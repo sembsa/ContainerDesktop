@@ -431,3 +431,6 @@
 "zależność %@ nie wystartowała" = "zależność %@ nie wystartowała";
 "nieznany błąd" = "nieznany błąd";
 "przerwano: zadanie init %@ nie powiodło się" = "przerwano: zadanie init %@ nie powiodło się";
+
+/* Features/Containers/ComposeSheet.swift */
+"Kopiuj logi" = "Kopiuj logi";

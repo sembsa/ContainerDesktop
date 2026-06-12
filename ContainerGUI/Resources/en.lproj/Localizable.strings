@@ -431,3 +431,6 @@
 "zależność %@ nie wystartowała" = "dependency %@ did not start";
 "nieznany błąd" = "unknown error";
 "przerwano: zadanie init %@ nie powiodło się" = "aborted: init task %@ failed";
+
+/* Features/Containers/ComposeSheet.swift */
+"Kopiuj logi" = "Copy logs";

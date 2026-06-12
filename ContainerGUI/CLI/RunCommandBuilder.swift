@@ -59,7 +59,19 @@ enum RunCommandBuilder {
         appendOption(&args, "--network", config.network)
         appendOption(&args, "--workdir", config.workdir)
         appendOption(&args, "--user", config.user)
-        appendOption(&args, "--entrypoint", config.entrypoint)
+
+        // The CLI's --entrypoint takes a SINGLE executable. A multi-token
+        // entrypoint (compose style: ["dotnet", "dbmgr.dll"]) is split: first
+        // token goes to --entrypoint, the rest become leading process args
+        // placed before the command (OCI entrypoint+cmd concatenation).
+        var entrypointExtras: [String] = []
+        if !config.entrypoint.isEmpty {
+            let tokens = tokenize(config.entrypoint)
+            if let first = tokens.first {
+                args.append(contentsOf: ["--entrypoint", first])
+                entrypointExtras = Array(tokens.dropFirst())
+            }
+        }
 
         for port in config.ports where !port.host.isEmpty && !port.container.isEmpty {
             let proto = port.proto.isEmpty ? "tcp" : port.proto
@@ -86,6 +98,7 @@ enum RunCommandBuilder {
 
         args.append(config.image)
 
+        args.append(contentsOf: entrypointExtras)
         if !config.command.isEmpty {
             args.append(contentsOf: tokenize(config.command))
         }
