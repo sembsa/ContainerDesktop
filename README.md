@@ -11,12 +11,13 @@ Container Desktop does not reimplement any container logic: every action shells 
 ## Features
 
 ### Containers
-- List with live state, IP address and published ports; details panel with **logs, live statistics, file browser, inspect and an embedded terminal** (`exec -it` via SwiftTerm)
+- List with live state, IP address and published ports (with one-click **open in browser** arrows); details panel with **logs, live statistics, file browser, inspect and an embedded terminal** (`exec -it` via SwiftTerm)
+- Native log viewer: continuous selection, copy-all, optional timestamps and **severity colouring** (errors red, warnings orange) tolerant of serilog/.NET/logfmt/klog syntaxes
 - Start / stop / restart / kill / remove / prune, with per-container progress indicators
 - Rich **Run container** dialog: ports, environment variables, volumes (pick an existing volume or a local folder), resources, network, architecture (arm64 / amd64 with automatic Rosetta), entrypoint, `--rm` — with a live, copy-pasteable shell preview of the exact command
 - **Change command / configuration** of an existing container: the app recreates it with the same configuration pre-filled for editing (volume data survives)
 - Live image-pull progress streamed straight into the dialog
-- **Docker Compose**: paste a `docker-compose.yml` and the app translates it into `container run` calls — project network, dependency ordering, grouped containers on the list with start/stop-all. One-off setup tasks (e.g. database creation) via the `x-init: true` service extension run to completion before the other services start. The `host.containers.internal` alias resolves to the project network's gateway (your Mac as seen from containers)
+- **Docker Compose**: paste a `docker-compose.yml` and the app translates it into `container run` calls — project network, dependency ordering, grouped containers on the list with start/stop-all. One-off setup tasks (e.g. database creation) via the `x-init: true` service extension run to completion before the other services start. The `host.containers.internal` alias resolves to the project network's gateway (your Mac as seen from containers), and service hostnames are wired between containers via `/etc/hosts` (works around the broken name DNS in container 1.0.0). A "skip init tasks" toggle reruns a stack without repeating one-off setup
 
 ### Live statistics
 ![Statistics](docs/screenshots/stats.png)

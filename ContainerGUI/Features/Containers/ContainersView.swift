@@ -466,6 +466,7 @@ struct ContainersView: View {
                 showComposeSheet = true
             } label: {
                 Label("Compose…", systemImage: "square.stack.3d.down.right")
+                    .labelStyle(.titleAndIcon)
             }
             .disabled(!model.system.serviceState.isRunning)
 

@@ -11,12 +11,13 @@ Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje 
 ## Możliwości
 
 ### Kontenery
-- Lista ze stanem na żywo, adresem IP i opublikowanymi portami; panel szczegółów z **logami, statystykami na żywo, przeglądarką plików, inspect i wbudowanym terminalem** (`exec -it` przez SwiftTerm)
+- Lista ze stanem na żywo, adresem IP i opublikowanymi portami (ze strzałkami **otwórz w przeglądarce**); panel szczegółów z **logami, statystykami na żywo, przeglądarką plików, inspect i wbudowanym terminalem** (`exec -it` przez SwiftTerm)
+- Natywny podgląd logów: ciągłe zaznaczanie, kopiowanie całości, opcjonalne znaczniki czasu i **kolorowanie poziomów** (błędy na czerwono, ostrzeżenia na pomarańczowo) tolerujące składnie serilog/.NET/logfmt/klog
 - Start / stop / restart / kill / usuń / wyczyść, ze wskaźnikami postępu per kontener
 - Rozbudowany dialog **Uruchom kontener**: porty, zmienne środowiskowe, wolumeny (wybór istniejącego wolumenu albo lokalnego folderu), zasoby, sieć, architektura (arm64 / amd64 z automatyczną Rosettą), entrypoint, `--rm` — z podglądem dokładnego polecenia shell gotowym do skopiowania
 - **Zmiana polecenia / konfiguracji** istniejącego kontenera: aplikacja odtwarza go z tą samą konfiguracją wstępnie wypełnioną do edycji (dane w wolumenach przetrwają)
 - Postęp pobierania obrazu streamowany prosto do dialogu
-- **Docker Compose**: wklejasz `docker-compose.yml`, a aplikacja tłumaczy go na wywołania `container run` — wspólna sieć projektu, kolejność wg zależności, grupowanie kontenerów na liście ze zbiorczym start/stop. Zadania jednorazowe (np. utworzenie bazy danych) przez rozszerzenie `x-init: true` wykonują się do końca przed startem pozostałych usług. Alias `host.containers.internal` wskazuje bramę sieci projektu (Twojego Maca widzianego z kontenerów)
+- **Docker Compose**: wklejasz `docker-compose.yml`, a aplikacja tłumaczy go na wywołania `container run` — wspólna sieć projektu, kolejność wg zależności, grupowanie kontenerów na liście ze zbiorczym start/stop. Zadania jednorazowe (np. utworzenie bazy danych) przez rozszerzenie `x-init: true` wykonują się do końca przed startem pozostałych usług. Alias `host.containers.internal` wskazuje bramę sieci projektu (Twojego Maca widzianego z kontenerów), a nazwy usług są zszywane między kontenerami przez `/etc/hosts` (obejście zepsutego DNS nazw w container 1.0.0). Przełącznik „Pomiń zadania init" pozwala wznawiać stack bez powtarzania jednorazowej konfiguracji
 
 ### Statystyki na żywo
 ![Statystyki](docs/screenshots/stats.png)
