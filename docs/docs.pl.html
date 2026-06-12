@@ -101,6 +101,7 @@
     <tr><td><code>environment</code></td><td>Forma mapy lub listy.</td></tr>
     <tr><td><code>ports</code></td><td>Składnia krótka (<code>"8080:80"</code>, opcjonalnie <code>/udp</code>) i długa.</td></tr>
     <tr><td><code>volumes</code></td><td><code>źródło:cel[:ro]</code>; nazwane wolumeny muszą już istnieć.</td></tr>
+    <tr><td><code>mem_limit</code> / <code>cpus</code></td><td>Limity zasobów VM (także <code>deploy.resources.limits</code>). Domyślnie 1 GB — pamięciożerne zadania init (np. zasiewanie bazy) zwykle potrzebują <code>mem_limit: 4g</code>.</td></tr>
     <tr><td><code>depends_on</code></td><td>Lista lub mapa (warunki inne niż <em>service_started</em> są ignorowane z ostrzeżeniem).</td></tr>
     <tr><td><code>x-init</code></td><td>Rozszerzenie Container Desktop — zobacz <a href="#x-init">Zadania x-init</a>.</td></tr>
   </table>

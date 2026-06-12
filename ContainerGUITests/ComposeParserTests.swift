@@ -350,4 +350,46 @@ final class ComposeParserTests: XCTestCase {
         XCTAssertEqual(ComposeStore.substituteHostAlias("host.containers.internal", gateway: nil), "host.containers.internal")
     }
 
+
+    func testMemLimitAndCpusParsed() throws {
+        let yaml = """
+        services:
+          db:
+            image: alpine:latest
+            mem_limit: 4g
+            cpus: 2
+        """
+        let project = try ComposeParser.parse(yaml, projectName: "demo")
+        XCTAssertEqual(project.services[0].memory, "4G")
+        XCTAssertEqual(project.services[0].cpus, "2")
+    }
+
+    func testDeployResourceLimitsParsed() throws {
+        let yaml = """
+        services:
+          db:
+            image: alpine:latest
+            deploy:
+              resources:
+                limits:
+                  memory: 512M
+                  cpus: "1.5"
+        """
+        let project = try ComposeParser.parse(yaml, projectName: "demo")
+        XCTAssertEqual(project.services[0].memory, "512M")
+        XCTAssertEqual(project.services[0].cpus, "1.5")
+        XCTAssertFalse(project.warnings.contains { $0.contains("deploy") })
+    }
+
+    func testMemLimitBytesIntConverted() throws {
+        let yaml = """
+        services:
+          db:
+            image: alpine:latest
+            mem_limit: 1073741824
+        """
+        let project = try ComposeParser.parse(yaml, projectName: "demo")
+        XCTAssertEqual(project.services[0].memory, "1024M")
+    }
+
 }

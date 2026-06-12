@@ -97,7 +97,7 @@ enum ComposeParser {
     private static let knownServiceKeys: Set<String> = [
         "image", "build", "container_name", "command", "entrypoint",
         "working_dir", "user", "environment", "ports", "volumes", "depends_on",
-        "x-init",
+        "x-init", "mem_limit", "cpus", "deploy",
     ]
 
     private static func parseService(
@@ -138,6 +138,17 @@ enum ComposeParser {
             )
         }
 
+        // Resource limits: compose v2 `mem_limit`/`cpus` or v3
+        // `deploy.resources.limits.{memory,cpus}` → CLI --memory/--cpus.
+        var memory = normalizeMemory(dict["mem_limit"])
+        var cpus = normalizeNumber(dict["cpus"])
+        if let deploy = dict["deploy"] as? [String: Any],
+           let resources = deploy["resources"] as? [String: Any],
+           let limits = resources["limits"] as? [String: Any] {
+            if memory.isEmpty { memory = normalizeMemory(limits["memory"]) }
+            if cpus.isEmpty { cpus = normalizeNumber(limits["cpus"]) }
+        }
+
         return ComposeService(
             name: name,
             image: image,
@@ -150,8 +161,37 @@ enum ComposeParser {
             ports: ports,
             volumes: volumes,
             dependsOn: dependsOn,
+            memory: memory,
+            cpus: cpus,
             isInit: isInit
         )
+    }
+
+    /// Normalizes a compose memory value ("4g", "512m", bytes as Int) to the
+    /// CLI's --memory format ("4G", "512M").
+    private static func normalizeMemory(_ value: Any?) -> String {
+        switch value {
+        case let text as String:
+            let trimmed = text.trimmingCharacters(in: .whitespaces)
+            guard !trimmed.isEmpty else { return "" }
+            return trimmed.uppercased().replacingOccurrences(of: "B", with: "")
+        case let bytes as Int:
+            guard bytes > 0 else { return "" }
+            let megabytes = max(1, Int((Double(bytes) / 1_048_576).rounded(.up)))
+            return "\(megabytes)M"
+        default:
+            return ""
+        }
+    }
+
+    private static func normalizeNumber(_ value: Any?) -> String {
+        switch value {
+        case let text as String: return text.trimmingCharacters(in: .whitespaces)
+        case let int as Int: return String(int)
+        case let double as Double:
+            return double == double.rounded() ? String(Int(double)) : String(double)
+        default: return ""
+        }
     }
 
     // MARK: - Field helpers

@@ -101,6 +101,7 @@
     <tr><td><code>environment</code></td><td>Map or list form.</td></tr>
     <tr><td><code>ports</code></td><td>Short syntax (<code>"8080:80"</code>, optionally <code>/udp</code>) and long syntax.</td></tr>
     <tr><td><code>volumes</code></td><td><code>source:target[:ro]</code>; named volumes must already exist.</td></tr>
+    <tr><td><code>mem_limit</code> / <code>cpus</code></td><td>VM resource limits (also <code>deploy.resources.limits</code>). The default is 1 GB — memory-hungry init tasks (e.g. database seeding) usually need <code>mem_limit: 4g</code>.</td></tr>
     <tr><td><code>depends_on</code></td><td>List or map (conditions other than <em>service_started</em> are ignored with a warning).</td></tr>
     <tr><td><code>x-init</code></td><td>Container Desktop extension — see <a href="#x-init">x-init tasks</a>.</td></tr>
   </table>

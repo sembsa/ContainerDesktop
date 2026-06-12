@@ -202,6 +202,8 @@ final class ComposeStore {
         config.entrypoint = service.entrypoint
         config.workdir = service.workdir
         config.user = service.user
+        config.memory = service.memory
+        config.cpus = service.cpus
         config.network = project.name
         config.environment = service.environment.map {
             RunConfiguration.KeyValue(key: $0.key, value: Self.substituteHostAlias($0.value, gateway: gateway))

@@ -41,6 +41,10 @@ struct ComposeService: Sendable, Hashable, Identifiable {
     /// Volume specs, e.g. "src:dst" or "src:dst:ro".
     var volumes: [String]
     var dependsOn: [String]
+    /// Memory limit for the container VM (CLI --memory format, e.g. "4G", "512M").
+    var memory: String = ""
+    /// CPU limit (CLI --cpus).
+    var cpus: String = ""
     /// `true` for one-off init tasks (compose extension `x-init: true`). Init
     /// services run first, sequentially and blocking, before regular services.
     var isInit: Bool
@@ -62,6 +66,8 @@ struct ComposeService: Sendable, Hashable, Identifiable {
             && lhs.ports == rhs.ports
             && lhs.volumes == rhs.volumes
             && lhs.dependsOn == rhs.dependsOn
+            && lhs.memory == rhs.memory
+            && lhs.cpus == rhs.cpus
             && lhs.isInit == rhs.isInit
     }
 
@@ -80,6 +86,8 @@ struct ComposeService: Sendable, Hashable, Identifiable {
         hasher.combine(ports)
         hasher.combine(volumes)
         hasher.combine(dependsOn)
+        hasher.combine(memory)
+        hasher.combine(cpus)
         hasher.combine(isInit)
     }
 
@@ -95,6 +103,8 @@ struct ComposeService: Sendable, Hashable, Identifiable {
         ports: [String] = [],
         volumes: [String] = [],
         dependsOn: [String] = [],
+        memory: String = "",
+        cpus: String = "",
         isInit: Bool = false
     ) {
         self.name = name
@@ -108,6 +118,8 @@ struct ComposeService: Sendable, Hashable, Identifiable {
         self.ports = ports
         self.volumes = volumes
         self.dependsOn = dependsOn
+        self.memory = memory
+        self.cpus = cpus
         self.isInit = isInit
     }
 }
