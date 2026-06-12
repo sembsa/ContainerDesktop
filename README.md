@@ -95,4 +95,4 @@ SwiftUI views (per feature)  →  @Observable stores  →  ContainerCLI (actor) 
 
 ## License
 
-TBD
+[MIT](LICENSE)

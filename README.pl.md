@@ -95,4 +95,4 @@ Widoki SwiftUI (per sekcja)  →  @Observable stores  →  ContainerCLI (actor) 
 
 ## Licencja
 
-Do ustalenia
+[MIT](LICENSE)
