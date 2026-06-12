@@ -8,6 +8,7 @@ import Observation
 @MainActor @Observable
 final class ComposeStore {
     enum ServicePhase: Equatable {
+        case skipped
         case pending
         case creating
         case running
@@ -36,7 +37,7 @@ final class ComposeStore {
     /// When a target container name already exists and `replaceExisting == true`,
     /// it is removed (`rm --force`) before the service is started.
     @discardableResult
-    func up(_ project: ComposeProject, replaceExisting: Bool) async -> Bool {
+    func up(_ project: ComposeProject, replaceExisting: Bool, skipInit: Bool = false) async -> Bool {
         statuses = project.services.map { ServiceStatus(id: $0.name, phase: .pending) }
         isRunning = true
         defer { isRunning = false }
@@ -81,8 +82,14 @@ final class ComposeStore {
         var failedServices: Set<String> = []
         var allSucceeded = true
 
-        let initServices = project.services.filter { $0.isInit }
+        let initServices = skipInit ? [] : project.services.filter { $0.isInit }
         let regularServices = project.services.filter { !$0.isInit }
+        if skipInit {
+            for service in project.services where service.isInit {
+                setPhase(.skipped, for: service.name)
+                appendLog(prefix: service.name, line: String(localized: "pominięto zadanie init"))
+            }
+        }
 
         // 2. Run init tasks first, sequentially and blocking. They run the same
         // configuration as a regular service but attached (--detach=false) and
@@ -96,7 +103,9 @@ final class ComposeStore {
             }
 
             var config = makeConfiguration(for: service, project: project, gateway: gateway)
-            config.removeOnExit = true
+            // No --rm: on success we remove the container ourselves; on
+            // failure we KEEP it so its logs stay inspectable in the app.
+            config.removeOnExit = false
             let arguments = RunCommandBuilder.arguments(for: config, progress: "plain", detach: false)
 
             do {
@@ -105,10 +114,15 @@ final class ComposeStore {
                     appendLog(prefix: service.name, line: line)
                 }
                 setPhase(.completed, for: service.name)
+                _ = try? await cli.run(["rm", "--force", resolvedName])
             } catch {
                 let message = (error as? CLIError)?.errorDescription ?? error.localizedDescription
                 setPhase(.failed(summarizeFailure(message)), for: service.name)
                 appendLog(prefix: service.name, line: message)
+                appendLog(
+                    prefix: service.name,
+                    line: String(format: String(localized: "kontener %@ zachowany do wglądu logów"), resolvedName)
+                )
 
                 // An init task failed: abort everything that has not run yet.
                 let abortMessage = String(

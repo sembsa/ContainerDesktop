@@ -437,3 +437,8 @@
 
 /* Compose/ComposeStore.swift — alias hosta */
 "host.containers.internal → %@" = "host.containers.internal → %@";
+
+/* Compose — pomijanie init */
+"Pomiń zadania init (x-init)" = "Pomiń zadania init (x-init)";
+"pominięto zadanie init" = "pominięto zadanie init";
+"kontener %@ zachowany do wglądu logów" = "kontener %@ zachowany do wglądu logów";

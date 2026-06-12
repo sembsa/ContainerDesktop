@@ -8,6 +8,7 @@ struct ComposeSheet: View {
 
     @State private var projectName: String = "compose"
     @State private var replaceExisting: Bool = true
+    @State private var skipInit: Bool = false
     @State private var yamlText: String = ""
     @State private var parsedProject: ComposeProject?
     @State private var parseError: String?
@@ -49,6 +50,7 @@ struct ComposeSheet: View {
                 TextField("compose", text: $projectName)
                 HStack(spacing: 4) {
                     Toggle("Zastąp istniejące kontenery o tych samych nazwach", isOn: $replaceExisting)
+                    Toggle("Pomiń zadania init (x-init)", isOn: $skipInit)
                     InfoTip(text: String(localized: "Nazwa grupuje kontenery na liście i tworzy wspólną sieć — kontenery widzą się po swoich nazwach (hostname = nazwa kontenera)."))
                 }
             } header: {
@@ -224,6 +226,10 @@ struct ComposeSheet: View {
             Circle()
                 .fill(Color.secondary)
                 .frame(width: 8, height: 8)
+        case .skipped:
+            Image(systemName: "minus.circle")
+                .foregroundStyle(.secondary)
+                .font(.system(size: 11))
         case .creating:
             ProgressView()
                 .controlSize(.mini)
@@ -304,7 +310,7 @@ struct ComposeSheet: View {
         // the YAML name (e.g. `name: demoapp` reverted to "compose").
         guard let project = parsedProject else { return }
 
-        let success = await store.up(project, replaceExisting: replaceExisting)
+        let success = await store.up(project, replaceExisting: replaceExisting, skipInit: skipInit)
         if success {
             await model.containers.refresh()
             dismiss()
