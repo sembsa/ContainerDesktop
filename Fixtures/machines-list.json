@@ -1,0 +1,12 @@
+[
+  {
+    "diskSize": 78647296,
+    "cpus": 4,
+    "createdDate": "2026-06-11T12:19:27Z",
+    "memory": 12884901888,
+    "default": true,
+    "id": "demo-machine",
+    "ipAddress": "192.168.64.22",
+    "status": "running"
+  }
+]

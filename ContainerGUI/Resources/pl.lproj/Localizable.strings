@@ -1,0 +1,380 @@
+/* ContainerGUI — polskie teksty źródłowe (development language). Mapowanie tożsamościowe. */
+
+/* App/AppModel.swift — tytuły sekcji */
+"Kontenery" = "Kontenery";
+"Obrazy" = "Obrazy";
+"Wolumeny" = "Wolumeny";
+"Sieci" = "Sieci";
+"Rejestry" = "Rejestry";
+"Maszyny" = "Maszyny";
+"System" = "System";
+
+/* App/MenuBarContent.swift */
+"Zatrzymaj" = "Zatrzymaj";
+"Uruchom" = "Uruchom";
+"Działające kontenery: %lld" = "Działające kontenery: %lld";
+"Otwórz okno główne" = "Otwórz okno główne";
+"Odśwież" = "Odśwież";
+"Zakończ" = "Zakończ";
+"Usługa działa" = "Usługa działa";
+"Usługa zatrzymana" = "Usługa zatrzymana";
+"Uruchamianie…" = "Uruchamianie…";
+"Zatrzymywanie…" = "Zatrzymywanie…";
+"Sprawdzanie…" = "Sprawdzanie…";
+
+/* App/RootView.swift */
+"Wystąpił błąd" = "Wystąpił błąd";
+
+/* App/SidebarView.swift */
+"Zasoby" = "Zasoby";
+"Konfiguracja" = "Konfiguracja";
+
+/* App/SettingsView.swift */
+"Narzędzie container" = "Narzędzie container";
+"Ścieżka pliku wykonywalnego" = "Ścieżka pliku wykonywalnego";
+"Wybierz…" = "Wybierz…";
+"Wykryta ścieżka" = "Wykryta ścieżka";
+"nie znaleziono" = "nie znaleziono";
+"Odświeżanie" = "Odświeżanie";
+"Co %lld s" = "Co %lld s";
+
+/* CLI/CLIError.swift */
+"Nie znaleziono narzędzia container. Zainstaluj je lub wskaż ścieżkę w Ustawieniach." = "Nie znaleziono narzędzia container. Zainstaluj je lub wskaż ścieżkę w Ustawieniach.";
+"Usługa systemowa container nie jest uruchomiona. Uruchom ją, aby kontynuować." = "Usługa systemowa container nie jest uruchomiona. Uruchom ją, aby kontynuować.";
+"Polecenie zakończyło się błędem (kod %d)." = "Polecenie zakończyło się błędem (kod %d).";
+"Polecenie „container %@” nie odpowiedziało w ciągu %d s i zostało przerwane." = "Polecenie „container %@” nie odpowiedziało w ciągu %d s i zostało przerwane.";
+"Nie udało się odczytać odpowiedzi narzędzia: %@" = "Nie udało się odczytać odpowiedzi narzędzia: %@";
+
+/* CLI/ContainerCLI.swift */
+"pusta odpowiedź" = "pusta odpowiedź";
+
+/* Common/JSONValue.swift */
+"tak" = "tak";
+"nie" = "nie";
+
+/* Common/EmptyStateView.swift */
+"Ta sekcja zostanie udostępniona w kolejnym etapie." = "Ta sekcja zostanie udostępniona w kolejnym etapie.";
+
+/* Common/FileBrowser.swift */
+"Przeglądanie przez container exec ls — wymaga działającego kontenera. Kopiowanie plików: container cp w obie strony." = "Przeglądanie przez container exec ls — wymaga działającego kontenera. Kopiowanie plików: container cp w obie strony.";
+"Ścieżka" = "Ścieżka";
+"Wyślij…" = "Wyślij…";
+"Pobierz na dysk" = "Pobierz na dysk";
+"Pusty katalog" = "Pusty katalog";
+"Wybierz plik lub folder do wysłania" = "Wybierz plik lub folder do wysłania";
+"Wysyłanie…" = "Wysyłanie…";
+"Wybierz folder docelowy" = "Wybierz folder docelowy";
+"Pobieranie…" = "Pobieranie…";
+
+/* Common/InfoTip.swift */
+"Co to jest?" = "Co to jest?";
+
+/* Common/OnboardingView.swift */
+"Nie znaleziono narzędzia container" = "Nie znaleziono narzędzia container";
+"Aplikacja jest nakładką na narzędzie wiersza poleceń Apple container. Zainstaluj je lub wskaż lokalizację pliku wykonywalnego." = "Aplikacja jest nakładką na narzędzie wiersza poleceń Apple container. Zainstaluj je lub wskaż lokalizację pliku wykonywalnego.";
+"Wskaż plik…" = "Wskaż plik…";
+"Strona projektu" = "Strona projektu";
+"Szukane lokalizacje: /usr/local/bin/container, /opt/homebrew/bin/container" = "Szukane lokalizacje: /usr/local/bin/container, /opt/homebrew/bin/container";
+"Wskaż plik wykonywalny container" = "Wskaż plik wykonywalny container";
+
+/* Common/ServiceBanner.swift */
+"Usługa systemowa nie jest uruchomiona" = "Usługa systemowa nie jest uruchomiona";
+"Uruchom usługę container, aby zarządzać kontenerami i obrazami." = "Uruchom usługę container, aby zarządzać kontenerami i obrazami.";
+"Uruchom usługę" = "Uruchom usługę";
+
+/* Features/Containers/ContainerDetailView.swift */
+"Szczegóły kontenera: Logi (stdout/stderr procesu), Statystyki na żywo, Pliki (przeglądanie przez exec), Inspect (pełna konfiguracja) i Terminal (interaktywna powłoka)." = "Szczegóły kontenera: Logi (stdout/stderr procesu), Statystyki na żywo, Pliki (przeglądanie przez exec), Inspect (pełna konfiguracja) i Terminal (interaktywna powłoka).";
+"Logi" = "Logi";
+"Statystyki" = "Statystyki";
+"Pliki" = "Pliki";
+"Inspect" = "Inspect";
+"Terminal" = "Terminal";
+"Widok" = "Widok";
+"Kontener nie działa" = "Kontener nie działa";
+"Statystyki są dostępne tylko dla uruchomionego kontenera." = "Statystyki są dostępne tylko dla uruchomionego kontenera.";
+"Przeglądanie plików wymaga działającego kontenera. Eksport całego systemu plików jest dostępny przyciskiem Eksportuj." = "Przeglądanie plików wymaga działającego kontenera. Eksport całego systemu plików jest dostępny przyciskiem Eksportuj.";
+"Uruchom kontener, aby otworzyć interaktywną powłokę." = "Uruchom kontener, aby otworzyć interaktywną powłokę.";
+"Eksportuj" = "Eksportuj";
+"Eksportuj system plików kontenera do archiwum tar" = "Eksportuj system plików kontenera do archiwum tar";
+"Zmień konfigurację…" = "Zmień konfigurację…";
+"Wykonuję…" = "Wykonuję…";
+"Restart" = "Restart";
+"Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie." = "Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie.";
+"Zapisz system plików kontenera jako archiwum tar" = "Zapisz system plików kontenera jako archiwum tar";
+
+/* Features/Containers/ContainersView.swift */
+"Usunąć kontener?" = "Usunąć kontener?";
+"Usunąć zatrzymane kontenery?" = "Usunąć zatrzymane kontenery?";
+"Usuń" = "Usuń";
+"Anuluj" = "Anuluj";
+"Usuń zatrzymane" = "Usuń zatrzymane";
+"Kontener %@ zostanie nieodwracalnie usunięty." = "Kontener %@ zostanie nieodwracalnie usunięty.";
+"Usunięte zostaną wszystkie zatrzymane kontenery." = "Usunięte zostaną wszystkie zatrzymane kontenery.";
+"Brak kontenerów" = "Brak kontenerów";
+"Uruchom kontener z obrazu, aby zobaczyć go tutaj." = "Uruchom kontener z obrazu, aby zobaczyć go tutaj.";
+"Uruchom kontener…" = "Uruchom kontener…";
+"Nazwa" = "Nazwa";
+"Obraz" = "Obraz";
+"Stan" = "Stan";
+"Adres IP" = "Adres IP";
+"Porty" = "Porty";
+"Akcja w toku…" = "Akcja w toku…";
+"Uruchom ponownie" = "Uruchom ponownie";
+"Zabij" = "Zabij";
+"Zmień polecenie / konfigurację…" = "Zmień polecenie / konfigurację…";
+"Eksportuj do tar…" = "Eksportuj do tar…";
+"Usuń…" = "Usuń…";
+"Uruchom kontener" = "Uruchom kontener";
+"Wyczyść zatrzymane" = "Wyczyść zatrzymane";
+
+/* Features/Containers/InspectView.swift */
+"Zamontowane wolumeny i katalogi. Dane w nich przetrwają usunięcie kontenera." = "Zamontowane wolumeny i katalogi. Dane w nich przetrwają usunięcie kontenera.";
+"Sieci, do których podłączony jest kontener, wraz z adresem IP przydzielonym przez lokalny DHCP." = "Sieci, do których podłączony jest kontener, wraz z adresem IP przydzielonym przez lokalny DHCP.";
+"Przegląd" = "Przegląd";
+"Utworzony" = "Utworzony";
+"Uruchomiony" = "Uruchomiony";
+"Platforma" = "Platforma";
+"Tylko-do-odczytu" = "Tylko-do-odczytu";
+"Wirtualizacja" = "Wirtualizacja";
+"Polecenie" = "Polecenie";
+"Katalog roboczy" = "Katalog roboczy";
+"CPU: %@ · Pamięć: %@" = "CPU: %@ · Pamięć: %@";
+"Zmienne środowiskowe (%lld)" = "Zmienne środowiskowe (%lld)";
+"Kopiuj wszystkie" = "Kopiuj wszystkie";
+"Kopiuj %@" = "Kopiuj %@";
+"Porty (%lld)" = "Porty (%lld)";
+"Montowania (%lld)" = "Montowania (%lld)";
+"Etykiety (%lld)" = "Etykiety (%lld)";
+"Sieci (%lld)" = "Sieci (%lld)";
+"Surowy JSON" = "Surowy JSON";
+
+/* Features/Containers/LogsView.swift */
+"Brak logów" = "Brak logów";
+"Kontener nie wypisał nic na stdout/stderr. Kontenery typu `sleep` nie generują logów." = "Kontener nie wypisał nic na stdout/stderr. Kontenery typu `sleep` nie generują logów.";
+"Wczytywanie logów…" = "Wczytywanie logów…";
+"Autoprzewijanie" = "Autoprzewijanie";
+"[błąd strumienia logów: %@]" = "[błąd strumienia logów: %@]";
+
+/* Features/Containers/RunContainerSheet.swift */
+"Uruchom z nową konfiguracją" = "Uruchom z nową konfiguracją";
+"Podstawowe" = "Podstawowe";
+"Obraz (np. alpine:latest)" = "Obraz (np. alpine:latest)";
+"Nazwa (opcjonalnie)" = "Nazwa (opcjonalnie)";
+"Polecenie (opcjonalnie, np. sleep 600)" = "Polecenie (opcjonalnie, np. sleep 600)";
+"Zastąp istniejący kontener (najpierw usunie obecny)" = "Zastąp istniejący kontener (najpierw usunie obecny)";
+"CLI nie pozwala zmienić polecenia działającego kontenera. Aplikacja utworzy nowy kontener z tą samą konfiguracją — przy włączonym zastępowaniu stary zostanie usunięty, a nazwa zachowana. Dane w wolumenach przetrwają; dane zapisane poza wolumenami przepadną." = "CLI nie pozwala zmienić polecenia działającego kontenera. Aplikacja utworzy nowy kontener z tą samą konfiguracją — przy włączonym zastępowaniu stary zostanie usunięty, a nazwa zachowana. Dane w wolumenach przetrwają; dane zapisane poza wolumenami przepadną.";
+"Zmień nazwę albo włącz zastępowanie — kontener o tej nazwie już istnieje." = "Zmień nazwę albo włącz zastępowanie — kontener o tej nazwie już istnieje.";
+"Porty (host → kontener)" = "Porty (host → kontener)";
+"Przekierowanie portu: localhost:port-hosta prowadzi do portu wewnątrz kontenera. Np. 8080:80 — strona z kontenera będzie pod http://localhost:8080." = "Przekierowanie portu: localhost:port-hosta prowadzi do portu wewnątrz kontenera. Np. 8080:80 — strona z kontenera będzie pod http://localhost:8080.";
+"host" = "host";
+"kontener" = "kontener";
+"Zmienne środowiskowe" = "Zmienne środowiskowe";
+"Zmienne przekazywane do procesu w kontenerze, np. hasła czy konfiguracja. Format KLUCZ=wartość." = "Zmienne przekazywane do procesu w kontenerze, np. hasła czy konfiguracja. Format KLUCZ=wartość.";
+"KLUCZ" = "KLUCZ";
+"wartość" = "wartość";
+"Wolumeny (źródło → cel)" = "Wolumeny (źródło → cel)";
+"Trwały zapis danych: nazwa wolumenu (utworzonego w zakładce Wolumeny) albo ścieżka lokalna, montowana pod wskazaną ścieżką w kontenerze. Dane przetrwają usunięcie kontenera." = "Trwały zapis danych: nazwa wolumenu (utworzonego w zakładce Wolumeny) albo ścieżka lokalna, montowana pod wskazaną ścieżką w kontenerze. Dane przetrwają usunięcie kontenera.";
+"źródło / nazwa" = "źródło / nazwa";
+"ścieżka w kontenerze" = "ścieżka w kontenerze";
+"Wybierz folder z dysku…" = "Wybierz folder z dysku…";
+"Wybierz folder do zamontowania w kontenerze" = "Wybierz folder do zamontowania w kontenerze";
+"CPU (np. 2)" = "CPU (np. 2)";
+"Pamięć (np. 512M, 2G)" = "Pamięć (np. 512M, 2G)";
+"Sieć" = "Sieć";
+"domyślna" = "domyślna";
+"Limit zasobów maszyny wirtualnej kontenera. CPU: liczba rdzeni (np. 2). Pamięć: liczba z jednostką, np. 512M lub 2G." = "Limit zasobów maszyny wirtualnej kontenera. CPU: liczba rdzeni (np. 2). Pamięć: liczba z jednostką, np. 512M lub 2G.";
+"Zaawansowane" = "Zaawansowane";
+"Architektura" = "Architektura";
+"arm64 (natywna)" = "arm64 (natywna)";
+"amd64 (Intel)" = "amd64 (Intel)";
+"Obrazy zbudowane dla Intel (amd64) wymagają wybrania tej architektury. Włączona Rosetta znacząco przyspiesza ich działanie na Apple Silicon." = "Obrazy zbudowane dla Intel (amd64) wymagają wybrania tej architektury. Włączona Rosetta znacząco przyspiesza ich działanie na Apple Silicon.";
+"Użytkownik" = "Użytkownik";
+"Włącz Rosetta" = "Włącz Rosetta";
+"Pozwala uruchamiać obrazy x86_64 (Intel) na Apple Silicon przez tłumaczenie Rosetta. Wolniejsze niż natywne arm64." = "Pozwala uruchamiać obrazy x86_64 (Intel) na Apple Silicon przez tłumaczenie Rosetta. Wolniejsze niż natywne arm64.";
+"Usuń po zatrzymaniu (--rm)" = "Usuń po zatrzymaniu (--rm)";
+"Kontener zniknie automatycznie po zatrzymaniu — przydatne do jednorazowych zadań. Logi i dane (poza wolumenami) przepadną." = "Kontener zniknie automatycznie po zatrzymaniu — przydatne do jednorazowych zadań. Logi i dane (poza wolumenami) przepadną.";
+"Podgląd polecenia" = "Podgląd polecenia";
+"Pobieranie obrazu może chwilę potrwać…" = "Pobieranie obrazu może chwilę potrwać…";
+"Dodaj" = "Dodaj";
+
+/* Features/Containers/StatsView.swift */
+"Zbieranie danych…" = "Zbieranie danych…";
+"Czas" = "Czas";
+"Wartość" = "Wartość";
+"Seria" = "Seria";
+"Wczytywanie statystyk…" = "Wczytywanie statystyk…";
+"Ostatnie %@" = "Ostatnie %@";
+"Okno" = "Okno";
+"Pamięć" = "Pamięć";
+"Odebrane" = "Odebrane";
+"Wysłane" = "Wysłane";
+"Odczyt" = "Odczyt";
+"Zapis" = "Zapis";
+"Procesy" = "Procesy";
+"Łącznie od startu — Sieć: ↓ %@ ↑ %@ · Dysk: odczyt %@, zapis %@" = "Łącznie od startu — Sieć: ↓ %@ ↑ %@ · Dysk: odczyt %@, zapis %@";
+"Procent czasu procesora zużywany przez kontener. Może przekraczać 100%, gdy kontener używa wielu rdzeni." = "Procent czasu procesora zużywany przez kontener. Może przekraczać 100%, gdy kontener używa wielu rdzeni.";
+"Dysk" = "Dysk";
+"Przepływ danych na sekundę (nie suma). Łączne liczniki od startu są pod wykresami." = "Przepływ danych na sekundę (nie suma). Łączne liczniki od startu są pod wykresami.";
+"Odczyt i zapis na sekundę (nie suma). Łączne liczniki od startu są pod wykresami." = "Odczyt i zapis na sekundę (nie suma). Łączne liczniki od startu są pod wykresami.";
+
+/* Features/Images/BuildImageSheet.swift */
+"Zbuduj obraz" = "Zbuduj obraz";
+"Dockerfile (opcjonalnie)" = "Dockerfile (opcjonalnie)";
+"Bez cache" = "Bez cache";
+"Gotowe" = "Gotowe";
+"Zamknij" = "Zamknij";
+"Zbuduj" = "Zbuduj";
+"Katalog kontekstu" = "Katalog kontekstu";
+"Katalog ze źródłami i Dockerfile. Polecenia COPY/ADD w Dockerfile widzą tylko pliki z tego katalogu." = "Katalog ze źródłami i Dockerfile. Polecenia COPY/ADD w Dockerfile widzą tylko pliki z tego katalogu.";
+"Tag (np. moja-aplikacja:latest)" = "Tag (np. moja-aplikacja:latest)";
+"Nazwa budowanego obrazu, np. mojaapka:1.0. Bez tagu CLI nada losową nazwę." = "Nazwa budowanego obrazu, np. mojaapka:1.0. Bez tagu CLI nada losową nazwę.";
+"[błąd: %@]" = "[błąd: %@]";
+
+/* Features/Images/ImagesView.swift */
+"Obraz to tylko-do-odczytu szablon z systemem plików i konfiguracją, z którego uruchamia się kontenery. Pobierz gotowy (pull) albo zbuduj własny z Dockerfile (build)." = "Obraz to tylko-do-odczytu szablon z systemem plików i konfiguracją, z którego uruchamia się kontenery. Pobierz gotowy (pull) albo zbuduj własny z Dockerfile (build).";
+"Brak obrazów" = "Brak obrazów";
+"Pobierz obraz z rejestru, aby zacząć." = "Pobierz obraz z rejestru, aby zacząć.";
+"Pobierz obraz…" = "Pobierz obraz…";
+"Repozytorium" = "Repozytorium";
+"Tag" = "Tag";
+"Rozmiar" = "Rozmiar";
+"Pobierz" = "Pobierz";
+"Wyczyść" = "Wyczyść";
+"Usunąć obraz?" = "Usunąć obraz?";
+"Usunąć nieużywane obrazy?" = "Usunąć nieużywane obrazy?";
+"Usuń nieużywane" = "Usuń nieużywane";
+"Obraz %@ zostanie usunięty." = "Obraz %@ zostanie usunięty.";
+"Usunięte zostaną wszystkie nieużywane obrazy." = "Usunięte zostaną wszystkie nieużywane obrazy.";
+
+/* Features/Images/PullImageSheet.swift */
+"Format: [rejestr/]repozytorium[:tag], np. nginx:latest albo ghcr.io/uzytkownik/app:1.0. Bez rejestru → docker.io, bez taga → latest." = "Format: [rejestr/]repozytorium[:tag], np. nginx:latest albo ghcr.io/uzytkownik/app:1.0. Bez rejestru → docker.io, bez taga → latest.";
+"Pobierz obraz" = "Pobierz obraz";
+"np. docker.io/library/nginx:latest" = "np. docker.io/library/nginx:latest";
+
+/* Features/Machines/MachinesView.swift */
+"Brak maszyn" = "Brak maszyn";
+"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego." = "Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego.";
+"Utwórz maszynę…" = "Utwórz maszynę…";
+"Utworzona" = "Utworzona";
+"Ustaw jako domyślną" = "Ustaw jako domyślną";
+"Utwórz" = "Utwórz";
+"Usunąć maszynę?" = "Usunąć maszynę?";
+"Maszyna %@ zostanie usunięta." = "Maszyna %@ zostanie usunięta.";
+"Nowa maszyna" = "Nowa maszyna";
+"Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać." = "Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać.";
+"Obraz bazowy (np. alpine:3.22)" = "Obraz bazowy (np. alpine:3.22)";
+
+/* Features/Networks/NetworksView.swift */
+"Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci." = "Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci.";
+"Brak sieci" = "Brak sieci";
+"Utwórz sieć, aby połączyć kontenery." = "Utwórz sieć, aby połączyć kontenery.";
+"Utwórz sieć…" = "Utwórz sieć…";
+"Tryb" = "Tryb";
+"Podsieć" = "Podsieć";
+"Brama" = "Brama";
+"Usunąć sieć?" = "Usunąć sieć?";
+"Usunąć nieużywane sieci?" = "Usunąć nieużywane sieci?";
+"Sieć %@ zostanie usunięta." = "Sieć %@ zostanie usunięta.";
+"Usunięte zostaną wszystkie nieużywane sieci." = "Usunięte zostaną wszystkie nieużywane sieci.";
+"Nowa sieć" = "Nowa sieć";
+"Osobna sieć izoluje grupę kontenerów. Kontenery w tej samej sieci widzą się nawzajem po nazwie (lokalny DNS)." = "Osobna sieć izoluje grupę kontenerów. Kontenery w tej samej sieci widzą się nawzajem po nazwie (lokalny DNS).";
+"Podsieć (np. 10.0.0.0/24 — opcjonalnie)" = "Podsieć (np. 10.0.0.0/24 — opcjonalnie)";
+"Tylko sieć hosta (internal)" = "Tylko sieć hosta (internal)";
+
+/* Features/Registries/RegistriesView.swift */
+"Zapisane logowania do prywatnych rejestrów. Dzięki nim pull i push prywatnych obrazów działają bez podawania hasła." = "Zapisane logowania do prywatnych rejestrów. Dzięki nim pull i push prywatnych obrazów działają bez podawania hasła.";
+"Brak zalogowanych rejestrów" = "Brak zalogowanych rejestrów";
+"Zaloguj się do rejestru, aby pobierać i wysyłać prywatne obrazy." = "Zaloguj się do rejestru, aby pobierać i wysyłać prywatne obrazy.";
+"Zaloguj się…" = "Zaloguj się…";
+"Host" = "Host";
+"Wyloguj…" = "Wyloguj…";
+"Zaloguj" = "Zaloguj";
+"Wylogować z rejestru?" = "Wylogować z rejestru?";
+"Wyloguj" = "Wyloguj";
+"Sesja dla %@ zostanie usunięta." = "Sesja dla %@ zostanie usunięta.";
+"Logowanie do rejestru" = "Logowanie do rejestru";
+"Logowanie do prywatnego rejestru obrazów (np. ghcr.io, Docker Hub). Hasło trafia bezpiecznie przez stdin — nie pojawia się w historii poleceń." = "Logowanie do prywatnego rejestru obrazów (np. ghcr.io, Docker Hub). Hasło trafia bezpiecznie przez stdin — nie pojawia się w historii poleceń.";
+"Serwer (np. ghcr.io)" = "Serwer (np. ghcr.io)";
+"Hasło / token" = "Hasło / token";
+
+/* Features/System/SystemView.swift */
+"Miejsce zajmowane przez kontenery, obrazy i wolumeny. «Do odzysku» — dane usuwalne przez czyszczenie (prune): zatrzymane kontenery i nieużywane obrazy." = "Miejsce zajmowane przez kontenery, obrazy i wolumeny. «Do odzysku» — dane usuwalne przez czyszczenie (prune): zatrzymane kontenery i nieużywane obrazy.";
+"Pozwala odwoływać się do kontenerów po nazwie hosta, np. http://web.test zamiast adresu IP. Zmiany wymagają uprawnień administratora." = "Pozwala odwoływać się do kontenerów po nazwie hosta, np. http://web.test zamiast adresu IP. Zmiany wymagają uprawnień administratora.";
+"Logi wewnętrzne usługi container (apiserver) — tu szukaj przyczyn, gdy operacje zawodzą." = "Logi wewnętrzne usługi container (apiserver) — tu szukaj przyczyn, gdy operacje zawodzą.";
+"Domyślne ustawienia CLI: zasoby nowych kontenerów i maszyn, rejestr, jądro. Zmienisz je poleceniem container system property set." = "Domyślne ustawienia CLI: zasoby nowych kontenerów i maszyn, rejestr, jądro. Zmienisz je poleceniem container system property set.";
+"Nowa domena DNS" = "Nowa domena DNS";
+"np. test" = "np. test";
+"Tworzenie domeny DNS wymaga uprawnień administratora." = "Tworzenie domeny DNS wymaga uprawnień administratora.";
+"Usunąć domenę DNS?" = "Usunąć domenę DNS?";
+"Działa" = "Działa";
+"Zatrzymana" = "Zatrzymana";
+"Zatrzymywanie… (%@)" = "Zatrzymywanie… (%@)";
+"Usługa container" = "Usługa container";
+"Usługa w tle (apiserver) zarządza kontenerami, obrazami i siecią. Bez niej żadna operacja nie działa." = "Usługa w tle (apiserver) zarządza kontenerami, obrazami i siecią. Bez niej żadna operacja nie działa.";
+"Builder obrazów" = "Builder obrazów";
+"Nieaktywny" = "Nieaktywny";
+"Pomocnicza maszyna wirtualna (BuildKit) używana przez „Buduj obraz”. Startuje automatycznie przy pierwszym budowaniu — nie musisz jej włączać ręcznie. Zatrzymaj lub usuń, by zwolnić zasoby." = "Pomocnicza maszyna wirtualna (BuildKit) używana przez „Buduj obraz”. Startuje automatycznie przy pierwszym budowaniu — nie musisz jej włączać ręcznie. Zatrzymaj lub usuń, by zwolnić zasoby.";
+"Zużycie dysku" = "Zużycie dysku";
+"Lokalne domeny DNS" = "Lokalne domeny DNS";
+"Dodaj…" = "Dodaj…";
+"Brak skonfigurowanych domen." = "Brak skonfigurowanych domen.";
+"Właściwości systemu" = "Właściwości systemu";
+"builder obrazów" = "builder obrazów";
+"domyślne zasoby kontenerów" = "domyślne zasoby kontenerów";
+"domyślne zasoby maszyn" = "domyślne zasoby maszyn";
+"jądro Linux dla VM" = "jądro Linux dla VM";
+"domyślny rejestr" = "domyślny rejestr";
+"obraz init VM" = "obraz init VM";
+"Logi usługi" = "Logi usługi";
+"5 min" = "5 min";
+"30 min" = "30 min";
+"1 h" = "1 h";
+"Odśwież logi" = "Odśwież logi";
+"Brak logów w wybranym oknie." = "Brak logów w wybranym oknie.";
+"Aktywne: %lld/%lld" = "Aktywne: %lld/%lld";
+"Do odzysku: %@" = "Do odzysku: %@";
+
+/* Features/System/SystemStore.swift */
+"Usługa nie wystartowała mimo zakończenia polecenia. Sprawdź: container system logs" = "Usługa nie wystartowała mimo zakończenia polecenia. Sprawdź: container system logs";
+"zatrzymuję kontenery" = "zatrzymuję kontenery";
+"Usługa nadal działa po próbie zatrzymania. Spróbuj ponownie lub wykonaj 'container system stop' w Terminalu." = "Usługa nadal działa po próbie zatrzymania. Spróbuj ponownie lub wykonaj 'container system stop' w Terminalu.";
+
+/* Features/Volumes/VolumesView.swift */
+"Wolumen to trwały dysk dla kontenerów — dane przetrwają usunięcie i odtworzenie kontenera. Podłączasz go w dialogu uruchamiania w sekcji Wolumeny." = "Wolumen to trwały dysk dla kontenerów — dane przetrwają usunięcie i odtworzenie kontenera. Podłączasz go w dialogu uruchamiania w sekcji Wolumeny.";
+"Brak wolumenów" = "Brak wolumenów";
+"Utwórz wolumen, aby trwale przechowywać dane kontenerów." = "Utwórz wolumen, aby trwale przechowywać dane kontenerów.";
+"Utwórz wolumen…" = "Utwórz wolumen…";
+"Format" = "Format";
+"Źródło" = "Źródło";
+"Przeglądaj zawartość…" = "Przeglądaj zawartość…";
+"Usunąć wolumen?" = "Usunąć wolumen?";
+"Usunąć nieużywane wolumeny?" = "Usunąć nieużywane wolumeny?";
+"Wolumen %@ zostanie usunięty." = "Wolumen %@ zostanie usunięty.";
+"Usunięte zostaną wszystkie nieużywane wolumeny." = "Usunięte zostaną wszystkie nieużywane wolumeny.";
+"Nowy wolumen" = "Nowy wolumen";
+"Rozmiar (np. 512M, 2G — opcjonalnie)" = "Rozmiar (np. 512M, 2G — opcjonalnie)";
+"Rozmiar wolumenu: liczba z jednostką K/M/G/T, np. 512M albo 2G." = "Rozmiar wolumenu: liczba z jednostką K/M/G/T, np. 512M albo 2G.";
+
+/* Features/Volumes/VolumeFilesView.swift */
+"Zawartość wolumenu: %@" = "Zawartość wolumenu: %@";
+
+/* Nowe klucze — ujednolicone formularze */
+"Wolumen" = "Wolumen";
+"Maszyna wirtualna" = "Maszyna wirtualna";
+"Dane logowania" = "Dane logowania";
+"Referencja obrazu" = "Referencja obrazu";
+"Postęp" = "Postęp";
+"Opcje budowania" = "Opcje budowania";
+"Domyślnie przeszukiwane są /usr/local/bin/container i /opt/homebrew/bin/container. Wskaż własną lokalizację, jeśli zainstalowałeś narzędzie gdzie indziej." = "Domyślnie przeszukiwane są /usr/local/bin/container i /opt/homebrew/bin/container. Wskaż własną lokalizację, jeśli zainstalowałeś narzędzie gdzie indziej.";
+
+/* Terminal/EmbeddedTerminalView.swift — klucz „Nie znaleziono narzędzia container” wspólny z OnboardingView */
+
+/* App/MenuBarContent.swift — rozszerzone menu */
+"Przejdź do" = "Przejdź do";
+"Ustawienia…" = "Ustawienia…";
+"Zatrzymaj wszystkie" = "Zatrzymaj wszystkie";
+"Zatrzymaj kontener" = "Zatrzymaj kontener";
+"…i %lld więcej" = "…i %lld więcej";
+
+/* Common/InfoTip.swift — etykieta przycisku w toolbarze */
+"Informacje" = "Informacje";

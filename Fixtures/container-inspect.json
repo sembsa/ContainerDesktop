@@ -1,0 +1,140 @@
+[
+  {
+    "configuration" : {
+      "capAdd" : [
+
+      ],
+      "capDrop" : [
+
+      ],
+      "creationDate" : "2026-06-11T08:46:06Z",
+      "dns" : {
+        "nameservers" : [
+
+        ],
+        "options" : [
+
+        ],
+        "searchDomains" : [
+
+        ]
+      },
+      "id" : "demo2",
+      "image" : {
+        "descriptor" : {
+          "digest" : "sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4",
+          "mediaType" : "application\/vnd.oci.image.index.v1+json",
+          "size" : 9218
+        },
+        "reference" : "docker.io\/library\/alpine:latest"
+      },
+      "initProcess" : {
+        "arguments" : [
+          "600"
+        ],
+        "environment" : [
+          "PATH=\/usr\/local\/sbin:\/usr\/local\/bin:\/usr\/sbin:\/usr\/bin:\/sbin:\/bin",
+          "FOO=bar"
+        ],
+        "executable" : "sleep",
+        "rlimits" : [
+
+        ],
+        "supplementalGroups" : [
+
+        ],
+        "terminal" : false,
+        "user" : {
+          "id" : {
+            "gid" : 0,
+            "uid" : 0
+          }
+        },
+        "workingDirectory" : "\/"
+      },
+      "labels" : {
+        "team" : "dev"
+      },
+      "mounts" : [
+        {
+          "destination" : "\/data",
+          "options" : [
+
+          ],
+          "source" : "\/Users\/strzesniewski\/Library\/Application Support\/com.apple.container\/volumes\/demovol\/volume.img",
+          "type" : {
+            "volume" : {
+              "cache" : {
+                "on" : {
+
+                }
+              },
+              "format" : "ext4",
+              "name" : "demovol",
+              "sync" : {
+                "fsync" : {
+
+                }
+              }
+            }
+          }
+        }
+      ],
+      "networks" : [
+        {
+          "network" : "default",
+          "options" : {
+            "hostname" : "demo2",
+            "mtu" : 1280
+          }
+        }
+      ],
+      "platform" : {
+        "architecture" : "arm64",
+        "os" : "linux"
+      },
+      "publishedPorts" : [
+        {
+          "containerPort" : 80,
+          "count" : 1,
+          "hostAddress" : "0.0.0.0",
+          "hostPort" : 8080,
+          "proto" : "tcp"
+        }
+      ],
+      "publishedSockets" : [
+
+      ],
+      "readOnly" : false,
+      "resources" : {
+        "cpuOverhead" : 1,
+        "cpus" : 4,
+        "memoryInBytes" : 1073741824
+      },
+      "rosetta" : false,
+      "runtimeHandler" : "container-runtime-linux",
+      "ssh" : false,
+      "sysctls" : {
+
+      },
+      "useInit" : false,
+      "virtualization" : false
+    },
+    "id" : "demo2",
+    "status" : {
+      "networks" : [
+        {
+          "hostname" : "demo2",
+          "ipv4Address" : "192.168.64.3\/24",
+          "ipv4Gateway" : "192.168.64.1",
+          "ipv6Address" : "fd13:fd16:ae46:1725:f4ed:84ff:fe5e:4a3\/64",
+          "macAddress" : "f6:ed:84:5e:04:a3",
+          "mtu" : 1280,
+          "network" : "default"
+        }
+      ],
+      "startedDate" : "2026-06-11T08:46:08Z",
+      "state" : "running"
+    }
+  }
+]

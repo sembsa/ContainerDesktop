@@ -1,0 +1,84 @@
+name: ContainerGUI
+options:
+  bundleIdPrefix: com.containerdesktop
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  developmentLanguage: pl
+
+packages:
+  SwiftTerm:
+    url: https://github.com/migueldeicaza/SwiftTerm
+    from: 1.0.0
+
+schemes:
+  ContainerGUI:
+    build:
+      targets:
+        ContainerGUI: all
+        ContainerGUITests: [test]
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - ContainerGUITests
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    ENABLE_HARDENED_RUNTIME: NO
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  ContainerGUI:
+    type: application
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: ContainerGUI
+    dependencies:
+      - package: SwiftTerm
+        product: SwiftTerm
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
+        PRODUCT_NAME: ContainerGUI
+        CODE_SIGN_ENTITLEMENTS: ContainerGUI/ContainerGUI.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    info:
+      path: ContainerGUI/Info.plist
+      properties:
+        CFBundleDevelopmentRegion: pl
+        CFBundleDisplayName: Container Desktop
+        LSApplicationCategoryType: public.app-category.developer-tools
+        LSMinimumSystemVersion: "26.0"
+        NSHumanReadableCopyright: ""
+        NSSupportsAutomaticTermination: true
+        NSSupportsSuddenTermination: false
+
+  # Self-contained logic test bundle: compiles the model + CLI sources directly
+  # and bundles the captured fixtures, so it runs headless without a GUI host.
+  ContainerGUITests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: ContainerGUITests
+      - path: ContainerGUI/Models
+      - path: ContainerGUI/Common/JSONValue.swift
+      - path: ContainerGUI/CLI/RunCommandBuilder.swift
+      - path: ContainerGUI/CLI/CLIError.swift
+      - path: Fixtures
+        buildPhase: resources
+        type: folder
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUITests
