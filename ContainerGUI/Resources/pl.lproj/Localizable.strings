@@ -474,3 +474,13 @@
 "Pomoc Container Desktop" = "Pomoc Container Desktop";
 "Dokumentacja Compose" = "Dokumentacja Compose";
 "Zgłoś problem…" = "Zgłoś problem…";
+
+/* App/SettingsView.swift — language picker; App — Sparkle auto-update */
+"Język" = "Język";
+"Język aplikacji" = "Język aplikacji";
+"Zmiana języka zacznie obowiązywać po ponownym uruchomieniu aplikacji." = "Zmiana języka zacznie obowiązywać po ponownym uruchomieniu aplikacji.";
+"Sprawdź aktualizacje…" = "Sprawdź aktualizacje…";
+
+/* Features/Containers/ContainersView.swift — Compose project removal */
+"Usuń projekt" = "Usuń projekt";
+"Wszystkie kontenery projektu %@ zostaną usunięte." = "Wszystkie kontenery projektu %@ zostaną usunięte.";

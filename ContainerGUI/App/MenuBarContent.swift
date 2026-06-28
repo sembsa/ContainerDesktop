@@ -1,9 +1,12 @@
 import SwiftUI
 import AppKit
+import Sparkle
 
 struct MenuBarContent: View {
     @Environment(AppModel.self) private var model
     @Environment(\.openWindow) private var openWindow
+
+    let updater: SPUUpdater
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -62,6 +65,7 @@ struct MenuBarContent: View {
 
             Divider()
 
+            CheckForUpdatesView(updater: updater)
             SettingsLink {
                 Text("Ustawienia…")
             }

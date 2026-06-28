@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>pl</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>Container Desktop</string>
 	<key>CFBundleExecutable</key>
@@ -12,14 +12,20 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>pl</string>
+		<string>zh-Hans</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>LSMinimumSystemVersion</key>
@@ -30,5 +36,11 @@
 	<true/>
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://sembsa.github.io/ContainerDesktop/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>D/C+a86F4ZfbqGMnz4YoO/EjNZKxYRSJ8eUgcjvHKbY=</string>
 </dict>
 </plist>
