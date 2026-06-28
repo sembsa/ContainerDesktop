@@ -5,7 +5,9 @@ options:
     macOS: "26.0"
   createIntermediateGroups: true
   groupSortPosition: top
-  developmentLanguage: pl
+  # English is the development/base language so that systems whose language is
+  # neither Polish nor Chinese fall back to English (fixes issue #1) instead of Polish.
+  developmentLanguage: en
 
 packages:
   SwiftTerm:
@@ -14,6 +16,9 @@ packages:
   Yams:
     url: https://github.com/jpsim/Yams
     from: 5.0.0
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.6.0
 
 schemes:
   ContainerGUI:
@@ -31,8 +36,8 @@ schemes:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.2.2"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.2.3"
+    CURRENT_PROJECT_VERSION: "2"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     CODE_SIGN_IDENTITY: "-"
@@ -51,6 +56,8 @@ targets:
         product: SwiftTerm
       - package: Yams
         product: Yams
+      - package: Sparkle
+        product: Sparkle
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
@@ -60,13 +67,20 @@ targets:
     info:
       path: ContainerGUI/Info.plist
       properties:
-        CFBundleDevelopmentRegion: pl
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, pl, zh-Hans]
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleDisplayName: Container Desktop
         LSApplicationCategoryType: public.app-category.developer-tools
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: ""
         NSSupportsAutomaticTermination: true
         NSSupportsSuddenTermination: false
+        # Sparkle auto-update (appcast hosted on GitHub Pages).
+        SUFeedURL: https://sembsa.github.io/ContainerDesktop/appcast.xml
+        SUEnableAutomaticChecks: true
+        SUPublicEDKey: D/C+a86F4ZfbqGMnz4YoO/EjNZKxYRSJ8eUgcjvHKbY=
 
   # Self-contained logic test bundle: compiles the model + CLI sources directly
   # and bundles the captured fixtures, so it runs headless without a GUI host.

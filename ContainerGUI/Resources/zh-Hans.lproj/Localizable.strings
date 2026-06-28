@@ -1,0 +1,486 @@
+/* ContainerGUI — Simplified Chinese (zh-Hans). Keys are the Polish source strings. */
+
+/* App/AppModel.swift — section titles */
+"Kontenery" = "容器";
+"Obrazy" = "镜像";
+"Wolumeny" = "卷";
+"Sieci" = "网络";
+"Rejestry" = "仓库";
+"Maszyny" = "虚拟机";
+"System" = "系统";
+
+/* App/MenuBarContent.swift */
+"Zatrzymaj" = "停止";
+"Uruchom" = "启动";
+"Działające kontenery: %lld" = "运行中的容器：%lld";
+"Otwórz okno główne" = "打开主窗口";
+"Odśwież" = "刷新";
+"Zakończ" = "退出";
+"Usługa działa" = "服务运行中";
+"Usługa zatrzymana" = "服务已停止";
+"Uruchamianie…" = "正在启动…";
+"Zatrzymywanie…" = "正在停止…";
+"Sprawdzanie…" = "正在检查…";
+
+/* App/RootView.swift */
+"Wystąpił błąd" = "发生错误";
+
+/* App/SidebarView.swift */
+"Zasoby" = "资源";
+"Konfiguracja" = "配置";
+
+/* App/SettingsView.swift */
+"Narzędzie container" = "container 工具";
+"Ścieżka pliku wykonywalnego" = "可执行文件路径";
+"Wybierz…" = "选择…";
+"Wykryta ścieżka" = "检测到的路径";
+"nie znaleziono" = "未找到";
+"Odświeżanie" = "刷新";
+"Co %lld s" = "每 %lld 秒";
+
+/* CLI/CLIError.swift */
+"Nie znaleziono narzędzia container. Zainstaluj je lub wskaż ścieżkę w Ustawieniach." = "未找到 container 工具。请安装它，或在“设置”中指定其路径。";
+"Usługa systemowa container nie jest uruchomiona. Uruchom ją, aby kontynuować." = "container 系统服务未运行。请启动它以继续。";
+"Polecenie zakończyło się błędem (kod %d)." = "命令执行失败（退出代码 %d）。";
+"Polecenie „container %@” nie odpowiedziało w ciągu %d s i zostało przerwane." = "命令“container %@”在 %d 秒内未响应，已被终止。";
+"Nie udało się odczytać odpowiedzi narzędzia: %@" = "无法读取工具的响应：%@";
+
+/* CLI/ContainerCLI.swift */
+"pusta odpowiedź" = "空响应";
+
+/* Common/JSONValue.swift */
+"tak" = "是";
+"nie" = "否";
+
+/* Common/EmptyStateView.swift */
+"Ta sekcja zostanie udostępniona w kolejnym etapie." = "此部分将在后续阶段提供。";
+
+/* Common/FileBrowser.swift */
+"Przeglądanie przez container exec ls — wymaga działającego kontenera. Kopiowanie plików: container cp w obie strony." = "通过 container exec ls 浏览 — 需要运行中的容器。复制文件：使用 container cp 进行双向复制。";
+"Ścieżka" = "路径";
+"Wyślij…" = "上传…";
+"Pobierz na dysk" = "下载到磁盘";
+"Pusty katalog" = "空目录";
+"Wybierz plik lub folder do wysłania" = "选择要上传的文件或文件夹";
+"Wysyłanie…" = "正在上传…";
+"Wybierz folder docelowy" = "选择目标文件夹";
+"Pobieranie…" = "正在下载…";
+
+/* Common/InfoTip.swift */
+"Co to jest?" = "这是什么？";
+
+/* Common/OnboardingView.swift */
+"Nie znaleziono narzędzia container" = "未找到 container 工具";
+"Aplikacja jest nakładką na narzędzie wiersza poleceń Apple container. Zainstaluj je lub wskaż lokalizację pliku wykonywalnego." = "本应用是 Apple container 命令行工具的图形前端。请安装它，或指定其可执行文件的位置。";
+"Wskaż plik…" = "定位文件…";
+"Strona projektu" = "项目主页";
+"Szukane lokalizacje: /usr/local/bin/container, /opt/homebrew/bin/container" = "已搜索的位置：/usr/local/bin/container、/opt/homebrew/bin/container";
+"Wskaż plik wykonywalny container" = "定位 container 可执行文件";
+
+/* Common/ServiceBanner.swift */
+"Usługa systemowa nie jest uruchomiona" = "系统服务未运行";
+"Uruchom usługę container, aby zarządzać kontenerami i obrazami." = "启动 container 服务以管理容器和镜像。";
+"Uruchom usługę" = "启动服务";
+
+/* Features/Containers/ContainerDetailView.swift */
+"Szczegóły kontenera: Logi (stdout/stderr procesu), Statystyki na żywo, Pliki (przeglądanie przez exec), Inspect (pełna konfiguracja) i Terminal (interaktywna powłoka)." = "容器详情：日志（进程 stdout/stderr）、实时统计、文件（通过 exec 浏览）、Inspect（完整配置）和终端（交互式 Shell）。";
+"Logi" = "日志";
+"Statystyki" = "统计";
+"Pliki" = "文件";
+"Inspect" = "Inspect";
+"Terminal" = "终端";
+"Widok" = "视图";
+"Kontener nie działa" = "容器未运行";
+"Statystyki są dostępne tylko dla uruchomionego kontenera." = "统计信息仅在容器运行时可用。";
+"Przeglądanie plików wymaga działającego kontenera. Eksport całego systemu plików jest dostępny przyciskiem Eksportuj." = "浏览文件需要运行中的容器。导出整个文件系统可通过“导出”按钮完成。";
+"Uruchom kontener, aby otworzyć interaktywną powłokę." = "启动容器以打开交互式 Shell。";
+"Eksportuj" = "导出";
+"Eksportuj system plików kontenera do archiwum tar" = "将容器的文件系统导出为 tar 归档";
+"Zmień konfigurację…" = "更改配置…";
+"Wykonuję…" = "正在执行…";
+"Restart" = "重启";
+"Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie." = "导出需要已停止的容器。请停止容器后重试。";
+"Zapisz system plików kontenera jako archiwum tar" = "将容器的文件系统保存为 tar 归档";
+
+/* Features/Containers/ContainersView.swift */
+"Usunąć kontener?" = "删除容器？";
+"Usunąć zatrzymane kontenery?" = "删除已停止的容器？";
+"Usuń" = "删除";
+"Anuluj" = "取消";
+"Usuń zatrzymane" = "删除已停止的";
+"Kontener %@ zostanie nieodwracalnie usunięty." = "容器 %@ 将被永久删除。";
+"Usunięte zostaną wszystkie zatrzymane kontenery." = "所有已停止的容器都将被删除。";
+"Brak kontenerów" = "暂无容器";
+"Uruchom kontener z obrazu, aby zobaczyć go tutaj." = "从镜像启动一个容器即可在此处看到它。";
+"Uruchom kontener…" = "启动容器…";
+"Nazwa" = "名称";
+"Obraz" = "镜像";
+"Stan" = "状态";
+"Adres IP" = "IP 地址";
+"Porty" = "端口";
+"Akcja w toku…" = "操作进行中…";
+"Uruchom ponownie" = "重启";
+"Zabij" = "强制终止";
+"Zmień polecenie / konfigurację…" = "更改命令 / 配置…";
+"Eksportuj do tar…" = "导出为 tar…";
+"Usuń…" = "删除…";
+"Uruchom kontener" = "启动容器";
+"Wyczyść zatrzymane" = "清理已停止的";
+
+/* Features/Containers/InspectView.swift */
+"Zamontowane wolumeny i katalogi. Dane w nich przetrwają usunięcie kontenera." = "已挂载的卷和目录。其中的数据在容器删除后仍会保留。";
+"Sieci, do których podłączony jest kontener, wraz z adresem IP przydzielonym przez lokalny DHCP." = "容器所连接的网络，以及由本地 DHCP 服务器分配的 IP 地址。";
+"Przegląd" = "概览";
+"Utworzony" = "已创建";
+"Uruchomiony" = "已启动";
+"Platforma" = "平台";
+"Tylko-do-odczytu" = "只读";
+"Wirtualizacja" = "虚拟化";
+"Polecenie" = "命令";
+"Katalog roboczy" = "工作目录";
+"CPU: %@ · Pamięć: %@" = "CPU：%@ · 内存：%@";
+"Zmienne środowiskowe (%lld)" = "环境变量（%lld）";
+"Kopiuj wszystkie" = "全部复制";
+"Kopiuj %@" = "复制 %@";
+"Porty (%lld)" = "端口（%lld）";
+"Montowania (%lld)" = "挂载（%lld）";
+"Etykiety (%lld)" = "标签（%lld）";
+"Sieci (%lld)" = "网络（%lld）";
+"Surowy JSON" = "原始 JSON";
+
+/* Features/Containers/LogsView.swift */
+"Brak logów" = "暂无日志";
+"Kontener nie wypisał nic na stdout/stderr. Kontenery typu `sleep` nie generują logów." = "容器未向 stdout/stderr 输出任何内容。`sleep` 之类的容器不会产生日志。";
+"Wczytywanie logów…" = "正在加载日志…";
+"Autoprzewijanie" = "自动滚动";
+"[błąd strumienia logów: %@]" = "[日志流错误：%@]";
+
+/* Features/Containers/RunContainerSheet.swift */
+"Uruchom z nową konfiguracją" = "使用新配置启动";
+"Podstawowe" = "基本";
+"Obraz (np. alpine:latest)" = "镜像（例如 alpine:latest）";
+"Nazwa (opcjonalnie)" = "名称（可选）";
+"Polecenie (opcjonalnie, np. sleep 600)" = "命令（可选，例如 sleep 600）";
+"Zastąp istniejący kontener (najpierw usunie obecny)" = "替换现有容器（将先删除当前容器）";
+"CLI nie pozwala zmienić polecenia działającego kontenera. Aplikacja utworzy nowy kontener z tą samą konfiguracją — przy włączonym zastępowaniu stary zostanie usunięty, a nazwa zachowana. Dane w wolumenach przetrwają; dane zapisane poza wolumenami przepadną." = "CLI 无法更改运行中容器的命令。本应用将以相同配置创建一个新容器 — 在启用替换的情况下，旧容器会被删除，名称保留。卷中的数据会保留；写在卷之外的数据将会丢失。";
+"Zmień nazwę albo włącz zastępowanie — kontener o tej nazwie już istnieje." = "请更改名称或启用替换 — 同名容器已存在。";
+"Porty (host → kontener)" = "端口（主机 → 容器）";
+"Przekierowanie portu: localhost:port-hosta prowadzi do portu wewnątrz kontenera. Np. 8080:80 — strona z kontenera będzie pod http://localhost:8080." = "端口转发：localhost:主机端口 映射到容器内部的端口。例如 8080:80 — 容器中的网站将位于 http://localhost:8080。";
+"host" = "主机";
+"kontener" = "容器";
+"Zmienne środowiskowe" = "环境变量";
+"Zmienne przekazywane do procesu w kontenerze, np. hasła czy konfiguracja. Format KLUCZ=wartość." = "传递给容器内进程的变量，例如密码或配置。格式为 键=值。";
+"KLUCZ" = "键";
+"wartość" = "值";
+"Wolumeny (źródło → cel)" = "卷（源 → 目标）";
+"Trwały zapis danych: nazwa wolumenu (utworzonego w zakładce Wolumeny) albo ścieżka lokalna, montowana pod wskazaną ścieżką w kontenerze. Dane przetrwają usunięcie kontenera." = "持久化数据存储：卷名称（在“卷”选项卡中创建）或本地路径，挂载到容器内指定的路径。数据在容器删除后仍会保留。";
+"źródło / nazwa" = "源 / 名称";
+"ścieżka w kontenerze" = "容器内路径";
+"Wybierz folder z dysku…" = "从磁盘选择文件夹…";
+"Wybierz folder do zamontowania w kontenerze" = "选择要挂载到容器中的文件夹";
+"CPU (np. 2)" = "CPU（例如 2）";
+"Pamięć (np. 512M, 2G)" = "内存（例如 512M、2G）";
+"Sieć" = "网络";
+"domyślna" = "默认";
+"Limit zasobów maszyny wirtualnej kontenera. CPU: liczba rdzeni (np. 2). Pamięć: liczba z jednostką, np. 512M lub 2G." = "容器虚拟机的资源限制。CPU：核心数（例如 2）。内存：带单位的数值，例如 512M 或 2G。";
+"Zaawansowane" = "高级";
+"Architektura" = "架构";
+"arm64 (natywna)" = "arm64（原生）";
+"amd64 (Intel)" = "amd64（Intel）";
+"Obrazy zbudowane dla Intel (amd64) wymagają wybrania tej architektury. Włączona Rosetta znacząco przyspiesza ich działanie na Apple Silicon." = "为 Intel（amd64）构建的镜像需要选择此架构。启用 Rosetta 可显著加快它们在 Apple Silicon 上的运行速度。";
+"Użytkownik" = "用户";
+"Włącz Rosetta" = "启用 Rosetta";
+"Pozwala uruchamiać obrazy x86_64 (Intel) na Apple Silicon przez tłumaczenie Rosetta. Wolniejsze niż natywne arm64." = "允许通过 Rosetta 转译在 Apple Silicon 上运行 x86_64（Intel）镜像。比原生 arm64 慢。";
+"Usuń po zatrzymaniu (--rm)" = "停止后删除（--rm）";
+"Kontener zniknie automatycznie po zatrzymaniu — przydatne do jednorazowych zadań. Logi i dane (poza wolumenami) przepadną." = "容器在停止后会自动删除 — 适用于一次性任务。日志和数据（卷之外的）将会丢失。";
+"Podgląd polecenia" = "命令预览";
+"Pobieranie obrazu może chwilę potrwać…" = "拉取镜像可能需要一些时间…";
+"Dodaj" = "添加";
+
+/* Features/Containers/StatsView.swift */
+"Zbieranie danych…" = "正在收集数据…";
+"Czas" = "时间";
+"Wartość" = "值";
+"Seria" = "序列";
+"Wczytywanie statystyk…" = "正在加载统计…";
+"Ostatnie %@" = "最近 %@";
+"Okno" = "时间窗口";
+"Pamięć" = "内存";
+"Odebrane" = "已接收";
+"Wysłane" = "已发送";
+"Odczyt" = "读取";
+"Zapis" = "写入";
+"Procesy" = "进程";
+"Łącznie od startu — Sieć: ↓ %@ ↑ %@ · Dysk: odczyt %@, zapis %@" = "自启动以来总计 — 网络：↓ %@ ↑ %@ · 磁盘：读取 %@，写入 %@";
+"Procent czasu procesora zużywany przez kontener. Może przekraczać 100%, gdy kontener używa wielu rdzeni." = "容器占用的 CPU 时间百分比。当容器使用多个核心时，可能超过 100%。";
+"Dysk" = "磁盘";
+"Przepływ danych na sekundę (nie suma). Łączne liczniki od startu są pod wykresami." = "每秒的数据吞吐量（非总量）。自启动以来的累计计数显示在图表下方。";
+"Odczyt i zapis na sekundę (nie suma). Łączne liczniki od startu są pod wykresami." = "每秒的读取和写入量（非总量）。自启动以来的累计计数显示在图表下方。";
+
+/* Features/Images/BuildImageSheet.swift */
+"Zbuduj obraz" = "构建镜像";
+"Dockerfile (opcjonalnie)" = "Dockerfile（可选）";
+"Bez cache" = "不使用缓存";
+"Gotowe" = "完成";
+"Zamknij" = "关闭";
+"Zbuduj" = "构建";
+"Katalog kontekstu" = "上下文目录";
+"Katalog ze źródłami i Dockerfile. Polecenia COPY/ADD w Dockerfile widzą tylko pliki z tego katalogu." = "包含源文件和 Dockerfile 的目录。Dockerfile 中的 COPY/ADD 指令只能访问此目录中的文件。";
+"Tag (np. moja-aplikacja:latest)" = "标签（例如 my-app:latest）";
+"Nazwa budowanego obrazu, np. mojaapka:1.0. Bez tagu CLI nada losową nazwę." = "所构建镜像的名称，例如 myapp:1.0。如果没有标签，CLI 将分配一个随机名称。";
+"[błąd: %@]" = "[错误：%@]";
+
+/* Features/Images/ImagesView.swift */
+"Obraz to tylko-do-odczytu szablon z systemem plików i konfiguracją, z którego uruchamia się kontenery. Pobierz gotowy (pull) albo zbuduj własny z Dockerfile (build)." = "镜像是包含文件系统和配置的只读模板，用于启动容器。可拉取现成的镜像，或从 Dockerfile 构建你自己的镜像。";
+"Brak obrazów" = "暂无镜像";
+"Pobierz obraz z rejestru, aby zacząć." = "从仓库拉取一个镜像即可开始。";
+"Pobierz obraz…" = "拉取镜像…";
+"Repozytorium" = "存储库";
+"Tag" = "标签";
+"Rozmiar" = "大小";
+"Pobierz" = "拉取";
+"Wyczyść" = "清理";
+"Usunąć obraz?" = "删除镜像？";
+"Usunąć nieużywane obrazy?" = "删除未使用的镜像？";
+"Usuń nieużywane" = "删除未使用的";
+"Obraz %@ zostanie usunięty." = "镜像 %@ 将被删除。";
+"Usunięte zostaną wszystkie nieużywane obrazy." = "所有未使用的镜像都将被删除。";
+
+/* Features/Images/ImageDetailSheet.swift */
+"Szczegóły obrazu…" = "镜像详情…";
+"Brak danych obrazu." = "没有可用的镜像数据。";
+"Wariant" = "变体";
+"Referencja" = "引用";
+"Digest wariantu" = "变体摘要";
+"Warstwy (%lld)" = "层（%lld）";
+"Warstwy systemu plików: %lld" = "文件系统层数：%lld";
+"pusta" = "空";
+
+/* Features/Images/PullImageSheet.swift */
+"Format: [rejestr/]repozytorium[:tag], np. nginx:latest albo ghcr.io/uzytkownik/app:1.0. Bez rejestru → docker.io, bez taga → latest." = "格式：[仓库/]存储库[:标签]，例如 nginx:latest 或 ghcr.io/user/app:1.0。不指定仓库 → docker.io；不指定标签 → latest。";
+"Pobierz obraz" = "拉取镜像";
+"np. docker.io/library/nginx:latest" = "例如 docker.io/library/nginx:latest";
+
+/* Features/Machines/MachinesView.swift */
+"Brak maszyn" = "暂无虚拟机";
+"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego." = "虚拟机是一种持久的轻量级 Linux 虚拟机 — 与容器不同，它不会在进程结束后消失。你可以在其中运行命令（container machine run）、挂载主目录，并将其用作小型开发服务器。";
+"Utwórz maszynę…" = "创建虚拟机…";
+"Utworzona" = "已创建";
+"Ustaw jako domyślną" = "设为默认";
+"Utwórz" = "创建";
+"Usunąć maszynę?" = "删除虚拟机？";
+"Maszyna %@ zostanie usunięta." = "虚拟机 %@ 将被删除。";
+"Nowa maszyna" = "新建虚拟机";
+"Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać." = "创建虚拟机将拉取镜像并启动虚拟机 — 这可能需要一些时间。";
+"Obraz bazowy (np. alpine:3.22)" = "基础镜像（例如 alpine:3.22）";
+
+/* Features/Networks/NetworksView.swift */
+"Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci." = "同一网络中的容器可以通过名称相互访问。默认网络连接所有未指定网络的容器。";
+"Brak sieci" = "暂无网络";
+"Utwórz sieć, aby połączyć kontenery." = "创建一个网络以连接容器。";
+"Utwórz sieć…" = "创建网络…";
+"Tryb" = "模式";
+"Podsieć" = "子网";
+"Brama" = "网关";
+"Usunąć sieć?" = "删除网络？";
+"Usunąć nieużywane sieci?" = "删除未使用的网络？";
+"Sieć %@ zostanie usunięta." = "网络 %@ 将被删除。";
+"Usunięte zostaną wszystkie nieużywane sieci." = "所有未使用的网络都将被删除。";
+"Nowa sieć" = "新建网络";
+"Osobna sieć izoluje grupę kontenerów. Kontenery w tej samej sieci widzą się nawzajem po nazwie (lokalny DNS)." = "独立的网络可隔离一组容器。同一网络中的容器可通过名称相互访问（本地 DNS）。";
+"Podsieć (np. 10.0.0.0/24 — opcjonalnie)" = "子网（例如 10.0.0.0/24 — 可选）";
+"Tylko sieć hosta (internal)" = "仅主机网络（internal）";
+
+/* Features/Registries/RegistriesView.swift */
+"Zapisane logowania do prywatnych rejestrów. Dzięki nim pull i push prywatnych obrazów działają bez podawania hasła." = "已保存的私有仓库登录凭据。借助它们，拉取和推送私有镜像无需再次输入密码。";
+"Brak zalogowanych rejestrów" = "暂无已登录的仓库";
+"Zaloguj się do rejestru, aby pobierać i wysyłać prywatne obrazy." = "登录到仓库以拉取和推送私有镜像。";
+"Zaloguj się…" = "登录…";
+"Host" = "主机";
+"Wyloguj…" = "退出登录…";
+"Zaloguj" = "登录";
+"Wylogować z rejestru?" = "退出仓库登录？";
+"Wyloguj" = "退出登录";
+"Sesja dla %@ zostanie usunięta." = "%@ 的会话将被删除。";
+"Logowanie do rejestru" = "仓库登录";
+"Logowanie do prywatnego rejestru obrazów (np. ghcr.io, Docker Hub). Hasło trafia bezpiecznie przez stdin — nie pojawia się w historii poleceń." = "登录到私有镜像仓库（例如 ghcr.io、Docker Hub）。密码通过 stdin 安全传递 — 不会出现在命令历史记录中。";
+"Serwer (np. ghcr.io)" = "服务器（例如 ghcr.io）";
+"Hasło / token" = "密码 / 令牌";
+
+/* Features/System/SystemView.swift */
+"Miejsce zajmowane przez kontenery, obrazy i wolumeny. «Do odzysku» — dane usuwalne przez czyszczenie (prune): zatrzymane kontenery i nieużywane obrazy." = "容器、镜像和卷所占用的空间。“可回收” — 可通过清理（prune）删除的数据：已停止的容器和未使用的镜像。";
+"Pozwala odwoływać się do kontenerów po nazwie hosta, np. http://web.test zamiast adresu IP. Zmiany wymagają uprawnień administratora." = "允许通过主机名访问容器，例如 http://web.test 而非 IP 地址。更改需要管理员权限。";
+"Logi wewnętrzne usługi container (apiserver) — tu szukaj przyczyn, gdy operacje zawodzą." = "container 服务（apiserver）的内部日志 — 当操作失败时，可在此查找原因。";
+"Domyślne ustawienia CLI: zasoby nowych kontenerów i maszyn, rejestr, jądro. Zmienisz je poleceniem container system property set." = "CLI 的默认设置：新容器和虚拟机的资源、仓库、内核。可使用 container system property set 命令更改它们。";
+"Nowa domena DNS" = "新建 DNS 域";
+"np. test" = "例如 test";
+"Tworzenie domeny DNS wymaga uprawnień administratora." = "创建 DNS 域需要管理员权限。";
+"Usunąć domenę DNS?" = "删除 DNS 域？";
+"Działa" = "运行中";
+"Zatrzymana" = "已停止";
+"Zatrzymywanie… (%@)" = "正在停止…（%@）";
+"Usługa container" = "container 服务";
+"Usługa w tle (apiserver) zarządza kontenerami, obrazami i siecią. Bez niej żadna operacja nie działa." = "后台服务（apiserver）负责管理容器、镜像和网络。没有它，任何操作都无法运行。";
+"Builder obrazów" = "镜像构建器";
+"Nieaktywny" = "未激活";
+"Pomocnicza maszyna wirtualna (BuildKit) używana przez „Buduj obraz”. Startuje automatycznie przy pierwszym budowaniu — nie musisz jej włączać ręcznie. Zatrzymaj lub usuń, by zwolnić zasoby." = "“构建镜像”所使用的辅助虚拟机（BuildKit）。它会在首次构建时自动启动 — 你无需手动启动它。停止或删除它可释放资源。";
+"Zużycie dysku" = "磁盘使用情况";
+"Lokalne domeny DNS" = "本地 DNS 域";
+"Dodaj…" = "添加…";
+"Brak skonfigurowanych domen." = "未配置任何域。";
+"Właściwości systemu" = "系统属性";
+"builder obrazów" = "镜像构建器";
+"domyślne zasoby kontenerów" = "容器默认资源";
+"domyślne zasoby maszyn" = "虚拟机默认资源";
+"jądro Linux dla VM" = "虚拟机的 Linux 内核";
+"domyślny rejestr" = "默认仓库";
+"obraz init VM" = "虚拟机 init 镜像";
+"Logi usługi" = "服务日志";
+"5 min" = "5 分钟";
+"30 min" = "30 分钟";
+"1 h" = "1 小时";
+"Odśwież logi" = "刷新日志";
+"Brak logów w wybranym oknie." = "所选时间窗口内没有日志。";
+"Aktywne: %lld/%lld" = "活动：%lld/%lld";
+"Do odzysku: %@" = "可回收：%@";
+
+/* Features/System/SystemStore.swift */
+"Usługa nie wystartowała mimo zakończenia polecenia. Sprawdź: container system logs" = "尽管命令已完成，服务仍未启动。请检查：container system logs";
+"zatrzymuję kontenery" = "正在停止容器";
+"Usługa nadal działa po próbie zatrzymania. Spróbuj ponownie lub wykonaj 'container system stop' w Terminalu." = "尝试停止后服务仍在运行。请重试，或在终端中执行 'container system stop'。";
+
+/* Features/Volumes/VolumesView.swift */
+"Wolumen to trwały dysk dla kontenerów — dane przetrwają usunięcie i odtworzenie kontenera. Podłączasz go w dialogu uruchamiania w sekcji Wolumeny." = "卷是容器的持久化磁盘 — 数据在容器删除和重建后仍会保留。可在启动对话框的“卷”部分挂载它。";
+"Brak wolumenów" = "暂无卷";
+"Utwórz wolumen, aby trwale przechowywać dane kontenerów." = "创建一个卷以持久化存储容器数据。";
+"Utwórz wolumen…" = "创建卷…";
+"Format" = "格式";
+"Źródło" = "源";
+"Przeglądaj zawartość…" = "浏览内容…";
+"Usunąć wolumen?" = "删除卷？";
+"Usunąć nieużywane wolumeny?" = "删除未使用的卷？";
+"Wolumen %@ zostanie usunięty." = "卷 %@ 将被删除。";
+"Usunięte zostaną wszystkie nieużywane wolumeny." = "所有未使用的卷都将被删除。";
+"Nowy wolumen" = "新建卷";
+"Rozmiar (np. 512M, 2G — opcjonalnie)" = "大小（例如 512M、2G — 可选）";
+"Rozmiar wolumenu: liczba z jednostką K/M/G/T, np. 512M albo 2G." = "卷大小：带 K/M/G/T 单位的数值，例如 512M 或 2G。";
+
+/* Features/Volumes/VolumeFilesView.swift */
+"Zawartość wolumenu: %@" = "卷内容：%@";
+
+/* New keys — unified forms */
+"Wolumen" = "卷";
+"Maszyna wirtualna" = "虚拟机";
+"Dane logowania" = "登录凭据";
+"Referencja obrazu" = "镜像引用";
+"Postęp" = "进度";
+"Opcje budowania" = "构建选项";
+"Domyślnie przeszukiwane są /usr/local/bin/container i /opt/homebrew/bin/container. Wskaż własną lokalizację, jeśli zainstalowałeś narzędzie gdzie indziej." = "默认会搜索 /usr/local/bin/container 和 /opt/homebrew/bin/container。如果你将工具安装在其他位置，请指定自定义位置。";
+
+/* Terminal/EmbeddedTerminalView.swift — key “Nie znaleziono narzędzia container” shared with OnboardingView */
+
+/* App/MenuBarContent.swift — extended menu */
+"Przejdź do" = "前往";
+"Ustawienia…" = "设置…";
+"Zatrzymaj wszystkie" = "全部停止";
+"Zatrzymaj kontener" = "停止容器";
+"…i %lld więcej" = "…还有 %lld 项";
+
+/* Common/InfoTip.swift — toolbar button label */
+"Informacje" = "信息";
+
+/* Compose/ComposeParser.swift — parser errors and warnings */
+"Nieprawidłowy YAML: %@" = "无效的 YAML：%@";
+"dokument najwyższego poziomu nie jest mapą" = "顶层文档不是映射";
+"Plik compose nie zawiera sekcji services:." = "compose 文件不包含 services: 部分。";
+"Usługa „%@”: %@" = "服务“%@”：%@";
+"zadeklarowane wolumeny muszą istnieć: %@" = "声明的卷必须已存在：%@";
+"definicja usługi nie jest mapą" = "服务定义不是映射";
+"usługa używa build: — wskaż gotowy obraz (image:), budowanie z compose nie jest wspierane" = "该服务使用了 build: — 请指定一个现成的镜像（image:）；不支持从 compose 构建";
+"brak wymaganego pola image:" = "缺少必需的字段 image:";
+"pominięto nieobsługiwane pole: %1$@ (usługa %2$@)" = "已跳过不支持的字段：%1$@（服务 %2$@）";
+"pominięto wpis portu bez pola target (usługa %@)" = "已跳过缺少 target 字段的端口条目（服务 %@）";
+"pominięto port bez pola published (usługa %@)" = "已跳过缺少 published 字段的端口（服务 %@）";
+"pominięto wolumen typu %1$@ (usługa %2$@)" = "已跳过 %1$@ 类型的卷（服务 %2$@）";
+"pominięto wolumen bez source/target (usługa %@)" = "已跳过缺少 source/target 的卷（服务 %@）";
+"zignorowano warunek depends_on „%1$@” dla %2$@ (obsługiwane jest tylko uruchomienie)" = "已忽略 %2$@ 的 depends_on 条件“%1$@”（仅支持启动）";
+"cykl zależności: %@" = "依赖循环：%@";
+"usługa init nie może zależeć od zwykłej usługi: %@" = "init 服务不能依赖于普通服务：%@";
+
+/* Features/Containers/ComposeSheet.swift + ContainersView.swift — Compose UI */
+"Uruchom Docker Compose" = "运行 Docker Compose";
+"Compose…" = "Compose…";
+"Projekt" = "项目";
+"Zastąp istniejące kontenery o tych samych nazwach" = "替换同名的现有容器";
+"Nazwa grupuje kontenery na liście i tworzy wspólną sieć — kontenery widzą się po swoich nazwach (hostname = nazwa kontenera)." = "该名称会在列表中对容器进行分组，并创建一个共享网络 — 容器之间可通过各自的名称相互访问（主机名 = 容器名称）。";
+"Wykryte usługi (%lld)" = "检测到的服务（%lld）";
+"Uruchom (%lld usług)" = "运行（%lld 个服务）";
+"zależy od: %@" = "依赖于：%@";
+"%lld/%lld działa" = "%lld/%lld 运行中";
+"Uruchom wszystkie" = "全部启动";
+"Zatrzymaj wszystkie" = "全部停止";
+"Usuń projekt…" = "删除项目…";
+"Usunąć projekt?" = "删除项目？";
+"Arch" = "架构";
+"Akcje" = "操作";
+"Rosetta włączona" = "已启用 Rosetta";
+"%lld port" = "%lld 个端口";
+"%lld porty" = "%lld 个端口";
+"port" = "端口";
+"porty" = "端口";
+"init" = "init";
+"zadanie jednorazowe — wykona się przed startem usług" = "一次性任务 — 在服务启动前执行";
+"Rozszerzenie x-init: true oznacza zadanie jednorazowe (np. utworzenie bazy danych) — uruchamiane tym samym lub innym obrazem przed startem pozostałych usług; usługi wystartują dopiero po jego pomyślnym zakończeniu." = "x-init: true 扩展标记一个一次性任务（例如创建数据库）— 在其他服务启动前，使用相同或不同的镜像运行；只有在它成功完成后，服务才会启动。";
+
+/* Compose/ComposeStore.swift — progress and error messages */
+"utworzono sieć %@" = "已创建网络 %@";
+"sieć %@ już istnieje" = "网络 %@ 已存在";
+"nieznany błąd sieci" = "未知网络错误";
+"nie udało się utworzyć sieci: %@" = "创建网络失败：%@";
+"sieć %@ niedostępna" = "网络 %@ 不可用";
+"zależność %@ nie wystartowała" = "依赖项 %@ 未启动";
+"nieznany błąd" = "未知错误";
+"przerwano: zadanie init %@ nie powiodło się" = "已中止：init 任务 %@ 失败";
+
+/* Features/Containers/ComposeSheet.swift */
+"Kopiuj logi" = "复制日志";
+
+/* Compose/ComposeStore.swift — host alias */
+"host.containers.internal → %@" = "host.containers.internal → %@";
+
+/* Compose — init skipping */
+"Pomiń zadania init (x-init)" = "跳过 init 任务（x-init）";
+"pominięto zadanie init" = "已跳过 init 任务";
+"kontener %@ zachowany do wglądu logów" = "已保留容器 %@ 以便查看日志";
+
+/* Features/Containers/LogsView.swift — logs toolbar */
+"Kopiuj wszystko" = "全部复制";
+"Znaczniki czasu" = "时间戳";
+"Kopiuje wszystkie widoczne linie logu do schowka" = "将所有可见的日志行复制到剪贴板";
+
+/* Ports — open in browser */
+"Otwórz http://localhost:%lld w przeglądarce" = "在浏览器中打开 http://localhost:%lld";
+
+/* Compose — DNS workaround via /etc/hosts */
+"nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts" = "无法确定 IP 地址 — 跳过 /etc/hosts 条目";
+"%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)" = "%@ → %@（/etc/hosts 条目 — 用于规避缺少名称 DNS 的问题）";
+
+/* ComposeSheet — documentation link; Compose toolbar label */
+"Dokumentacja" = "文档";
+"Otwiera dokumentację Compose w przeglądarce" = "在浏览器中打开 Compose 文档";
+"Compose" = "Compose";
+
+/* App — Help menu */
+"Pomoc Container Desktop" = "Container Desktop 帮助";
+"Dokumentacja Compose" = "Compose 文档";
+"Zgłoś problem…" = "报告问题…";
+
+/* App/SettingsView.swift — language picker; App — Sparkle auto-update */
+"Język" = "语言";
+"Język aplikacji" = "应用语言";
+"Zmiana języka zacznie obowiązywać po ponownym uruchomieniu aplikacji." = "语言更改将在重新启动应用后生效。";
+"Sprawdź aktualizacje…" = "检查更新…";
+
+/* Features/Containers/ContainersView.swift — Compose project removal */
+"Usuń projekt" = "删除项目";
+"Wszystkie kontenery projektu %@ zostaną usunięte." = "项目 %@ 中的所有容器都将被删除。";

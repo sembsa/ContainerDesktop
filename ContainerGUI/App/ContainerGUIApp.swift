@@ -1,9 +1,18 @@
 import SwiftUI
 import AppKit
+import Sparkle
 
 @main
 struct ContainerGUIApp: App {
     @State private var model = AppModel()
+
+    /// Sparkle auto-updater. Starts on launch; feed URL and EdDSA public key
+    /// come from Info.plist (SUFeedURL / SUPublicEDKey).
+    private let updaterController = SPUStandardUpdaterController(
+        startingUpdater: true,
+        updaterDelegate: nil,
+        userDriverDelegate: nil
+    )
 
     /// MenuBarExtra ignores SwiftUI `.font` on its label, so size the status
     /// item glyph explicitly via an NSImage symbol configuration. The image is
@@ -32,6 +41,9 @@ struct ContainerGUIApp: App {
         .defaultSize(width: 1100, height: 720)
         .defaultPosition(.center)
         .commands {
+            CommandGroup(after: .appInfo) {
+                CheckForUpdatesView(updater: updaterController.updater)
+            }
             CommandGroup(replacing: .help) {
                 Button("Pomoc Container Desktop") {
                     NSWorkspace.shared.open(AppDocs.url())
@@ -47,7 +59,7 @@ struct ContainerGUIApp: App {
         }
 
         MenuBarExtra {
-            MenuBarContent()
+            MenuBarContent(updater: updaterController.updater)
                 .environment(model)
         } label: {
             let iconName: String = {

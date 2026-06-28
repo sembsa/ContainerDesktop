@@ -41,3 +41,21 @@ hdiutil create \
   "$DIST/ContainerDesktop.dmg"
 
 echo "Gotowe: $DIST/ContainerDesktop.dmg"
+
+# --- Sparkle: appcast ---
+# WAŻNE: najpierw podpisz (Developer ID) i znotaryzuj DMG (zob. komentarz na górze),
+# DOPIERO POTEM generuj appcast, by wskazywał na notaryzowany plik.
+#
+# generate_appcast skanuje folder z archiwami aktualizacji, podpisuje je kluczem
+# EdDSA z Twojego Keychain (wygenerowanym przez `generate_keys`) i zapisuje appcast.xml.
+GEN_APPCAST="$(find .spm -type f -name generate_appcast 2>/dev/null | head -1)"
+if [ -n "${GEN_APPCAST}" ]; then
+  "${GEN_APPCAST}" "$DIST" \
+    --download-url-prefix "https://github.com/sembsa/ContainerDesktop/releases/latest/download/"
+  if [ -f "$DIST/appcast.xml" ]; then
+    cp "$DIST/appcast.xml" docs/appcast.xml
+    echo "Zaktualizowano docs/appcast.xml — zatwierdź i wypchnij (GitHub Pages serwuje go pod SUFeedURL)."
+  fi
+else
+  echo "Uwaga: nie znaleziono generate_appcast — uruchom build (pobiera Sparkle), potem ponów."
+fi

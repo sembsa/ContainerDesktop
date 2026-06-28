@@ -39,7 +39,8 @@ Container Desktop does not reimplement any container logic: every action shells 
 ### Designed for macOS 26
 - Liquid Glass accents, colorful System Settings-style sidebar, transition states everywhere (“Stopping… (stopping containers)”), informative empty states and (i) explainers across the app
 - **Menu bar extra**: service status, running containers with one-click stop, “stop all”, jump to any section
-- Localized in **English and Polish** (follows the system language)
+- Localized in **English, Polish and Simplified Chinese (简体中文)** — follows the system language, with an in-app language switch in Settings (System / English / 中文 / Polski). Systems set to any other language default to **English**.
+- **Automatic updates** via [Sparkle](https://sparkle-project.org): *Check for Updates…* in both the app and menu-bar menus, with an EdDSA-signed appcast served from GitHub Pages
 
 ![Run container](docs/screenshots/run-sheet.png)
 
@@ -58,6 +59,9 @@ Download the DMG from [Releases](../../releases), open it and drag **Container D
 > xattr -dr com.apple.quarantine "/Applications/ContainerGUI.app"
 > ```
 > Alternatively, build from source — it takes one command.
+
+### Automatic updates
+Once installed, Container Desktop checks for updates with [Sparkle](https://sparkle-project.org) (use *Check for Updates…* in the app or menu-bar menu). Updates are verified with an EdDSA signature and Sparkle clears quarantine on the installed update, so after the first launch you won't need the Gatekeeper step again. Maintainer release flow (sign/notarize if available → `generate_appcast` → publish DMG + `docs/appcast.xml`) is documented in `scripts/package.sh`.
 
 ### Build from source
 
