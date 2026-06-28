@@ -1,17 +1,14 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
-  <channel>
-    <title>Container Desktop</title>
-    <link>https://sembsa.github.io/ContainerDesktop/appcast.xml</link>
-    <description>Aktualizacje aplikacji Container Desktop / Container Desktop updates</description>
-    <language>en</language>
-    <!--
-      Pozycje <item> są generowane przez `scripts/release.sh` (Sparkle generate_appcast)
-      na podstawie podpisanych archiwów wydań i wstrzykiwane tutaj. Pusty kanał =
-      brak oferowanej aktualizacji do czasu opublikowania pierwszego wydania przez Sparkle.
-
-      Items below are produced by `scripts/release.sh` (Sparkle's generate_appcast) from
-      signed release archives. An empty channel means no update is offered yet.
-    -->
-  </channel>
+    <channel>
+        <title>ContainerGUI</title>
+        <item>
+            <title>0.2.3</title>
+            <pubDate>Sun, 28 Jun 2026 20:54:59 +0200</pubDate>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>0.2.3</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg" length="7197170" type="application/octet-stream" sparkle:edSignature="tMq5SYjNhximd/2F7DzXtUV6z2KQLFj3tZBP7VzRrntSfJAvQIFBhZjiH1iwt9l3ZwIKjOLQUugV7R1ra/4zAQ=="/>
+        </item>
+    </channel>
 </rss>
