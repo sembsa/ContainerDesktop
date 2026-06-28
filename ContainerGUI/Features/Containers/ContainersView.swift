@@ -33,6 +33,22 @@ struct ContainersView: View {
 
     private var store: ContainerStore { model.containers }
 
+    /// Expand/collapse binding for a Compose project group, backed by the store
+    /// (so it survives this view being recreated on sidebar navigation). Default
+    /// is expanded; collapsing is remembered.
+    private func expansion(for project: String) -> Binding<Bool> {
+        Binding(
+            get: { !store.collapsedProjects.contains(project) },
+            set: { expanded in
+                if expanded {
+                    store.collapsedProjects.remove(project)
+                } else {
+                    store.collapsedProjects.insert(project)
+                }
+            }
+        )
+    }
+
     private var selectedContainer: ContainerInfo? {
         guard let sel = selection else { return nil }
         // Flat search across all items
@@ -261,7 +277,7 @@ struct ContainersView: View {
             } rows: {
                 ForEach(rows) { row in
                     if let children = row.children {
-                        DisclosureTableRow(row) {
+                        DisclosureTableRow(row, isExpanded: expansion(for: row.projectName ?? row.id)) {
                             ForEach(children) { child in
                                 TableRow(child)
                             }

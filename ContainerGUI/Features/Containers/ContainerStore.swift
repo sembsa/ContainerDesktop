@@ -9,6 +9,22 @@ final class ContainerStore {
     var error: CLIError?
     var pendingIDs: Set<String> = []
 
+    /// Compose project names the user has collapsed in the list. Absent = expanded
+    /// (Docker-Desktop-like default). Held on the store so the expand/collapse state
+    /// survives `ContainersView` being recreated on sidebar navigation, and persisted
+    /// across launches.
+    var collapsedProjects: Set<String> = ContainerStore.loadCollapsed() {
+        didSet { ContainerStore.saveCollapsed(collapsedProjects) }
+    }
+
+    private static let collapsedKey = "collapsedComposeProjects"
+    private static func loadCollapsed() -> Set<String> {
+        Set(UserDefaults.standard.stringArray(forKey: collapsedKey) ?? [])
+    }
+    private static func saveCollapsed(_ value: Set<String>) {
+        UserDefaults.standard.set(Array(value), forKey: collapsedKey)
+    }
+
     private let cli = ContainerCLI.shared
 
     var runningCount: Int { items.filter(\.isRunning).count }
