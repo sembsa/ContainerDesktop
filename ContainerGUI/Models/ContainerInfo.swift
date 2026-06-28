@@ -32,6 +32,11 @@ struct ContainerInfo: Codable, Identifiable, Sendable, Hashable {
         let readOnly: Bool?
         let ssh: Bool?
         let virtualization: Bool?
+        let networks: [NetworkRef]?
+
+        struct NetworkRef: Codable, Sendable, Hashable {
+            let network: String?
+        }
 
         struct ImageRef: Codable, Sendable, Hashable {
             let reference: String

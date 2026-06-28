@@ -104,6 +104,24 @@ struct RunContainerSheet: View {
             initial.workdir = wd
         }
 
+        // Labels — preserve Compose grouping (compose.project / compose.service)
+        // and any other metadata, so an edited container stays in its project.
+        if let labels = cfg.labels {
+            initial.labels = labels
+                .sorted { $0.key < $1.key }
+                .map { RunConfiguration.KeyValue(key: $0.key, value: $0.value) }
+        }
+
+        // Network — keep the container on its (project) network.
+        if let net = cfg.networks?.first?.network, !net.isEmpty {
+            initial.network = net
+        }
+
+        // Architecture — preserve (e.g. amd64 containers running under Rosetta).
+        if let arch = cfg.platform?.architecture, !arch.isEmpty {
+            initial.arch = arch
+        }
+
         _config = State(initialValue: initial)
         replacesContainerID = container.id
     }
