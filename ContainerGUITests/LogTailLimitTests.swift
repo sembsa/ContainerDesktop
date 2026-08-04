@@ -9,10 +9,12 @@ final class LogTailLimitTests: XCTestCase {
 
     // MARK: - CLI arguments
 
-    func testTailedLimitsPassLineCount() {
-        XCTAssertEqual(LogTailLimit.last200.arguments, ["-n", "200"])
-        XCTAssertEqual(LogTailLimit.last1000.arguments, ["-n", "1000"])
-        XCTAssertEqual(LogTailLimit.last5000.arguments, ["-n", "5000"])
+    func testTailedLimitsAskForOneExtraLine() {
+        // One more than wanted: the CLI hands back a truncated first line
+        // (apple/container#2022, still present in 1.2.0), which the view drops.
+        XCTAssertEqual(LogTailLimit.last200.arguments, ["-n", "201"])
+        XCTAssertEqual(LogTailLimit.last1000.arguments, ["-n", "1001"])
+        XCTAssertEqual(LogTailLimit.last5000.arguments, ["-n", "5001"])
     }
 
     func testEverythingOmitsTheFlag() {

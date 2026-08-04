@@ -78,6 +78,10 @@ final class ProcessLineReader: @unchecked Sendable {
         if process.isRunning { process.terminate() }
     }
 
+    /// Whether the child is still alive — an abandoned stream must not leave one
+    /// behind (`container logs --follow` held on and later log views hung).
+    var isRunning: Bool { process.isRunning }
+
     // MARK: - Buffer handling
 
     private func drain(appending chunk: Data) -> [String] {

@@ -25,8 +25,13 @@ enum LogTailLimit: Int, CaseIterable, Identifiable {
     }
 
     /// Arguments for `container logs`. Omitting `-n` is what asks for everything.
+    ///
+    /// One line more than asked for: the CLI's tail reader seeks back in 1 KiB
+    /// chunks and hands back the *first* line cut mid-way, so it arrives as a
+    /// fragment (apple/container#2022, still present in 1.2.0). The extra line is
+    /// dropped on arrival, leaving exactly `rawValue` intact ones.
     var arguments: [String] {
-        self == .all ? [] : ["-n", "\(rawValue)"]
+        self == .all ? [] : ["-n", "\(rawValue + 1)"]
     }
 
     /// Lines kept in memory. "Everything" still needs a ceiling — without one a
