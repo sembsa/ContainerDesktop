@@ -9,6 +9,12 @@ struct LogsView: View {
     @State private var autoscroll = true
     @State private var showTimestamps = false
     @State private var streamEnded = false
+    /// Backlog held back until `backlogWindow` elapses, so a long history is drawn
+    /// once instead of batch after batch.
+    @State private var backlog: [LogLine] = []
+    /// Set when the backlog has been handed over — also what dismisses the spinner,
+    /// because with `--follow` a quiet container never ends the stream.
+    @State private var backlogDrawn = false
 
     private var tail: LogTailLimit {
         LogTailLimit(rawValue: tailRawValue) ?? .default
@@ -16,14 +22,14 @@ struct LogsView: View {
 
     var body: some View {
         Group {
-            if lines.isEmpty && streamEnded {
+            if lines.isEmpty && (streamEnded || backlogDrawn) {
                 EmptyStateView(
                     symbol: "doc.text",
                     title: String(localized: "Brak logów"),
                     message: String(localized: "Kontener nie wypisał nic na stdout/stderr. Kontenery typu `sleep` nie generują logów."),
                     tint: .blue
                 )
-            } else if lines.isEmpty && !streamEnded {
+            } else if lines.isEmpty {
                 VStack(spacing: 12) {
                     ProgressView()
                     Text("Wczytywanie logów…")
@@ -101,6 +107,8 @@ struct LogsView: View {
     private func streamLogs() async {
         let tail = tail
         lines = []
+        backlog = []
+        backlogDrawn = false
         streamEnded = false
         let stream = ContainerCLI.shared.stream(["logs"] + tail.arguments + ["--follow", containerID])
         // Two phases. While the backlog pours in, lines are only collected — a
@@ -109,41 +117,60 @@ struct LogsView: View {
         // `backlogWindow` whatever survived trimming is drawn once, and from then
         // on lines are appended as they arrive (still batched, because publishing
         // per line re-renders the view).
-        let start = ContinuousClock.now
+        //
+        // The handover is driven by a timer, not by the next line arriving: a
+        // stopped container delivers its whole history in milliseconds and then
+        // `--follow` waits forever for output that will never come, so waiting for
+        // one more line to trigger the draw left the spinner up indefinitely.
+        let handover = Task { @MainActor in
+            try? await Task.sleep(for: Self.backlogWindow)
+            drawBacklog(tail: tail)
+        }
+        defer { handover.cancel() }
+
         var pending: [LogLine] = []
-        var lastFlush = start
-        var showingBacklog = true
+        var lastFlush = ContinuousClock.now
         do {
             for try await line in stream {
-                pending.append(LogLine(text: line))
-                let now = ContinuousClock.now
-                if showingBacklog {
-                    trimToRetained(&pending, tail: tail)
-                    guard now - start > Self.backlogWindow else { continue }
-                    showingBacklog = false
-                    // `arguments` asks for one line more than wanted because the
-                    // CLI truncates the first one (apple/container#2022). Getting
-                    // more lines than asked for means history was cut — so that
-                    // first line is the fragment, and goes.
-                    if tail != .all, pending.count > tail.rawValue {
-                        pending.removeFirst()
-                    }
-                } else {
-                    guard pending.count >= 250 || now - lastFlush > .milliseconds(120) else { continue }
+                let entry = LogLine(text: line)
+                if !backlogDrawn {
+                    backlog.append(entry)
+                    trimToRetained(&backlog, tail: tail)
+                    continue
                 }
+                pending.append(entry)
+                let now = ContinuousClock.now
+                guard pending.count >= 250 || now - lastFlush > .milliseconds(120) else { continue }
                 append(pending, tail: tail)
                 pending.removeAll(keepingCapacity: true)
                 lastFlush = now
             }
         } catch {
-            pending.append(LogLine(text: String(format: String(localized: "[błąd strumienia logów: %@]"), error.localizedDescription)))
+            let failure = LogLine(text: String(format: String(localized: "[błąd strumienia logów: %@]"), error.localizedDescription))
+            if backlogDrawn { pending.append(failure) } else { backlog.append(failure) }
         }
+        handover.cancel()
+        drawBacklog(tail: tail)          // in case the stream ended inside the window
         append(pending, tail: tail)
         streamEnded = true
     }
 
     /// How long the initial backlog is collected before anything is drawn.
     private static let backlogWindow = Duration.milliseconds(400)
+
+    /// Hands the collected backlog over to the view — once.
+    private func drawBacklog(tail: LogTailLimit) {
+        guard !backlogDrawn else { return }
+        backlogDrawn = true
+        // `arguments` asks for one line more than wanted because the CLI truncates
+        // the first one (apple/container#2022). More lines than asked for means
+        // history was actually cut, so that first line is the fragment — drop it.
+        if tail != .all, backlog.count > tail.rawValue {
+            backlog.removeFirst()
+        }
+        append(backlog, tail: tail)
+        backlog = []
+    }
 
     private func append(_ newLines: [LogLine], tail: LogTailLimit) {
         guard !newLines.isEmpty else { return }
