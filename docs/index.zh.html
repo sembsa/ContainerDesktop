@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hans">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Container Desktop — native macOS GUI for Apple's container CLI</title>
-<meta name="description" content="A native, Docker Desktop-style macOS app for Apple's container CLI. Containers, images, volumes, networks and machines — free and open source.">
+<title>Container Desktop — Apple container CLI 的原生 macOS 图形界面</title>
+<meta name="description" content="为 Apple 的 container CLI 打造的原生 macOS 应用，Docker Desktop 风格。容器、镜像、卷、网络和虚拟机 —— 免费且开源。">
 <meta property="og:title" content="Container Desktop">
-<meta property="og:description" content="Native macOS GUI for Apple's container CLI. Free, open source, MIT.">
+<meta property="og:description" content="Apple container CLI 的原生 macOS 图形界面。免费、开源、MIT 许可。">
 <meta property="og:image" content="https://sembsa.github.io/ContainerDesktop/og-icon.png">
-<meta property="og:url" content="https://sembsa.github.io/ContainerDesktop/">
+<meta property="og:url" content="https://sembsa.github.io/ContainerDesktop/index.zh.html">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="alternate" hreflang="en" href="https://sembsa.github.io/ContainerDesktop/index.html">
 <link rel="alternate" hreflang="pl" href="https://sembsa.github.io/ContainerDesktop/index.pl.html">
@@ -33,12 +33,12 @@
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.75;
     -webkit-font-smoothing: antialiased;
   }
-  .display { font-family: "Bricolage Grotesque", -apple-system, sans-serif; }
+  .display { font-family: "Bricolage Grotesque", -apple-system, "PingFang SC", "Hiragino Sans GB", sans-serif; }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
   a { color: var(--blue-bright); text-decoration: none; }
   a:hover { text-decoration: underline; }
@@ -67,13 +67,12 @@
     color: var(--blue-bright);
     font-size: 14px;
     letter-spacing: 0.08em;
-    text-transform: uppercase;
     font-weight: 600;
     margin-bottom: 14px;
   }
   h1 {
     font-size: clamp(40px, 6.5vw, 72px);
-    line-height: 1.02;
+    line-height: 1.08;
     font-weight: 800;
     letter-spacing: -0.02em;
     margin-bottom: 18px;
@@ -81,7 +80,7 @@
   .tagline {
     color: var(--ink-dim);
     font-size: clamp(17px, 2vw, 21px);
-    max-width: 34em;
+    max-width: 30em;
     margin-bottom: 32px;
   }
   .tagline strong { color: var(--ink); font-weight: 600; }
@@ -102,7 +101,7 @@
     padding: 13px 10px;
   }
   .btn-ghost:hover { color: var(--ink); }
-  .fineprint { margin-top: 16px; color: var(--ink-faint); font-size: 13.5px; max-width: 40em; }
+  .fineprint { margin-top: 16px; color: var(--ink-faint); font-size: 13.5px; max-width: 36em; }
   .fineprint code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 12.5px;
@@ -133,7 +132,7 @@
     gap: 36px 48px;
   }
   .feature { display: grid; grid-template-columns: 14px 1fr; gap: 14px; align-items: start; }
-  .dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 8px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 10px; }
   .feature h3 { font-size: 17px; font-weight: 650; margin-bottom: 5px; }
   .feature p { color: var(--ink-dim); font-size: 15.5px; }
   .feature code {
@@ -180,81 +179,81 @@
 <body>
 
 <div class="wrap">
-  <p class="langbar"><strong>English</strong> · <a href="index.pl.html">Polski</a> · <a href="index.zh.html">简体中文</a></p>
+  <p class="langbar"><a href="index.html">English</a> · <a href="index.pl.html">Polski</a> · <strong>简体中文</strong></p>
   <header>
     <div>
-      <p class="eyebrow">Free &amp; open source · macOS 26 · Apple Silicon</p>
+      <p class="eyebrow">免费开源 · macOS 26 · Apple Silicon</p>
       <h1 class="display">Container Desktop</h1>
-      <p class="tagline">A native macOS app for Apple's <a href="https://github.com/apple/container"><code>container</code></a> CLI.
-        Think Docker Desktop — but built with SwiftUI, and <strong>reimplementing nothing</strong>:
-        every action runs the official CLI, so the app always shows exactly what the CLI sees.</p>
+      <p class="tagline">为 Apple 的 <a href="https://github.com/apple/container"><code>container</code></a> CLI 打造的原生 macOS 应用。
+        可以理解为 Docker Desktop —— 但用 SwiftUI 构建，并且 <strong>不重新实现任何逻辑</strong>：
+        每个操作都调用官方 CLI，所以应用显示的永远是 CLI 眼中的真实状态。</p>
       <div class="cta-row">
         <a class="btn" href="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download DMG
+          下载 DMG
         </a>
-        <a class="btn-ghost" href="docs.html">Documentation</a>
-        <a class="btn-ghost" href="https://github.com/sembsa/ContainerDesktop">View on GitHub →</a>
+        <a class="btn-ghost" href="docs.zh.html">文档</a>
+        <a class="btn-ghost" href="https://github.com/sembsa/ContainerDesktop">在 GitHub 上查看 →</a>
       </div>
-      <p class="fineprint">Not notarized yet — on first launch use System Settings → Privacy &amp; Security → <em>Open Anyway</em>,
-        or build from source with <code>xcodegen generate &amp;&amp; xcodebuild</code>.</p>
+      <p class="fineprint">目前尚未公证 —— 首次启动时请使用 系统设置 → 隐私与安全性 → <em>仍要打开</em>，
+        或者从源码构建：<code>xcodegen generate &amp;&amp; xcodebuild</code>。</p>
     </div>
     <img class="hero-icon" src="icon.png" alt="" width="196" height="196">
   </header>
 
   <div class="hero-shot reveal">
-    <img src="screenshots/en/containers.png" alt="Container Desktop main window — containers list with a colorful sidebar" loading="eager">
+    <img src="screenshots/zh-Hans/containers.png" alt="Container Desktop 主窗口 —— 带彩色侧边栏的容器列表" loading="eager">
   </div>
 
   <section>
-    <h2 class="display reveal">Everything the CLI can do, one window away</h2>
+    <h2 class="display reveal">CLI 的全部能力，都在一个窗口里</h2>
     <div class="features">
       <div class="feature reveal"><span class="dot" style="background:oklch(65% 0.17 255)"></span>
-        <div><h3>Containers</h3><p>Run, stop, restart, recreate with edited configuration. Logs, file browser, inspect and an embedded terminal (<code>exec&nbsp;-it</code>) per container.</p></div></div>
+        <div><h3>容器</h3><p>运行、停止、重启，或用修改后的配置重新创建。每个容器都有日志、文件浏览器、inspect 和内嵌终端（<code>exec&nbsp;-it</code>）。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.14 160)"></span>
-        <div><h3>Live statistics</h3><p>CPU, memory, network and disk charts refreshed every second, with time windows and hover tooltips. Native Swift Charts.</p></div></div>
+        <div><h3>实时统计</h3><p>CPU、内存、网络和磁盘图表每秒刷新，可选时间窗口，悬停查看采样点。原生 Swift Charts。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(75% 0.13 210)"></span>
-        <div><h3>Docker Compose</h3><p>Paste a <code>docker-compose.yml</code> — project network, dependency order, grouped containers, one-off <code>x-init</code> setup tasks, <code>host.containers.internal</code> alias and automatic service-hostname wiring.</p></div></div>
+        <div><h3>Docker Compose</h3><p>粘贴 <code>docker-compose.yml</code> —— 项目网络、依赖顺序、分组显示的容器、一次性 <code>x-init</code> 初始化任务、<code>host.containers.internal</code> 别名，以及自动写入的服务主机名。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(68% 0.18 300)"></span>
-        <div><h3>Images</h3><p>Pull and build from a Dockerfile with progress streamed live into the dialog. Run a container straight from any image.</p></div></div>
+        <div><h3>镜像</h3><p>拉取，或从 Dockerfile 构建，进度实时流式显示在对话框中。也可以直接从任意镜像运行容器。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(72% 0.15 60)"></span>
-        <div><h3>Volumes &amp; networks</h3><p>Create, inspect, prune. Mount a named volume or any local folder in the run dialog.</p></div></div>
+        <div><h3>卷与网络</h3><p>创建、inspect、prune。在运行对话框中挂载命名卷或任意本地文件夹。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.17 0)"></span>
-        <div><h3>Registries &amp; machines</h3><p>Private registry logins (password via stdin) and full container-machine lifecycle.</p></div></div>
+        <div><h3>注册表与虚拟机</h3><p>私有注册表登录（密码通过 stdin 传递），以及容器虚拟机的完整生命周期管理。</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(60% 0.03 250)"></span>
-        <div><h3>System &amp; menu bar</h3><p>Service control with verified stop, disk usage, service logs, local DNS — plus a menu bar extra with one-click actions. Localized in English, Polish and 简体中文.</p></div></div>
+        <div><h3>系统与菜单栏</h3><p>带结果校验的服务控制、磁盘占用、服务日志、本地 DNS —— 以及可一键操作的菜单栏附加项。已本地化为英语、波兰语和简体中文。</p></div></div>
     </div>
   </section>
 
   <section>
-    <h2 class="display reveal">A quick look</h2>
+    <h2 class="display reveal">快速一览</h2>
     <div class="shots">
       <figure class="shot reveal">
-        <figcaption><h3>Live charts</h3><p>Per-second CPU, memory, network and disk throughput with a selectable time window — hover any chart to inspect a sample.</p></figcaption>
-        <img src="screenshots/en/stats.png" alt="Live statistics charts" loading="lazy">
+        <figcaption><h3>实时图表</h3><p>每秒采集的 CPU、内存、网络与磁盘吞吐量，时间窗口可选 —— 悬停任意图表即可查看具体采样点。</p></figcaption>
+        <img src="screenshots/zh-Hans/stats.png" alt="实时统计图表" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Compose projects</h3><p>A pasted <code>docker-compose.yml</code> becomes a group on the containers list — collective start, stop and delete, with the project network created for you.</p></figcaption>
-        <img src="screenshots/en/compose.png" alt="Compose project grouped on the containers list" loading="lazy">
+        <figcaption><h3>Compose 项目</h3><p>粘贴的 <code>docker-compose.yml</code> 会成为容器列表上的一个分组 —— 批量启动、停止和删除，项目网络自动创建。</p></figcaption>
+        <img src="screenshots/zh-Hans/compose.png" alt="容器列表上分组显示的 Compose 项目" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Logs and a terminal</h3><p>Severity-coloured log viewer with continuous selection and optional timestamps — and a real terminal inside the container via <code>exec&nbsp;-it</code>.</p></figcaption>
-        <img src="screenshots/en/logs.png" alt="Log viewer with severity colouring" loading="lazy">
+        <figcaption><h3>日志与终端</h3><p>按级别着色的日志查看器，支持连续选择和可选时间戳 —— 以及通过 <code>exec&nbsp;-it</code> 进入容器内部的真实终端。</p></figcaption>
+        <img src="screenshots/zh-Hans/logs.png" alt="按级别着色的日志查看器" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Run dialog</h3><p>Ports, env, volumes, resources, amd64 + Rosetta — with a copy-pasteable preview of the exact CLI command it will run.</p></figcaption>
-        <img src="screenshots/en/run-sheet.png" alt="Run container dialog" loading="lazy">
+        <figcaption><h3>运行对话框</h3><p>端口、环境变量、卷、资源、amd64 + Rosetta —— 并附上可直接复制粘贴的完整 CLI 命令预览。</p></figcaption>
+        <img src="screenshots/zh-Hans/run-sheet.png" alt="运行容器对话框" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>System at a glance</h3><p>Service and builder status explained in plain words, disk usage with reclaimable space, readable system properties and service logs.</p></figcaption>
-        <img src="screenshots/en/system.png" alt="System view" loading="lazy">
+        <figcaption><h3>一眼看清系统状态</h3><p>用平实的话解释服务与 builder 状态、带可回收空间的磁盘占用、易读的系统属性以及服务日志。</p></figcaption>
+        <img src="screenshots/zh-Hans/system.png" alt="系统视图" loading="lazy">
       </figure>
     </div>
   </section>
 
   <footer>
-    <span>MIT licensed · © 2026 Sebastian Trześniewski</span>
-    <span><a href="docs.html">Docs</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · <a href="https://github.com/sembsa/ContainerDesktop/releases">Releases</a> · <a href="https://github.com/apple/container">apple/container</a></span>
+    <span>MIT 许可 · © 2026 Sebastian Trześniewski</span>
+    <span><a href="docs.zh.html">文档</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · <a href="https://github.com/sembsa/ContainerDesktop/releases">发布版本</a> · <a href="https://github.com/apple/container">apple/container</a></span>
   </footer>
 </div>
 

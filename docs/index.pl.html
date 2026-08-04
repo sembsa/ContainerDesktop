@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Container Desktop — native macOS GUI for Apple's container CLI</title>
-<meta name="description" content="A native, Docker Desktop-style macOS app for Apple's container CLI. Containers, images, volumes, networks and machines — free and open source.">
+<title>Container Desktop — natywne GUI macOS dla CLI container od Apple</title>
+<meta name="description" content="Natywna aplikacja macOS w stylu Docker Desktop dla CLI container od Apple. Kontenery, obrazy, wolumeny, sieci i maszyny — darmowa i open source.">
 <meta property="og:title" content="Container Desktop">
-<meta property="og:description" content="Native macOS GUI for Apple's container CLI. Free, open source, MIT.">
+<meta property="og:description" content="Natywne GUI macOS dla CLI container od Apple. Darmowe, open source, MIT.">
 <meta property="og:image" content="https://sembsa.github.io/ContainerDesktop/og-icon.png">
-<meta property="og:url" content="https://sembsa.github.io/ContainerDesktop/">
+<meta property="og:url" content="https://sembsa.github.io/ContainerDesktop/index.pl.html">
 <link rel="icon" type="image/png" href="icon.png">
 <link rel="alternate" hreflang="en" href="https://sembsa.github.io/ContainerDesktop/index.html">
 <link rel="alternate" hreflang="pl" href="https://sembsa.github.io/ContainerDesktop/index.pl.html">
@@ -180,81 +180,81 @@
 <body>
 
 <div class="wrap">
-  <p class="langbar"><strong>English</strong> · <a href="index.pl.html">Polski</a> · <a href="index.zh.html">简体中文</a></p>
+  <p class="langbar"><a href="index.html">English</a> · <strong>Polski</strong> · <a href="index.zh.html">简体中文</a></p>
   <header>
     <div>
-      <p class="eyebrow">Free &amp; open source · macOS 26 · Apple Silicon</p>
+      <p class="eyebrow">Darmowa i open source · macOS 26 · Apple Silicon</p>
       <h1 class="display">Container Desktop</h1>
-      <p class="tagline">A native macOS app for Apple's <a href="https://github.com/apple/container"><code>container</code></a> CLI.
-        Think Docker Desktop — but built with SwiftUI, and <strong>reimplementing nothing</strong>:
-        every action runs the official CLI, so the app always shows exactly what the CLI sees.</p>
+      <p class="tagline">Natywna aplikacja macOS dla CLI <a href="https://github.com/apple/container"><code>container</code></a> od Apple.
+        Pomyśl o Docker Desktop — ale napisanym w SwiftUI i <strong>nie reimplementującym niczego</strong>:
+        każda akcja uruchamia oficjalne CLI, więc aplikacja pokazuje dokładnie to, co widzi CLI.</p>
       <div class="cta-row">
         <a class="btn" href="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download DMG
+          Pobierz DMG
         </a>
-        <a class="btn-ghost" href="docs.html">Documentation</a>
-        <a class="btn-ghost" href="https://github.com/sembsa/ContainerDesktop">View on GitHub →</a>
+        <a class="btn-ghost" href="docs.pl.html">Dokumentacja</a>
+        <a class="btn-ghost" href="https://github.com/sembsa/ContainerDesktop">Zobacz na GitHubie →</a>
       </div>
-      <p class="fineprint">Not notarized yet — on first launch use System Settings → Privacy &amp; Security → <em>Open Anyway</em>,
-        or build from source with <code>xcodegen generate &amp;&amp; xcodebuild</code>.</p>
+      <p class="fineprint">Jeszcze bez notaryzacji — przy pierwszym uruchomieniu wejdź w Ustawienia systemowe → Prywatność i ochrona → <em>Otwórz mimo to</em>,
+        albo zbuduj ze źródeł: <code>xcodegen generate &amp;&amp; xcodebuild</code>.</p>
     </div>
     <img class="hero-icon" src="icon.png" alt="" width="196" height="196">
   </header>
 
   <div class="hero-shot reveal">
-    <img src="screenshots/en/containers.png" alt="Container Desktop main window — containers list with a colorful sidebar" loading="eager">
+    <img src="screenshots/pl/containers.png" alt="Główne okno Container Desktop — lista kontenerów z kolorowym sidebarem" loading="eager">
   </div>
 
   <section>
-    <h2 class="display reveal">Everything the CLI can do, one window away</h2>
+    <h2 class="display reveal">Wszystko, co potrafi CLI, w jednym oknie</h2>
     <div class="features">
       <div class="feature reveal"><span class="dot" style="background:oklch(65% 0.17 255)"></span>
-        <div><h3>Containers</h3><p>Run, stop, restart, recreate with edited configuration. Logs, file browser, inspect and an embedded terminal (<code>exec&nbsp;-it</code>) per container.</p></div></div>
+        <div><h3>Kontenery</h3><p>Uruchamianie, zatrzymywanie, restart, odtworzenie ze zmienioną konfiguracją. Logi, przeglądarka plików, inspect i wbudowany terminal (<code>exec&nbsp;-it</code>) dla każdego kontenera.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.14 160)"></span>
-        <div><h3>Live statistics</h3><p>CPU, memory, network and disk charts refreshed every second, with time windows and hover tooltips. Native Swift Charts.</p></div></div>
+        <div><h3>Statystyki na żywo</h3><p>Wykresy CPU, pamięci, sieci i dysku odświeżane co sekundę, z oknem czasu i dymkami pod kursorem. Natywne Swift Charts.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(75% 0.13 210)"></span>
-        <div><h3>Docker Compose</h3><p>Paste a <code>docker-compose.yml</code> — project network, dependency order, grouped containers, one-off <code>x-init</code> setup tasks, <code>host.containers.internal</code> alias and automatic service-hostname wiring.</p></div></div>
+        <div><h3>Docker Compose</h3><p>Wklej <code>docker-compose.yml</code> — sieć projektu, kolejność wg zależności, grupowanie kontenerów, jednorazowe zadania <code>x-init</code>, alias <code>host.containers.internal</code> i automatyczne zszywanie nazw usług.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(68% 0.18 300)"></span>
-        <div><h3>Images</h3><p>Pull and build from a Dockerfile with progress streamed live into the dialog. Run a container straight from any image.</p></div></div>
+        <div><h3>Obrazy</h3><p>Pull i build z Dockerfile z postępem streamowanym na żywo do dialogu. Uruchomienie kontenera wprost z dowolnego obrazu.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(72% 0.15 60)"></span>
-        <div><h3>Volumes &amp; networks</h3><p>Create, inspect, prune. Mount a named volume or any local folder in the run dialog.</p></div></div>
+        <div><h3>Wolumeny i sieci</h3><p>Tworzenie, inspect, czyszczenie. Montowanie nazwanego wolumenu albo dowolnego lokalnego folderu w dialogu uruchamiania.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(70% 0.17 0)"></span>
-        <div><h3>Registries &amp; machines</h3><p>Private registry logins (password via stdin) and full container-machine lifecycle.</p></div></div>
+        <div><h3>Rejestry i maszyny</h3><p>Logowanie do prywatnych rejestrów (hasło przez stdin) i pełny cykl życia maszyn kontenerowych.</p></div></div>
       <div class="feature reveal"><span class="dot" style="background:oklch(60% 0.03 250)"></span>
-        <div><h3>System &amp; menu bar</h3><p>Service control with verified stop, disk usage, service logs, local DNS — plus a menu bar extra with one-click actions. Localized in English, Polish and 简体中文.</p></div></div>
+        <div><h3>System i pasek menu</h3><p>Kontrola usługi z weryfikowanym zatrzymaniem, zużycie dysku, logi usługi, lokalny DNS — plus ikona w pasku menu z akcjami na jedno kliknięcie. Lokalizacja polska, angielska i 简体中文.</p></div></div>
     </div>
   </section>
 
   <section>
-    <h2 class="display reveal">A quick look</h2>
+    <h2 class="display reveal">Szybki rzut okiem</h2>
     <div class="shots">
       <figure class="shot reveal">
-        <figcaption><h3>Live charts</h3><p>Per-second CPU, memory, network and disk throughput with a selectable time window — hover any chart to inspect a sample.</p></figcaption>
-        <img src="screenshots/en/stats.png" alt="Live statistics charts" loading="lazy">
+        <figcaption><h3>Wykresy na żywo</h3><p>CPU, pamięć, sieć i dysk co sekundę, z wybieranym oknem czasu — najedź na wykres, żeby zobaczyć konkretną próbkę.</p></figcaption>
+        <img src="screenshots/pl/stats.png" alt="Wykresy statystyk na żywo" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Compose projects</h3><p>A pasted <code>docker-compose.yml</code> becomes a group on the containers list — collective start, stop and delete, with the project network created for you.</p></figcaption>
-        <img src="screenshots/en/compose.png" alt="Compose project grouped on the containers list" loading="lazy">
+        <figcaption><h3>Projekty Compose</h3><p>Wklejony <code>docker-compose.yml</code> staje się grupą na liście kontenerów — zbiorczy start, stop i usuwanie, z automatycznie utworzoną siecią projektu.</p></figcaption>
+        <img src="screenshots/pl/compose.png" alt="Projekt Compose zgrupowany na liście kontenerów" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Logs and a terminal</h3><p>Severity-coloured log viewer with continuous selection and optional timestamps — and a real terminal inside the container via <code>exec&nbsp;-it</code>.</p></figcaption>
-        <img src="screenshots/en/logs.png" alt="Log viewer with severity colouring" loading="lazy">
+        <figcaption><h3>Logi i terminal</h3><p>Podgląd logów z kolorowaniem poziomów, ciągłym zaznaczaniem i opcjonalnymi znacznikami czasu — oraz prawdziwy terminal w środku kontenera przez <code>exec&nbsp;-it</code>.</p></figcaption>
+        <img src="screenshots/pl/logs.png" alt="Podgląd logów z kolorowaniem poziomów" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>Run dialog</h3><p>Ports, env, volumes, resources, amd64 + Rosetta — with a copy-pasteable preview of the exact CLI command it will run.</p></figcaption>
-        <img src="screenshots/en/run-sheet.png" alt="Run container dialog" loading="lazy">
+        <figcaption><h3>Dialog uruchamiania</h3><p>Porty, zmienne środowiskowe, wolumeny, zasoby, amd64 + Rosetta — z gotowym do skopiowania podglądem dokładnego polecenia CLI.</p></figcaption>
+        <img src="screenshots/pl/run-sheet.png" alt="Dialog uruchamiania kontenera" loading="lazy">
       </figure>
       <figure class="shot reveal">
-        <figcaption><h3>System at a glance</h3><p>Service and builder status explained in plain words, disk usage with reclaimable space, readable system properties and service logs.</p></figcaption>
-        <img src="screenshots/en/system.png" alt="System view" loading="lazy">
+        <figcaption><h3>System na pierwszy rzut oka</h3><p>Status usługi i buildera wyjaśniony po ludzku, zużycie dysku z miejscem do odzyskania, czytelne właściwości systemu i logi usługi.</p></figcaption>
+        <img src="screenshots/pl/system.png" alt="Widok systemu" loading="lazy">
       </figure>
     </div>
   </section>
 
   <footer>
-    <span>MIT licensed · © 2026 Sebastian Trześniewski</span>
-    <span><a href="docs.html">Docs</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · <a href="https://github.com/sembsa/ContainerDesktop/releases">Releases</a> · <a href="https://github.com/apple/container">apple/container</a></span>
+    <span>Licencja MIT · © 2026 Sebastian Trześniewski</span>
+    <span><a href="docs.pl.html">Dokumentacja</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · <a href="https://github.com/sembsa/ContainerDesktop/releases">Wydania</a> · <a href="https://github.com/apple/container">apple/container</a></span>
   </footer>
 </div>
 

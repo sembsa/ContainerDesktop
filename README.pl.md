@@ -1,12 +1,12 @@
 # Container Desktop
 
-[English](README.md) | **Polski**
+[English](README.md) | **Polski** | [简体中文](README.zh-Hans.md)
 
 Natywna aplikacja macOS w stylu Docker Desktop dla CLI [`container`](https://github.com/apple/container) od Apple — zarządzaj kontenerami, obrazami, wolumenami, sieciami i maszynami z szybkiego interfejsu SwiftUI zamiast z terminala.
 
 Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje oficjalne CLI `container` i parsuje jego wyjście JSON, więc to, co widzisz, jest zawsze dokładnie tym, co powiedziałoby CLI.
 
-![Kontenery](docs/screenshots/containers.png)
+![Kontenery](docs/screenshots/pl/containers.png)
 
 📘 **[Dokumentacja](https://sembsa.github.io/ContainerDesktop/docs.pl.html)** — przewodnik po Compose, zadania `x-init`, `host.containers.internal`, rozwiązywanie problemów.
 
@@ -21,27 +21,37 @@ Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje 
 - Postęp pobierania obrazu streamowany prosto do dialogu
 - **Docker Compose**: wklejasz `docker-compose.yml`, a aplikacja tłumaczy go na wywołania `container run` — wspólna sieć projektu, kolejność wg zależności, grupowanie kontenerów na liście ze zbiorczym start/stop. Zadania jednorazowe (np. utworzenie bazy danych) przez rozszerzenie `x-init: true` wykonują się do końca przed startem pozostałych usług. Alias `host.containers.internal` wskazuje bramę sieci projektu (Twojego Maca widzianego z kontenerów), a nazwy usług są zszywane między kontenerami przez `/etc/hosts` (obejście zepsutego DNS nazw w container 1.0.0). Przełącznik „Pomiń zadania init" pozwala wznawiać stack bez powtarzania jednorazowej konfiguracji
 
+![Projekt Compose](docs/screenshots/pl/compose.png)
+
+Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
+
+| Podgląd logów | Wbudowany terminal |
+| --- | --- |
+| ![Podgląd logów](docs/screenshots/pl/logs.png) | ![Wbudowany terminal](docs/screenshots/pl/terminal.png) |
+
 ### Statystyki na żywo
-![Statystyki](docs/screenshots/stats.png)
+![Statystyki](docs/screenshots/pl/stats.png)
 - CPU %, pamięć, przepływ sieci i dysku (na sekundę), liczba procesów — odświeżane co sekundę
 - Natywne wykresy Swift Charts z wybieranym oknem czasu (1–15 min) i dymkami pod kursorem przyciąganymi do próbek
 
 ### Obrazy, wolumeny, sieci, rejestry, maszyny
+![Obrazy](docs/screenshots/pl/images.png)
 - Pull i build (Dockerfile) ze streamowanym postępem, uruchamianie z obrazu, tag / usuwanie / czyszczenie / inspect
 - Wolumeny i sieci: tworzenie, usuwanie, czyszczenie, inspect; przeglądarka plików wolumenu
 - Logowania do rejestrów (hasło przekazywane bezpiecznie przez stdin)
 - Maszyny: tworzenie, ustawianie domyślnej, zatrzymywanie, usuwanie
 
 ### System
-![System](docs/screenshots/system.png)
+![System](docs/screenshots/pl/system.png)
 - Status usługi z bezpiecznym startem/stopem (z weryfikacją skutku — CLI połyka część błędów), zużycie dysku z paskami miejsca do odzyskania, zarządzanie builderem, lokalne domeny DNS (z obsługą promptu administratora), czytelne właściwości systemu i wbudowany podgląd logów usługi
 
 ### Zaprojektowana pod macOS 26
 - Akcenty Liquid Glass, kolorowy sidebar w stylu Ustawień systemowych, stany przejściowe wszędzie („Zatrzymywanie… (zatrzymuję kontenery)"), pomocne puste stany i ikonki (i) z objaśnieniami w całej aplikacji
 - **Ikona w pasku menu**: status usługi, działające kontenery z zatrzymywaniem jednym kliknięciem, „zatrzymaj wszystkie", skok do dowolnej sekcji
-- Lokalizacja **polska i angielska** (zgodnie z językiem systemu)
+- Lokalizacja **polska, angielska i chińska uproszczona (简体中文)** — zgodnie z językiem systemu, z przełącznikiem języka w Ustawieniach aplikacji (System / English / 中文 / Polski). Systemy ustawione na dowolny inny język startują po **angielsku**.
+- **Automatyczne aktualizacje** przez [Sparkle](https://sparkle-project.org): *Sprawdź aktualizacje…* w menu aplikacji i w pasku menu, z kanałem appcast podpisanym kluczem EdDSA, serwowanym z GitHub Pages
 
-![Uruchom kontener](docs/screenshots/run-sheet.png)
+![Uruchom kontener](docs/screenshots/pl/run-sheet.png)
 
 ## Wymagania
 
@@ -58,6 +68,9 @@ Pobierz DMG z [Releases](../../releases), otwórz i przeciągnij **Container Des
 > xattr -dr com.apple.quarantine "/Applications/ContainerGUI.app"
 > ```
 > Alternatywnie zbuduj ze źródeł — to jedno polecenie.
+
+### Automatyczne aktualizacje
+Po instalacji Container Desktop sam sprawdza aktualizacje przez [Sparkle](https://sparkle-project.org) (albo ręcznie: *Sprawdź aktualizacje…* w menu aplikacji lub w pasku menu). Aktualizacje są weryfikowane podpisem EdDSA, a Sparkle zdejmuje kwarantannę z zainstalowanej aktualizacji — więc po pierwszym uruchomieniu krok z Gatekeeperem już się nie powtarza. Proces wydawniczy dla opiekuna projektu (podpis → `generate_appcast` → publikacja DMG + `docs/appcast.xml`) jest opisany w `scripts/package.sh`.
 
 ### Budowanie ze źródeł
 
