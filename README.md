@@ -1,12 +1,12 @@
 # Container Desktop
 
-**English** | [Polski](README.pl.md)
+**English** | [Polski](README.pl.md) | [简体中文](README.zh-Hans.md)
 
 A native, Docker Desktop-style macOS app for Apple's [`container`](https://github.com/apple/container) CLI — manage containers, images, volumes, networks and machines from a fast SwiftUI interface instead of the terminal.
 
 Container Desktop does not reimplement any container logic: every action shells out to the official `container` CLI and parses its JSON output, so what you see is always exactly what the CLI would tell you.
 
-![Containers](docs/screenshots/containers.png)
+![Containers](docs/screenshots/en/containers.png)
 
 📘 **[Documentation](https://sembsa.github.io/ContainerDesktop/docs.html)** — Compose guide, `x-init` tasks, `host.containers.internal`, troubleshooting.
 
@@ -21,19 +21,28 @@ Container Desktop does not reimplement any container logic: every action shells 
 - Live image-pull progress streamed straight into the dialog
 - **Docker Compose**: paste a `docker-compose.yml` and the app translates it into `container run` calls — project network, dependency ordering, grouped containers on the list with start/stop-all. One-off setup tasks (e.g. database creation) via the `x-init: true` service extension run to completion before the other services start. The `host.containers.internal` alias resolves to the project network's gateway (your Mac as seen from containers), and service hostnames are wired between containers via `/etc/hosts` (works around the broken name DNS in container 1.0.0). A "skip init tasks" toggle reruns a stack without repeating one-off setup
 
+![Compose project](docs/screenshots/en/compose.png)
+
+Logs with severity colouring, and a full terminal inside the container:
+
+| Log viewer | Embedded terminal |
+| --- | --- |
+| ![Log viewer](docs/screenshots/en/logs.png) | ![Embedded terminal](docs/screenshots/en/terminal.png) |
+
 ### Live statistics
-![Statistics](docs/screenshots/stats.png)
+![Statistics](docs/screenshots/en/stats.png)
 - CPU %, memory, network and disk throughput (per second), process count — refreshed every second
 - Native Swift Charts with a selectable time window (1–15 min) and hover tooltips snapped to samples
 
 ### Images, volumes, networks, registries, machines
+![Images](docs/screenshots/en/images.png)
 - Pull and build (Dockerfile) with streamed progress, run-from-image, tag / delete / prune / inspect
 - Volumes and networks: create, delete, prune, inspect; volume file browser
 - Registry logins (password passed securely via stdin)
 - Container machines: create, set default, stop, delete
 
 ### System
-![System](docs/screenshots/system.png)
+![System](docs/screenshots/en/system.png)
 - Service status with safe start/stop (verifies the result — the CLI swallows some failures), disk usage with reclaimable-space bars, builder management, local DNS domains (admin prompt handled), readable system properties and a built-in service log viewer
 
 ### Designed for macOS 26
@@ -42,7 +51,7 @@ Container Desktop does not reimplement any container logic: every action shells 
 - Localized in **English, Polish and Simplified Chinese (简体中文)** — follows the system language, with an in-app language switch in Settings (System / English / 中文 / Polski). Systems set to any other language default to **English**.
 - **Automatic updates** via [Sparkle](https://sparkle-project.org): *Check for Updates…* in both the app and menu-bar menus, with an EdDSA-signed appcast served from GitHub Pages
 
-![Run container](docs/screenshots/run-sheet.png)
+![Run container](docs/screenshots/en/run-sheet.png)
 
 ## Requirements
 

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档 — Container Desktop</title>
+<meta name="description" content="Container Desktop 文档：Docker Compose 支持、x-init 任务、host.containers.internal、网络与故障排查。">
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: oklch(16% 0.012 250);
+    --bg-raised: oklch(20% 0.014 250);
+    --ink: oklch(93% 0.006 250);
+    --ink-dim: oklch(72% 0.012 250);
+    --ink-faint: oklch(54% 0.014 250);
+    --blue: oklch(62% 0.17 255);
+    --blue-bright: oklch(72% 0.15 250);
+    --line: oklch(28% 0.014 250);
+    --orange: oklch(75% 0.15 60);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", sans-serif;
+    font-size: 16.5px; line-height: 1.8; -webkit-font-smoothing: antialiased;
+  }
+  .display { font-family: "Bricolage Grotesque", -apple-system, "PingFang SC", "Hiragino Sans GB", sans-serif; }
+  .wrap { max-width: 800px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px) 80px; }
+  a { color: var(--blue-bright); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header { padding: 40px 0 8px; display: flex; align-items: center; gap: 14px; }
+  header img { width: 44px; height: 44px; }
+  header .crumbs { font-size: 14px; color: var(--ink-faint); }
+  h1 { font-size: clamp(30px, 5vw, 44px); font-weight: 800; letter-spacing: -0.02em; margin: 8px 0 6px; }
+  .lang { font-size: 14px; color: var(--ink-faint); margin-bottom: 28px; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.01em; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 17.5px; font-weight: 650; margin: 26px 0 8px; }
+  p, li { color: var(--ink-dim); }
+  p strong, li strong { color: var(--ink); }
+  ul { padding-left: 22px; margin: 8px 0 14px; }
+  li { margin: 4px 0; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 13.5px;
+    background: var(--bg-raised); color: var(--ink);
+    padding: 1px 6px; border-radius: 5px;
+  }
+  pre {
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; margin: 12px 0 18px;
+  }
+  pre code { background: none; padding: 0; font-size: 13px; line-height: 1.55; }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0 18px; font-size: 15px; }
+  th, td { text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--line); color: var(--ink-dim); }
+  th { color: var(--ink); font-weight: 650; }
+  td code { font-size: 12.5px; }
+  .note {
+    border-left: 3px solid var(--blue); background: var(--bg-raised);
+    padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 14px 0; font-size: 15px;
+  }
+  .warn { border-left-color: var(--orange); }
+  nav.toc { font-size: 15px; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 18px 0 8px; }
+  nav.toc a { display: inline-block; margin-right: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a href="index.zh.html"><img src="icon.png" alt="Container Desktop"></a>
+    <div class="crumbs"><a href="index.zh.html">Container Desktop</a> / 文档</div>
+  </header>
+  <h1 class="display">文档</h1>
+  <p class="lang"><a href="docs.html">English</a> · <a href="docs.pl.html">Polski</a> · <strong>简体中文</strong></p>
+
+  <nav class="toc">
+    <a href="#compose">Docker Compose</a>
+    <a href="#host-alias">host.containers.internal</a>
+    <a href="#hostnames">服务主机名</a>
+    <a href="#x-init">x-init 任务</a>
+    <a href="#limitations">限制</a>
+    <a href="#troubleshooting">故障排查</a>
+  </nav>
+
+  <h2 id="compose">Docker Compose</h2>
+  <p>Container Desktop 在 Apple 的 <code>container</code> CLI 之上运行 <code>docker-compose.yml</code> 定义的 stack —— 而该 CLI 本身并不支持 compose。应用会解析你的 YAML，并把每个服务翻译成普通的 <code>container run</code> 调用：没有额外的守护进程，也没有隐藏状态。通过 <strong>容器 → Compose…</strong> 打开，粘贴 YAML 然后点击运行。</p>
+  <p>对于每个项目，应用会：</p>
+  <ul>
+    <li>创建以项目命名的 <strong>项目网络</strong>（取自顶层 <code>name:</code> 或对话框中的字段），</li>
+    <li>按 <code>depends_on</code> 的顺序启动服务，并实时流式显示每个服务的输出，</li>
+    <li>为容器打上 <code>compose.project</code> / <code>compose.service</code> 标签，因此它们会在容器列表中 <strong>分组</strong> 显示，可批量启动 / 停止 / 删除。</li>
+  </ul>
+
+  <h3>支持的服务键</h3>
+  <table>
+    <tr><th>键</th><th>说明</th></tr>
+    <tr><td><code>image</code></td><td>必填。不支持 <code>build:</code> —— 请指向一个现成的镜像。</td></tr>
+    <tr><td><code>container_name</code></td><td>覆盖默认的 <code>&lt;项目&gt;-&lt;服务&gt;</code> 名称。</td></tr>
+    <tr><td><code>command</code> / <code>entrypoint</code></td><td>字符串或列表。多段 entrypoint（例如 <code>["dotnet", "dbmgr.dll"]</code>）会被正确翻译。</td></tr>
+    <tr><td><code>environment</code></td><td>支持映射和列表两种写法。</td></tr>
+    <tr><td><code>ports</code></td><td>短语法（<code>"8080:80"</code>，可加 <code>/udp</code>）和长语法。</td></tr>
+    <tr><td><code>volumes</code></td><td><code>源:目标[:ro]</code>；命名卷必须已经存在。</td></tr>
+    <tr><td><code>mem_limit</code> / <code>cpus</code></td><td>虚拟机资源限制（也支持 <code>deploy.resources.limits</code>）。默认为 1 GB —— 吃内存的初始化任务（例如数据库初始化）通常需要 <code>mem_limit: 4g</code>。</td></tr>
+    <tr><td><code>depends_on</code></td><td>列表或映射（除 <em>service_started</em> 之外的条件会被忽略并给出警告）。</td></tr>
+    <tr><td><code>x-init</code></td><td>Container Desktop 的扩展 —— 参见 <a href="#x-init">x-init 任务</a>。</td></tr>
+  </table>
+
+  <h2 id="host-alias">host.containers.internal</h2>
+  <p>在 <code>environment</code> 的值或 <code>command</code> 中的任意位置使用主机名 <code>host.containers.internal</code>，即可从容器内部访问 <strong>你的 Mac</strong>（相当于 Docker 的 <code>host.docker.internal</code>）。</p>
+  <pre><code>environment:
+  DB_SERVER: "host.containers.internal,1433"   # 运行在宿主机上的 SQL Server</code></pre>
+  <p>为什么用别名而不是 IP：每个 compose 项目都会得到 <em>自己的</em> vmnet 网络和 <em>自己的</em> 子网，因此宿主机网关地址在不同项目间各不相同，甚至会在重启 <code>container</code> 服务后变化（例如 <code>192.168.64.1</code> 与 <code>192.168.65.1</code>）。应用会在创建项目网络后立即 inspect 它，并把别名替换为真实的网关 IP —— 该映射会打印在进度日志中。</p>
+  <div class="note">宿主机上的服务必须监听所有网络接口（<code>0.0.0.0</code>），而不是只监听 <code>127.0.0.1</code>，否则无法从 vmnet 子网访问。其他 Container Desktop 项目、或宿主机上 Docker Desktop 发布的端口，也可以用同样的方式访问。</div>
+
+  <h2 id="hostnames">服务主机名（/etc/hosts 互写）</h2>
+  <p>服务之间通过 <strong>容器名</strong> 互相访问 —— 例如在默认命名下，项目 <code>shop</code> 中的服务 <code>server</code> 就是 <code>shop-server</code>：</p>
+  <pre><code>environment:
+  API_URL: "http://shop-server:22000"</code></pre>
+  <p><code>container</code> 1.0.0 自带一个用于容器名的 DNS 解析器，但它从来匹配不上：注册名称时不带 FQDN 结尾的点，而 DNS 查询到达时已经被规范化，于是每次查询都以 SERVFAIL 失败。Container Desktop 绕开了这一点：每个服务启动后，应用会读取它的 IP，并在项目内所有服务之间互相写入 <code>/etc/hosts</code> 条目（进度日志会显示每一条映射）。</p>
+  <div class="note warn">这些条目写在容器内部，因此只在容器被 <em>重新创建</em> 之前有效。如果你手动停止再启动某个容器、而它的 IP 变了，请用"替换已有容器"重新运行 compose 以刷新这些条目。</div>
+
+  <h2 id="x-init">x-init 任务</h2>
+  <p>给某个服务加上 <code>x-init: true</code>，它就会作为 <strong>一次性初始化任务</strong> 运行 —— 例如用同一个镜像、但不同的 entrypoint 来创建数据库。初始化任务会 <em>先于</em> 所有常规服务、按顺序执行到结束；只有当每个初始化任务都成功退出后，常规服务才会启动。</p>
+  <pre><code>services:
+  dbinit:
+    image: registry.example.com/server:1.0
+    x-init: true
+    entrypoint: ["dotnet", "dbmgr.dll"]
+    command: create mydb --sqlserver "host.containers.internal,1433" --recreate
+
+  server:
+    image: registry.example.com/server:1.0
+    # 只有在 dbinit 以退出码 0 结束后才启动</code></pre>
+  <ul>
+    <li>初始化任务失败会中止整次运行；它的容器会被 <strong>保留</strong>，方便你查看日志（成功的初始化容器会自动清理）。</li>
+    <li><strong>"跳过初始化任务"</strong> 开关让你重新运行 stack 而不必重复初始化 —— 数据库已经存在时很实用。</li>
+    <li>初始化任务之间可以互相依赖，但不能依赖常规服务（它们总是先执行）。</li>
+  </ul>
+
+  <h2 id="limitations">限制</h2>
+  <ul>
+    <li>不支持 <code>build:</code> —— 请先构建镜像（应用的 <em>构建</em> 对话框可以做到），然后用 tag 引用它。</li>
+    <li><code>healthcheck</code>、<code>restart</code>、<code>profiles</code> 及其他不支持的键会被忽略 —— 但每一个都会在解析阶段以警告形式提示，绝不静默跳过。</li>
+    <li><code>depends_on</code> 只等待依赖 <em>启动</em>，而不是等它变为健康状态。如果某个服务在启动时就去连接依赖且没有重试逻辑，请用 ↻ 按钮重启它一次。</li>
+    <li>顶层的 <code>volumes:</code> 声明不会自动创建 —— 请先在"卷"标签页中创建命名卷。</li>
+  </ul>
+
+  <h2 id="troubleshooting">故障排查</h2>
+  <ul>
+    <li><strong>服务访问不到宿主机</strong> —— 确认宿主机进程监听在 <code>0.0.0.0</code>，并且你用的是 <code>host.containers.internal</code> 而不是 <code>localhost</code>（在容器内部，<code>localhost</code> 指的是容器自己）。</li>
+    <li><strong>重启容器后名称解析失效</strong> —— 用"替换已有容器"重新运行 compose，以刷新 <code>/etc/hosts</code> 条目。</li>
+    <li><strong>绑定 1024 以下端口时报 <code>Permission denied</code></strong> —— 以非 root 用户运行的镜像无法绑定特权端口；请监听高位端口（例如 8080）并发布为 <code>60000:8080</code>。</li>
+    <li><strong>项目网络上的一切都超时</strong> —— vmnet 辅助进程可能在容器运行期间重启过；请重新创建该 stack（替换已有容器），如果仍不行，就在"系统"标签页中重启服务。</li>
+    <li><strong>服务日志</strong> —— "系统"标签页内置了 <code>container</code> 服务日志查看器（5 分钟 / 30 分钟 / 1 小时窗口）。</li>
+  </ul>
+
+  <p style="margin-top:48px; color: var(--ink-faint); font-size: 14px;">
+    <a href="index.zh.html">← Container Desktop</a> · <a href="https://github.com/sembsa/ContainerDesktop">GitHub</a> · MIT
+  </p>
+</div>
+</body>
+</html>
