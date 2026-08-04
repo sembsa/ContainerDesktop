@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(AppModel.self) private var model
     @State private var binaryPath = BinaryResolver.overridePath ?? ""
     @AppStorage("appLanguageOverride") private var languageOverride = "system"
+    @AppStorage(TerminalEngine.storageKey) private var terminalEngine = TerminalEngine.default.rawValue
     @State private var showRelaunchNote = false
 
     var body: some View {
@@ -65,6 +66,25 @@ struct SettingsView: View {
                     Image(systemName: "terminal.fill")
                         .foregroundStyle(Color.blue.gradient)
                     Text("Narzędzie container")
+                }
+            }
+
+            Section {
+                Picker(selection: $terminalEngine) {
+                    ForEach(TerminalEngine.allCases) { engine in
+                        Text(engine.title).tag(engine.rawValue)
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Text("Silnik terminala")
+                        InfoTip(text: String(localized: "Ghostty rysuje przez Metal — ostrzejszy tekst, ligatury i emoji. Jego API do wbudowywania nie jest jeszcze ustabilizowane, dlatego domyślny pozostaje SwiftTerm. Zmiana dotyczy nowo otwieranych terminali."))
+                    }
+                }
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "apple.terminal.fill")
+                        .foregroundStyle(Color.teal.gradient)
+                    Text("Terminal")
                 }
             }
 

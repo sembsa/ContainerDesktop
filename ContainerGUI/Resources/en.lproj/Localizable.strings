@@ -489,3 +489,11 @@
 "ostatnie %d" = "last %d";
 "wszystko" = "everything";
 "Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę." = "How much history to fetch. A full log can be very large — loading and drawing it will take a moment.";
+/* Terminal/TerminalEngine.swift — engine switch and shell exit */
+"Silnik terminala" = "Terminal engine";
+"Wbudowany (SwiftTerm)" = "Built-in (SwiftTerm)";
+"Ghostty — Metal (eksperymentalny)" = "Ghostty — Metal (experimental)";
+"Ghostty rysuje przez Metal — ostrzejszy tekst, ligatury i emoji. Jego API do wbudowywania nie jest jeszcze ustabilizowane, dlatego domyślny pozostaje SwiftTerm. Zmiana dotyczy nowo otwieranych terminali." = "Ghostty renders with Metal — sharper text, ligatures and emoji. Its embedding API is not stabilized yet, so SwiftTerm stays the default. The change applies to terminals opened from now on.";
+"Powłoka zakończona." = "Shell exited.";
+"Powłoka zakończona (kod %d)." = "Shell exited (code %d).";
+"Połącz ponownie" = "Reconnect";
