@@ -484,3 +484,8 @@
 /* Features/Containers/ContainersView.swift — Compose project removal */
 "Usuń projekt" = "删除项目";
 "Wszystkie kontenery projektu %@ zostaną usunięte." = "项目 %@ 中的所有容器都将被删除。";
+
+/* Features/Containers/LogsView.swift — how much history to fetch */
+"ostatnie %d" = "最后 %d 行";
+"wszystko" = "全部";
+"Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę." = "获取多少历史记录。完整日志可能非常大 —— 加载和绘制会需要一些时间。";
