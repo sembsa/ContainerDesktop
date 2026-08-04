@@ -36,6 +36,7 @@ PROC_NAME="Container Desktop"          # AX/CGWindow owner name, not the bundle 
 CONTAINER="${CONTAINER_BIN:-/usr/local/bin/container}"
 
 HELPER="$HOME/Applications/ContainerDesktopShots.app"
+HELPER_ID="com.containerdesktop.screenshots"
 BRIDGE_DIR="$HOME/.container-desktop-shots"
 STEP="$BRIDGE_DIR/step.applescript"
 RESULT="$BRIDGE_DIR/result.txt"
@@ -45,8 +46,8 @@ RESULT="$BRIDGE_DIR/result.txt"
 SCREEN="0 0 1728 1117"
 WIN_X=280
 WIN_Y=140
-WIN_W=1160
-LIST_H=430      # list-only views: tall enough for the demo rows, short enough
+WIN_W=1420
+LIST_H=580      # list-only views: tall enough for the demo rows, short enough
                 # that whatever else is on the machine stays below the fold
 DETAIL_H=820    # views with the detail panel (logs / stats / terminal)
 SHEET_H=760     # modal sheets (run / compose)
@@ -55,12 +56,34 @@ LANGS=(en pl zh-Hans)
 VIEWS=(containers images system logs stats terminal run-sheet compose)
 
 # --- demo data -------------------------------------------------------------
-# Two compose projects, labelled the way the app's Compose support labels them,
+# Five compose projects, labelled the way the app's Compose support labels them,
 # so the containers list shows grouping. Names sort before any real project.
 
+# The Images view lists everything on the machine, sorted by repository, and the
+# app has no filter — so a handful of well-known docker.io/library images gives
+# that screenshot a neutral top-of-list, keeping private registries below the fold.
+DEMO_IMAGES=(
+  nginx:alpine busybox:latest golang:alpine haproxy:alpine httpd:alpine
+  memcached:alpine nats:alpine rabbitmq:4-alpine registry:2 traefik:v3
+  valkey:alpine postgres:16 redis:8-alpine node:22-alpine
+)
+
+demo_images() {
+  log "pulling demo images"
+  for image in "${DEMO_IMAGES[@]}"; do
+    if $CONTAINER image ls 2>/dev/null | grep -q "^${image%%:*} .*${image##*:}"; then continue; fi
+    log "  $image"
+    $CONTAINER image pull "$image" >/dev/null 2>&1 || log "  (failed: $image)"
+  done
+}
+
 demo_up() {
+  demo_images
+  demo_containers
+}
+
+demo_containers() {
   log "creating demo containers"
-  $CONTAINER image pull nginx:alpine >/dev/null 2>&1 || true
   c_run acme-shop web  "-p 8080:80 -m 512M nginx:alpine"
   c_run acme-shop db   "-e POSTGRES_PASSWORD=demo -m 1024M postgres:18"
   c_run acme-shop cache "-m 512M redis:7-alpine"
@@ -83,30 +106,64 @@ esac; sleep 1; done' >/dev/null
   c_run cms api   "-p 4000:4000 -m 512M alpine sleep infinity"
   c_run cms db    "-e POSTGRES_PASSWORD=demo -m 1024M postgres:18"
   c_run cms cache "-m 512M redis:7-alpine"
-  $CONTAINER ls
+  # The window cannot go below minHeight 580pt (see ContainerGUIApp.swift), which
+  # leaves room for ~21 rows — so these two projects are *created* but never
+  # started: they fill the list to the bottom edge, keeping whatever else lives on
+  # the machine below the fold, and cost no memory while stopped.
+  c_create analytics api    "-p 5000:5000 -m 512M alpine sleep infinity"
+  c_create analytics db     "-e POSTGRES_PASSWORD=demo -m 1024M postgres:18"
+  c_create analytics worker "-m 512M alpine sleep infinity"
+  c_create dev web   "-p 8083:80 -m 512M nginx:alpine"
+  c_create dev api   "-p 4100:4100 -m 512M alpine sleep infinity"
+  c_create dev db    "-e POSTGRES_PASSWORD=demo -m 1024M postgres:18"
+  c_create dev cache "-m 512M redis:7-alpine"
+  $CONTAINER ls -a | head -20
 }
 
 # Containers stop when the Mac sleeps, and a list full of "stopped" rows makes a
-# poor screenshot — so make sure the demo set is up before every capture run.
-demo_start() {
-  log "starting demo containers"
-  for name in "${DEMO_CONTAINERS[@]}"; do
-    $CONTAINER start "$name" >/dev/null 2>&1 || true
+# poor screenshot. Restarting them is not an option: once the project network has
+# been recreated under them, `container start` fails with `configureDns`. So when
+# the set is not fully up, throw it away and build it again.
+demo_ensure() {
+  local up=0
+  for name in "${DEMO_RUNNING[@]}"; do
+    if $CONTAINER ls 2>/dev/null | grep -q "^$name "; then up=$((up + 1)); fi
   done
+  if [ "$up" -eq "${#DEMO_RUNNING[@]}" ]; then
+    log "demo containers already up"
+    return 0
+  fi
+  log "demo containers not all running ($up/${#DEMO_RUNNING[@]}) — recreating"
+  demo_purge
+  demo_containers >/dev/null
   sleep 3
 }
 
-DEMO_CONTAINERS=(
+demo_purge() {
+  for name in "${DEMO_CONTAINERS[@]}"; do
+    $CONTAINER stop "$name" >/dev/null 2>&1 || true
+    $CONTAINER delete "$name" >/dev/null 2>&1 || true
+  done
+}
+
+DEMO_RUNNING=(
   acme-shop-web acme-shop-api acme-shop-db acme-shop-cache
   blog-web blog-cache
   cms-web cms-api cms-db cms-cache
 )
+DEMO_STOPPED=(
+  analytics-api analytics-db analytics-worker
+  dev-web dev-api dev-db dev-cache
+)
+DEMO_CONTAINERS=("${DEMO_RUNNING[@]}" "${DEMO_STOPPED[@]}")
 
 demo_down() {
   log "removing demo containers"
-  for name in "${DEMO_CONTAINERS[@]}"; do
-    $CONTAINER stop "$name" >/dev/null 2>&1 || true
-    $CONTAINER delete "$name" >/dev/null 2>&1 || true
+  demo_purge
+  log "removing demo images (nginx:alpine is kept — the run dialog uses it)"
+  for image in "${DEMO_IMAGES[@]}"; do
+    [ "$image" = nginx:alpine ] && continue
+    $CONTAINER image delete "$image" >/dev/null 2>&1 || true
   done
 }
 
@@ -115,6 +172,14 @@ c_run() {
   if c_exists "$project-$service"; then return 0; fi
   # shellcheck disable=SC2086
   $CONTAINER run -d --name "$project-$service" \
+    -l "compose.project=$project" -l "compose.service=$service" $rest >/dev/null
+}
+
+c_create() {
+  local project="$1" service="$2" rest="$3"
+  if c_exists "$project-$service"; then return 0; fi
+  # shellcheck disable=SC2086
+  $CONTAINER create --name "$project-$service" \
     -l "compose.project=$project" -l "compose.service=$service" $rest >/dev/null
 }
 
@@ -133,26 +198,42 @@ bridge_build() {
   log "compiling $HELPER (approve Accessibility for it once when macOS asks)"
   rm -rf "$HELPER"
   osacompile -o "$HELPER" scripts/ax-bridge.applescript
+  # Without these, the Accessibility list shows the applet's executable name —
+  # a bare "applet" asking for control of the computer, which nobody should be
+  # expected to approve on trust.
+  local plist="$HELPER/Contents/Info.plist"
+  /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $HELPER_ID" "$plist" 2>/dev/null \
+    || /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $HELPER_ID" "$plist"
+  /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string ContainerDesktopShots" "$plist" 2>/dev/null \
+    || /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName ContainerDesktopShots" "$plist"
+  codesign --force --sign - "$HELPER" >/dev/null 2>&1
+  tccutil reset Accessibility "$HELPER_ID" >/dev/null 2>&1 || true
 }
 
-# Runs the AppleScript on stdin inside the helper app and echoes its result.
-ax() {
+# Runs the AppleScript on stdin inside the helper app and echoes the raw result
+# ("OK\n…" or "ERR …"), without treating a failure as fatal.
+ax_soft() {
   { ax_prelude; cat; } > "$STEP"
   rm -f "$RESULT"
   open -a "$HELPER"
   local waited=0
-  while [ ! -f "$RESULT" ]; do
+  while [ ! -f "$RESULT" ] && [ "$waited" -lt 60 ]; do
     sleep 1
     waited=$((waited + 1))
-    if [ "$waited" -ge 25 ]; then
-      die "UI scripting timed out. Approve Accessibility for ContainerDesktopShots
-     (System Settings → Privacy & Security → Accessibility) and make sure the screen is unlocked."
-    fi
   done
-  if head -1 "$RESULT" | grep -q '^ERR'; then
-    die "UI scripting failed: $(tail -n +2 "$RESULT")"
+  if [ -f "$RESULT" ]; then cat "$RESULT"; else
+    printf 'ERR timeout\nUI scripting timed out. Approve Accessibility for ContainerDesktopShots\n(System Settings → Privacy & Security → Accessibility) and unlock the screen.\n'
   fi
-  tail -n +2 "$RESULT"
+}
+
+# Same, but a failed step aborts the run and echoes only the step's return value.
+ax() {
+  local result
+  result="$(ax_soft)"
+  case "$result" in
+    ERR*) die "UI scripting failed: $(printf '%s' "$result" | tail -n +2)" ;;
+  esac
+  printf '%s\n' "$result" | tail -n +2
 }
 
 ax_prelude() {
@@ -163,10 +244,14 @@ ax_prelude() {
 on clickNamed(nm)
 	tell application "System Events"
 		tell process "Container Desktop"
+			-- Indexing into the list matters: `repeat with e in (entire contents …)`
+			-- yields list references whose `name` does not resolve for AX elements.
+			set els to entire contents of window 1
 			set found to missing value
-			repeat with e in (entire contents of window 1)
+			repeat with i from 1 to (count of els)
+				set e to item i of els
 				try
-					if name of e is nm then
+					if (name of e) is nm then
 						set found to e
 						exit repeat
 					end if
@@ -181,6 +266,98 @@ on clickNamed(nm)
 	delay 0.6
 	return "clicked " & nm
 end clickNamed
+
+-- Element lookup goes through explicit paths, not `entire contents of window 1`:
+-- every AX property read is an IPC round trip, and scanning the whole window
+-- (hundreds of elements once the container list is populated) blows past the
+-- caller's timeout.
+on sidebarOutline()
+	tell application "System Events" to tell process "Container Desktop"
+		return outline 1 of scroll area 1 of group 1 of splitter group 1 of group 1 of window 1
+	end tell
+end sidebarOutline
+
+on listOutline()
+	tell application "System Events" to tell process "Container Desktop"
+		return outline 1 of scroll area 1 of group 1 of splitter group 1 of group 2 of splitter group 1 of group 1 of window 1
+	end tell
+end listOutline
+
+-- Sidebar rows carry no name of their own, and a click at their coordinates does
+-- not register — so match the label inside the row and set AXSelected.
+on selectSidebar(nm)
+	tell application "System Events"
+		tell process "Container Desktop"
+			set sb to my sidebarOutline()
+			repeat with i from 1 to (count of rows of sb)
+				try
+					if (name of static text 1 of UI element 1 of row i of sb) is nm then
+						set selected of row i of sb to true
+						delay 1.2
+						return "selected " & nm
+					end if
+				end try
+			end repeat
+			error "no sidebar row named " & nm
+		end tell
+	end tell
+end selectSidebar
+
+-- Toolbar buttons and segmented-picker segments do respond to AXPress. The scan
+-- is limited to a subtree: `toolbar 1` for the toolbar, the right-hand side of
+-- the split view for the detail panel's tab picker.
+on pressNamed(nm)
+	tell application "System Events"
+		tell process "Container Desktop"
+			try
+				set els to entire contents of toolbar 1 of window 1
+				repeat with i from 1 to (count of els)
+					set e to item i of els
+					try
+						if (name of e) is nm then
+							perform action "AXPress" of e
+							delay 1.2
+							return "pressed " & nm
+						end if
+					end try
+				end repeat
+			end try
+			set els to entire contents of splitter group 1 of group 2 of splitter group 1 of group 1 of window 1
+			repeat with i from 1 to (count of els)
+				set e to item i of els
+				try
+					if (name of e) is nm then
+						perform action "AXPress" of e
+						delay 1.2
+						return "pressed " & nm
+					end if
+				end try
+			end repeat
+			error "no element named " & nm
+		end tell
+	end tell
+end pressNamed
+
+-- Selects a container in the list, so the detail panel below it appears. The name
+-- sits in the second cell of the row (the first holds the state dot); it has to be
+-- reached as `item 2 of cells` — `cell 2 of row i` is a syntax error.
+on selectRow(nm)
+	tell application "System Events"
+		tell process "Container Desktop"
+			set lst to my listOutline()
+			repeat with i from 1 to (count of rows of lst)
+				try
+					if (name of static text 1 of group 1 of item 2 of cells of row i of lst) is nm then
+						set selected of row i of lst to true
+						delay 1.5
+						return "selected row " & nm
+					end if
+				end try
+			end repeat
+			error "no row named " & nm
+		end tell
+	end tell
+end selectRow
 
 on resizeWindow(w, h)
 	tell application "System Events" to tell process "Container Desktop"
@@ -204,8 +381,12 @@ PRELUDE
 
 app_restart() {
   local lang="$1"
+  require_unlocked
   pkill -x ContainerGUI 2>/dev/null || true
   sleep 2
+  # Killing the app makes AppKit record "no windows open", and because the app has
+  # a MenuBarExtra it happily relaunches windowless — so drop the restoration state.
+  rm -rf "$HOME/Library/Saved Application State/$BUNDLE_ID.savedState"
   # The app writes its window frame on quit, so set both *after* it is gone.
   defaults write "$BUNDLE_ID" AppleLanguages -array "$lang"
   defaults write "$BUNDLE_ID" "NSWindow Frame main" "$WIN_X $WIN_Y $WIN_W $LIST_H $SCREEN"
@@ -217,6 +398,14 @@ app_restart() {
     if [ "$waited" -ge 30 ]; then die "$APP did not open a window"; fi
   done
   sleep 4   # let the CLI queries settle so no spinners end up in the shot
+  # A window visible to CGWindow is not yet a window visible to the accessibility
+  # API, so wait for that separately before scripting anything.
+  waited=0
+  until ax_soft <<<'tell application "System Events" to tell process "Container Desktop" to return (count of windows)' | tail -n +2 | grep -q '^1'; do
+    sleep 2
+    waited=$((waited + 1))
+    if [ "$waited" -ge 15 ]; then die "the accessibility API never saw the app's window"; fi
+  done
   # AppKit state restoration wins over the frame written above, so set the size
   # through the accessibility API once the window is up.
   ax <<<"return my resizeWindow($WIN_W, $LIST_H)" >/dev/null
@@ -226,7 +415,13 @@ win_id() { swift scripts/windowid.swift "$PROC_NAME" 300; }
 
 shoot() {
   local out="$1"
+  require_unlocked
   mkdir -p "$(dirname "$out")"
+  # The helper app takes focus while scripting the UI, which leaves the window
+  # drawn inactive — dim traffic lights, grey selection. Re-activate before the
+  # shutter. (`open` activates through LaunchServices, needing no permission.)
+  open -a "$APP"
+  sleep 1.5
   screencapture -o -x "-l$(win_id)" "$out"
   [ -s "$out" ] || die "captured nothing into $out"
   log "  → $(basename "$(dirname "$out")")/$(basename "$out") ($(sips -g pixelWidth -g pixelHeight "$out" | awk '/pixel/ {printf "%s ", $2}'))"
@@ -280,16 +475,16 @@ capture_view() {
       shoot "$out"
       ;;
     images|system)
-      ax <<<"return my clickNamed(\"$(label "$view" "$lang")\")" >/dev/null
+      ax <<<"return my selectSidebar(\"$(label "$view" "$lang")\")" >/dev/null
       shoot "$out"
       # back to the containers list for whatever comes next
-      ax <<<"return my clickNamed(\"$(label containers "$lang")\")" >/dev/null
+      ax <<<"return my selectSidebar(\"$(label containers "$lang")\")" >/dev/null
       ;;
     logs|stats|terminal)
       ax <<EOF >/dev/null
 my resizeWindow($WIN_W, $DETAIL_H)
-my clickNamed("acme-shop-api")
-return my clickNamed("$(label "$view" "$lang")")
+my selectRow("acme-shop-api")
+return my pressNamed("$(label "$view" "$lang")")
 EOF
       # charts need a few samples; the terminal needs its shell to come up
       case "$view" in
@@ -313,7 +508,7 @@ EOF
     run-sheet)
       ax <<EOF >/dev/null
 my resizeWindow($WIN_W, $SHEET_H)
-my clickNamed("$(label run "$lang")")
+my pressNamed("$(label run "$lang")")
 delay 1
 tell application "System Events" to keystroke "nginx:alpine"
 delay 1
@@ -327,7 +522,7 @@ return "dismissed"' >/dev/null
       printf '%s' "$DEMO_YAML" | pbcopy
       ax <<EOF >/dev/null
 my resizeWindow($WIN_W, $SHEET_H)
-my clickNamed("Compose")
+my pressNamed("Compose")
 delay 1
 tell application "System Events"
 	keystroke "v" using command down
@@ -349,10 +544,17 @@ return "dismissed"' >/dev/null
 log() { printf '%s\n' "$*" >&2; }
 die() { printf 'error: %s\n' "$*" >&2; exit 1; }
 
+# A locked screen does not fail loudly: the accessibility API reports zero windows
+# and screencapture refuses every rect, which looks like a dozen unrelated bugs. So
+# check before each step, and hold sleep off for the duration of the run.
 require_unlocked() {
   if ioreg -n Root -d1 | grep -q '"CGSSessionScreenIsLocked"=Yes'; then
-    die "the screen is locked — unlock it first (window capture and UI scripting both need it)"
+    die "the screen is locked — unlock it and re-run (both window capture and UI scripting need an unlocked screen)"
   fi
+}
+
+prevent_sleep() {
+  caffeinate -dimsu -w $$ &
 }
 
 main() {
@@ -370,11 +572,12 @@ main() {
 
   [ -d "$APP" ] || die "$APP not installed"
   require_unlocked
+  prevent_sleep
   if [ -n "$only_lang" ]; then LANGS=("$only_lang"); fi
   if [ -n "$only_views" ]; then IFS=, read -r -a VIEWS <<<"$only_views"; fi
 
   bridge_build
-  demo_start
+  demo_ensure
   local saved_lang
   saved_lang="$(defaults read "$BUNDLE_ID" AppleLanguages 2>/dev/null || echo none)"
 
