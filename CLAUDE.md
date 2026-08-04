@@ -34,7 +34,16 @@ SwiftUI views (Features/<X>/) → @Observable stores → ContainerCLI (actor) �
 - `CLI/ContainerCLI.swift` — the only place that runs the binary (`json`, `run`, `run(input:)` for stdin, `runElevated` for admin, `stream` for `logs -f`/`stats`). `BinaryResolver` finds the binary (GUI apps don't inherit shell PATH). `RunCommandBuilder` maps a `RunConfiguration` to `container run` args (emits `--label`, `--network`, `--arch`, `--publish`, `--env`, `--volume`, …).
 - `Models/` — `Codable` structs mirroring real CLI JSON; keys verified against live output. `Configuration` includes `labels`, `networks`, `platform`, etc.
 - `Features/<Containers|Images|Volumes|Networks|Registries|Machines|System>/` — store + views per section. `Compose/` translates `docker-compose.yml` to `container run` calls (labels `compose.project` / `compose.service` drive grouping).
-- Deps (SPM in `project.yml`): `SwiftTerm`, `Yams`, `Sparkle`.
+- Deps (SPM in `project.yml`): `SwiftTerm`, `Yams`, `Sparkle`, `libghostty-spm`.
+
+### Terminal engines
+
+`Terminal/` holds two engines behind `@AppStorage("terminalEngine")` (`TerminalEngine`, default `swiftTerm`):
+
+- **SwiftTerm** — CoreText, spawns the PTY itself. The default.
+- **Ghostty (libghostty)** — Metal rendering. `GhosttyTerminalView` hands `container exec -it <id> sh` to libghostty's `.exec` backend as a ghostty `command` config line; libghostty owns the PTY, resizing and the exit report. Opt-in because **libghostty's embedding API is explicitly not stabilized** ("used primarily by the macOS app, may change significantly between releases") and Ghostty publishes only `ghostty-vt` officially — the full library comes from a third-party build, so the package is pinned with `exactVersion`, never `from:`.
+
+Two things that will bite when touching this: libghostty runs the command through `login -flp <user> /bin/bash --noprofile --norc -c exec -l <cmd>`, so (a) the command must stay a plain executable + arguments — a bare `clear; …` gets torn apart, hence the `/bin/sh -c "clear; exec …"` wrapper in `TerminalCommandLine`, and (b) without that `clear` the host's "Last login: … on ttysNNN" shows up above the container's prompt. The XCFramework is a **static** library, so nothing extra needs signing.
 
 ## Localization (important)
 

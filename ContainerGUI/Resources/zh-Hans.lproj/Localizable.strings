@@ -489,3 +489,11 @@
 "ostatnie %d" = "最后 %d 行";
 "wszystko" = "全部";
 "Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę." = "获取多少历史记录。完整日志可能非常大 —— 加载和绘制会需要一些时间。";
+/* Terminal/TerminalEngine.swift — engine switch and shell exit */
+"Silnik terminala" = "终端引擎";
+"Wbudowany (SwiftTerm)" = "内置 (SwiftTerm)";
+"Ghostty — Metal (eksperymentalny)" = "Ghostty — Metal（实验性）";
+"Ghostty rysuje przez Metal — ostrzejszy tekst, ligatury i emoji. Jego API do wbudowywania nie jest jeszcze ustabilizowane, dlatego domyślny pozostaje SwiftTerm. Zmiana dotyczy nowo otwieranych terminali." = "Ghostty 使用 Metal 渲染 —— 文字更锐利，支持连字和更好的 emoji。它的嵌入 API 尚未稳定，因此默认仍为 SwiftTerm。该更改只影响此后新打开的终端。";
+"Powłoka zakończona." = "Shell 已退出。";
+"Powłoka zakończona (kod %d)." = "Shell 已退出（退出码 %d）。";
+"Połącz ponownie" = "重新连接";

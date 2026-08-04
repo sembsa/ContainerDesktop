@@ -19,6 +19,14 @@ packages:
   Sparkle:
     url: https://github.com/sparkle-project/Sparkle
     from: 2.6.0
+  # Ghostty's terminal engine, as a prebuilt XCFramework. Pinned exactly, not
+  # `from:` — libghostty's embedding API is explicitly not stabilized yet ("used
+  # primarily by the macOS app", may change between releases), so picking up a new
+  # version has to be a deliberate, re-tested decision. Ghostty itself publishes
+  # only ghostty-vt (the VT parser); this package builds the full library.
+  libghostty:
+    url: https://github.com/Lakr233/libghostty-spm
+    exactVersion: 1.3.2
 
 schemes:
   ContainerGUI:
@@ -58,6 +66,8 @@ targets:
         product: Yams
       - package: Sparkle
         product: Sparkle
+      - package: libghostty
+        product: GhosttyTerminal
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
@@ -98,6 +108,7 @@ targets:
       - path: ContainerGUI/CLI/ProcessLineReader.swift
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
+      - path: ContainerGUI/Terminal/TerminalEngine.swift
       - path: ContainerGUI/Compose
       - path: Fixtures
         buildPhase: resources
