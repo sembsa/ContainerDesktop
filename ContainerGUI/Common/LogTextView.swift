@@ -72,6 +72,18 @@ struct LogTextView: NSViewRepresentable {
     // MARK: - Rendering
 
     private static let font = NSFont.monospacedSystemFont(ofSize: 11, weight: .regular)
+
+    /// Wrapped continuations are indented, otherwise a long entry looks like
+    /// several — SQL Server and MariaDB write single log lines hundreds of
+    /// characters long, and their tails started at column zero, exactly where a
+    /// new entry would.
+    private static let paragraphStyle: NSParagraphStyle = {
+        let style = NSMutableParagraphStyle()
+        style.lineBreakMode = .byWordWrapping
+        style.headIndent = 26
+        style.firstLineHeadIndent = 0
+        return style
+    }()
     private static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss"
@@ -83,13 +95,17 @@ struct LogTextView: NSViewRepresentable {
         if showTimestamps {
             result.append(NSAttributedString(
                 string: "[\(timeFormatter.string(from: line.date))] ",
-                attributes: [.font: font, .foregroundColor: NSColor.tertiaryLabelColor]
+                attributes: [
+                    .font: font,
+                    .foregroundColor: NSColor.tertiaryLabelColor,
+                    .paragraphStyle: paragraphStyle,
+                ]
             ))
         }
         let color: NSColor = colorize ? LogLevel.detect(in: line.text).color : .labelColor
         result.append(NSAttributedString(
             string: line.text + "\n",
-            attributes: [.font: font, .foregroundColor: color]
+            attributes: [.font: font, .foregroundColor: color, .paragraphStyle: paragraphStyle]
         ))
         return result
     }
