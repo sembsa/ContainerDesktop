@@ -14,6 +14,20 @@ struct ContainerGUIApp: App {
         userDriverDelegate: nil
     )
 
+    /// Sparkle schedules its automatic checks relative to the last one, so with the
+    /// default one-day interval an app relaunched the same day never checks — a new
+    /// release could sit unnoticed until the next day. This asks once per launch,
+    /// which is quiet: Sparkle only surfaces UI when there is something to install.
+    ///
+    /// Delayed a little so the check does not compete with the CLI queries the app
+    /// fires at startup.
+    @MainActor
+    private func checkForUpdatesOnLaunch() async {
+        try? await Task.sleep(for: .seconds(3))
+        guard updaterController.updater.canCheckForUpdates else { return }
+        updaterController.updater.checkForUpdatesInBackground()
+    }
+
     /// MenuBarExtra ignores SwiftUI `.font` on its label, so size the status
     /// item glyph explicitly via an NSImage symbol configuration. The image is
     /// capped to the menu bar grid (~17 pt tall) — anything taller gets clipped
@@ -36,6 +50,7 @@ struct ContainerGUIApp: App {
             RootView()
                 .environment(model)
                 .frame(minWidth: 940, minHeight: 580)
+                .task { await checkForUpdatesOnLaunch() }
         }
         .windowResizability(.contentMinSize)
         .defaultSize(width: 1100, height: 720)
