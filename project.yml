@@ -97,6 +97,7 @@ targets:
       - path: ContainerGUI/CLI/ContainerCLI.swift
       - path: ContainerGUI/CLI/ProcessLineReader.swift
       - path: ContainerGUI/CLI/BinaryResolver.swift
+      - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Compose
       - path: Fixtures
         buildPhase: resources

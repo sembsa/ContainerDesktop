@@ -4,10 +4,15 @@ import SwiftUI
 struct LogsView: View {
     let containerID: String
 
+    @AppStorage(LogTailLimit.storageKey) private var tailRawValue = LogTailLimit.default.rawValue
     @State private var lines: [LogLine] = []
     @State private var autoscroll = true
     @State private var showTimestamps = false
     @State private var streamEnded = false
+
+    private var tail: LogTailLimit {
+        LogTailLimit(rawValue: tailRawValue) ?? .default
+    }
 
     var body: some View {
         Group {
@@ -35,6 +40,18 @@ struct LogsView: View {
                 )
                 .overlay(alignment: .bottomTrailing) {
                     HStack(spacing: 6) {
+                        Picker(selection: $tailRawValue) {
+                            ForEach(LogTailLimit.allCases) { limit in
+                                Text(limit.title).tag(limit.rawValue)
+                            }
+                        } label: {
+                            EmptyView()
+                        }
+                        .pickerStyle(.menu)
+                        .controlSize(.small)
+                        .fixedSize()
+                        .help(String(localized: "Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę."))
+
                         Button {
                             copyAll()
                         } label: {
@@ -55,7 +72,8 @@ struct LogsView: View {
                 }
             }
         }
-        .task(id: containerID) {
+        // Restarts the stream when the container *or* the amount of history changes.
+        .task(id: "\(containerID)#\(tailRawValue)") {
             await streamLogs()
         }
     }
@@ -81,20 +99,38 @@ struct LogsView: View {
     }()
 
     private func streamLogs() async {
+        let tail = tail
         lines = []
         streamEnded = false
-        let stream = ContainerCLI.shared.stream(["logs", "--follow", containerID])
+        let stream = ContainerCLI.shared.stream(["logs"] + tail.arguments + ["--follow", containerID])
+        // Appending line by line would republish the array — and re-render the text
+        // view — thousands of times while the backlog arrives. Collect and flush.
+        var pending: [LogLine] = []
+        var lastFlush = ContinuousClock.now
         do {
             for try await line in stream {
-                lines.append(LogLine(text: line))
-                if lines.count > 2000 {
-                    lines.removeFirst(lines.count - 2000)
-                }
+                pending.append(LogLine(text: line))
+                let now = ContinuousClock.now
+                guard pending.count >= 250 || now - lastFlush > .milliseconds(120) else { continue }
+                append(pending, tail: tail)
+                pending.removeAll(keepingCapacity: true)
+                lastFlush = now
             }
         } catch {
-            lines.append(LogLine(text: String(format: String(localized: "[błąd strumienia logów: %@]"), error.localizedDescription)))
+            pending.append(LogLine(text: String(format: String(localized: "[błąd strumienia logów: %@]"), error.localizedDescription)))
         }
+        append(pending, tail: tail)
         streamEnded = true
+    }
+
+    private func append(_ newLines: [LogLine], tail: LogTailLimit) {
+        guard !newLines.isEmpty else { return }
+        lines.append(contentsOf: newLines)
+        guard lines.count > tail.retainedLines else { return }
+        // Trimmed in chunks, not down to the limit on every line: dropping the
+        // first line changes the array's head, which makes LogTextView rebuild
+        // its whole storage. Once per chunk is affordable; once per line is not.
+        lines.removeFirst(lines.count - tail.retainedLines * 3 / 4)
     }
 }
 

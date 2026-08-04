@@ -484,3 +484,8 @@
 /* Features/Containers/ContainersView.swift — Compose project removal */
 "Usuń projekt" = "Usuń projekt";
 "Wszystkie kontenery projektu %@ zostaną usunięte." = "Wszystkie kontenery projektu %@ zostaną usunięte.";
+
+/* Features/Containers/LogsView.swift — how much history to fetch */
+"ostatnie %d" = "ostatnie %d";
+"wszystko" = "wszystko";
+"Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę." = "Ile historii pobrać. Cały log może być bardzo duży — wczytanie i wyrysowanie zajmie wtedy chwilę.";
