@@ -103,15 +103,34 @@ struct LogsView: View {
         lines = []
         streamEnded = false
         let stream = ContainerCLI.shared.stream(["logs"] + tail.arguments + ["--follow", containerID])
-        // Appending line by line would republish the array — and re-render the text
-        // view — thousands of times while the backlog arrives. Collect and flush.
+        // Two phases. While the backlog pours in, lines are only collected — a
+        // container with thousands of lines of history would otherwise be drawn a
+        // batch at a time, all of it, and only the last screenful matters. After
+        // `backlogWindow` whatever survived trimming is drawn once, and from then
+        // on lines are appended as they arrive (still batched, because publishing
+        // per line re-renders the view).
+        let start = ContinuousClock.now
         var pending: [LogLine] = []
-        var lastFlush = ContinuousClock.now
+        var lastFlush = start
+        var showingBacklog = true
         do {
             for try await line in stream {
                 pending.append(LogLine(text: line))
                 let now = ContinuousClock.now
-                guard pending.count >= 250 || now - lastFlush > .milliseconds(120) else { continue }
+                if showingBacklog {
+                    trimToRetained(&pending, tail: tail)
+                    guard now - start > Self.backlogWindow else { continue }
+                    showingBacklog = false
+                    // `arguments` asks for one line more than wanted because the
+                    // CLI truncates the first one (apple/container#2022). Getting
+                    // more lines than asked for means history was cut — so that
+                    // first line is the fragment, and goes.
+                    if tail != .all, pending.count > tail.rawValue {
+                        pending.removeFirst()
+                    }
+                } else {
+                    guard pending.count >= 250 || now - lastFlush > .milliseconds(120) else { continue }
+                }
                 append(pending, tail: tail)
                 pending.removeAll(keepingCapacity: true)
                 lastFlush = now
@@ -123,6 +142,9 @@ struct LogsView: View {
         streamEnded = true
     }
 
+    /// How long the initial backlog is collected before anything is drawn.
+    private static let backlogWindow = Duration.milliseconds(400)
+
     private func append(_ newLines: [LogLine], tail: LogTailLimit) {
         guard !newLines.isEmpty else { return }
         lines.append(contentsOf: newLines)
@@ -131,6 +153,12 @@ struct LogsView: View {
         // first line changes the array's head, which makes LogTextView rebuild
         // its whole storage. Once per chunk is affordable; once per line is not.
         lines.removeFirst(lines.count - tail.retainedLines * 3 / 4)
+    }
+
+    /// Caps the not-yet-drawn backlog, keeping the newest lines.
+    private func trimToRetained(_ buffer: inout [LogLine], tail: LogTailLimit) {
+        guard buffer.count > tail.retainedLines else { return }
+        buffer.removeFirst(buffer.count - tail.retainedLines)
     }
 }
 
