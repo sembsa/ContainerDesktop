@@ -99,7 +99,6 @@
 "Zmień konfigurację…" = "Change configuration…";
 "Wykonuję…" = "Working…";
 "Restart" = "Restart";
-"Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie." = "Export requires a stopped container. Stop the container and try again.";
 "Zapisz system plików kontenera jako archiwum tar" = "Save the container’s file system as a tar archive";
 
 /* Features/Containers/ContainersView.swift */
@@ -497,3 +496,17 @@
 "Powłoka zakończona." = "Shell exited.";
 "Powłoka zakończona (kod %d)." = "Shell exited (code %d).";
 "Połącz ponownie" = "Reconnect";
+
+/* container 1.2.1 — build --ssh, run hardening */
+"Przekaż agenta SSH" = "Forward SSH agent";
+"Udostępnia budowaniu agenta SSH z hosta, dzięki czemu instrukcje RUN mogą klonować prywatne repozytoria (RUN --mount=type=ssh). Wymaga uruchomionego ssh-agent z wczytanym kluczem." = "Shares the host's SSH agent with the build, so RUN instructions can clone private repositories (RUN --mount=type=ssh). Requires a running ssh-agent with a loaded key.";
+"EKSPERYMENTALNE" = "EXPERIMENTAL";
+"Funkcja oznaczona przez Apple jako eksperymentalna — jej działanie może się zmienić w kolejnych wersjach container." = "A feature Apple marks as experimental — its behaviour may change in future container releases.";
+"Zabezpieczenia" = "Hardening";
+"Ograniczenia zgodne z tym, co robią Kubernetes i Docker: wybrane ścieżki są tylko do odczytu albo całkiem ukryte przed procesem w kontenerze. Dokładają się do domyślnych ustawień środowiska uruchomieniowego. Wymaga container 1.2.1 lub nowszego." = "The same restrictions Kubernetes and Docker apply: selected paths are read-only or hidden entirely from the process inside the container. They add to the runtime defaults. Requires container 1.2.1 or newer.";
+"System plików tylko do odczytu (--read-only)" = "Read-only filesystem (--read-only)";
+"Cały główny system plików kontenera jest montowany tylko do odczytu. Katalogi, do których aplikacja musi pisać, dołóż jako wolumeny." = "The container's entire root filesystem is mounted read-only. Add volumes for the directories the app needs to write to.";
+"Ścieżki tylko do odczytu" = "Read-only paths";
+"Ścieżki ukryte" = "Masked paths";
+"np. /etc" = "e.g. /etc";
+"np. /proc/kcore" = "e.g. /proc/kcore";

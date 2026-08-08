@@ -28,6 +28,29 @@ final class JSONDecodingTests: XCTestCase {
         XCTAssertEqual(container.configuration.labels?["team"], "dev")
     }
 
+    /// container 1.2.1 reports `--read-only-path` / `--masked-path` back through
+    /// inspect, merged with the runtime defaults. Captured from a live container
+    /// started with `--read-only --read-only-path /etc --masked-path /proc/kcore
+    /// --masked-path /sys/firmware`.
+    func testDecodeHardeningPaths() throws {
+        let containers = try decoder.decode([ContainerInfo].self, from: fixture("container-inspect-hardening"))
+        let configuration = try XCTUnwrap(containers.first?.configuration)
+
+        XCTAssertEqual(configuration.readOnly, true)
+        let readOnlyPaths = try XCTUnwrap(configuration.readonlyPaths)
+        let maskedPaths = try XCTUnwrap(configuration.maskedPaths)
+        XCTAssertTrue(readOnlyPaths.contains("/etc"))
+        XCTAssertTrue(maskedPaths.contains("/proc/kcore"))
+        XCTAssertTrue(maskedPaths.contains("/sys/firmware"))
+
+        // The recreate flow strips the runtime defaults so the form only shows
+        // what the user actually asked for.
+        let userReadOnly = readOnlyPaths.filter { !RunConfiguration.defaultReadOnlyPaths.contains($0) }
+        let userMasked = maskedPaths.filter { !RunConfiguration.defaultMaskedPaths.contains($0) }
+        XCTAssertEqual(userReadOnly, ["/etc"])
+        XCTAssertEqual(userMasked, ["/proc/kcore", "/sys/firmware"])
+    }
+
     func testDecodeImages() throws {
         let images = try decoder.decode([ImageInfo].self, from: fixture("images-list"))
         XCTAssertFalse(images.isEmpty)

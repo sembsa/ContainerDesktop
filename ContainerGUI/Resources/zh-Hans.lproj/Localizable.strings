@@ -99,7 +99,6 @@
 "Zmień konfigurację…" = "更改配置…";
 "Wykonuję…" = "正在执行…";
 "Restart" = "重启";
-"Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie." = "导出需要已停止的容器。请停止容器后重试。";
 "Zapisz system plików kontenera jako archiwum tar" = "将容器的文件系统保存为 tar 归档";
 
 /* Features/Containers/ContainersView.swift */
@@ -497,3 +496,17 @@
 "Powłoka zakończona." = "Shell 已退出。";
 "Powłoka zakończona (kod %d)." = "Shell 已退出（退出码 %d）。";
 "Połącz ponownie" = "重新连接";
+
+/* container 1.2.1 — build --ssh, run hardening */
+"Przekaż agenta SSH" = "转发 SSH 代理";
+"Udostępnia budowaniu agenta SSH z hosta, dzięki czemu instrukcje RUN mogą klonować prywatne repozytoria (RUN --mount=type=ssh). Wymaga uruchomionego ssh-agent z wczytanym kluczem." = "将主机的 SSH 代理共享给构建过程，使 RUN 指令能够克隆私有仓库（RUN --mount=type=ssh）。需要正在运行且已加载密钥的 ssh-agent。";
+"EKSPERYMENTALNE" = "实验性";
+"Funkcja oznaczona przez Apple jako eksperymentalna — jej działanie może się zmienić w kolejnych wersjach container." = "Apple 标记为实验性的功能——其行为可能在后续 container 版本中发生变化。";
+"Zabezpieczenia" = "安全加固";
+"Ograniczenia zgodne z tym, co robią Kubernetes i Docker: wybrane ścieżki są tylko do odczytu albo całkiem ukryte przed procesem w kontenerze. Dokładają się do domyślnych ustawień środowiska uruchomieniowego. Wymaga container 1.2.1 lub nowszego." = "与 Kubernetes 和 Docker 相同的限制：所选路径对容器内的进程为只读或完全隐藏。这些设置会叠加在运行时默认值之上。需要 container 1.2.1 或更高版本。";
+"System plików tylko do odczytu (--read-only)" = "只读文件系统（--read-only）";
+"Cały główny system plików kontenera jest montowany tylko do odczytu. Katalogi, do których aplikacja musi pisać, dołóż jako wolumeny." = "容器的整个根文件系统以只读方式挂载。应用需要写入的目录请通过卷来添加。";
+"Ścieżki tylko do odczytu" = "只读路径";
+"Ścieżki ukryte" = "隐藏路径";
+"np. /etc" = "例如 /etc";
+"np. /proc/kcore" = "例如 /proc/kcore";

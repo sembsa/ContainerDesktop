@@ -1,0 +1,133 @@
+[
+  {
+    "configuration" : {
+      "capAdd" : [
+
+      ],
+      "capDrop" : [
+
+      ],
+      "creationDate" : "2026-08-08T14:05:50Z",
+      "dns" : {
+        "nameservers" : [
+
+        ],
+        "options" : [
+
+        ],
+        "searchDomains" : [
+
+        ]
+      },
+      "id" : "gui-harden-test",
+      "image" : {
+        "descriptor" : {
+          "digest" : "sha256:28bd5fe8b56d1bd048e5babf5b10710ebe0bae67db86916198a6eec434943f8b",
+          "mediaType" : "application\/vnd.oci.image.index.v1+json",
+          "size" : 9218
+        },
+        "reference" : "docker.io\/library\/alpine:latest"
+      },
+      "initProcess" : {
+        "arguments" : [
+          "120"
+        ],
+        "environment" : [
+          "PATH=\/usr\/local\/sbin:\/usr\/local\/bin:\/usr\/sbin:\/usr\/bin:\/sbin:\/bin"
+        ],
+        "executable" : "sleep",
+        "rlimits" : [
+
+        ],
+        "supplementalGroups" : [
+
+        ],
+        "terminal" : false,
+        "user" : {
+          "id" : {
+            "gid" : 0,
+            "uid" : 0
+          }
+        },
+        "workingDirectory" : "\/"
+      },
+      "labels" : {
+
+      },
+      "maskedPaths" : [
+        "\/proc\/asound",
+        "\/proc\/acpi",
+        "\/proc\/kcore",
+        "\/proc\/keys",
+        "\/proc\/latency_stats",
+        "\/proc\/timer_list",
+        "\/proc\/timer_stats",
+        "\/proc\/sched_debug",
+        "\/proc\/scsi",
+        "\/sys\/firmware",
+        "\/sys\/devices\/virtual\/powercap"
+      ],
+      "mounts" : [
+
+      ],
+      "networks" : [
+        {
+          "network" : "default",
+          "options" : {
+            "hostname" : "gui-harden-test",
+            "mtu" : 1280
+          }
+        }
+      ],
+      "platform" : {
+        "architecture" : "arm64",
+        "os" : "linux"
+      },
+      "publishedPorts" : [
+
+      ],
+      "publishedSockets" : [
+
+      ],
+      "readOnly" : true,
+      "readonlyPaths" : [
+        "\/proc\/bus",
+        "\/proc\/fs",
+        "\/proc\/irq",
+        "\/proc\/sys",
+        "\/proc\/sysrq-trigger",
+        "\/etc"
+      ],
+      "resources" : {
+        "cpuOverhead" : 1,
+        "cpus" : 4,
+        "memoryInBytes" : 1073741824
+      },
+      "rosetta" : false,
+      "runtimeHandler" : "container-runtime-linux",
+      "ssh" : false,
+      "sysctls" : {
+
+      },
+      "useInit" : false,
+      "virtualization" : false
+    },
+    "id" : "gui-harden-test",
+    "status" : {
+      "networks" : [
+        {
+          "hostname" : "gui-harden-test",
+          "ipv4Address" : "192.168.69.12\/24",
+          "ipv4Gateway" : "192.168.69.1",
+          "ipv6Address" : "fdf6:fc84:2ccb:8c53:f82e:a1ff:fe2b:e69e\/64",
+          "macAddress" : "fa:2e:a1:2b:e6:9e",
+          "mtu" : 1280,
+          "network" : "default",
+          "variant" : "reserved"
+        }
+      ],
+      "startedDate" : "2026-08-08T14:05:51Z",
+      "state" : "running"
+    }
+  }
+]

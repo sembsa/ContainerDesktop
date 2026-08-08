@@ -458,14 +458,9 @@ struct ContainersView: View {
         }
     }
 
+    /// Since container 1.2.1 `container export` also works on live containers,
+    /// so there is no stopped-state precondition any more.
     private func exportContainer(_ container: ContainerInfo) {
-        guard !container.isRunning else {
-            model.present(CLIError.command(
-                exitCode: -1,
-                stderr: String(localized: "Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie.")
-            ))
-            return
-        }
         let panel = NSSavePanel()
         panel.nameFieldStringValue = "\(container.id).tar"
         panel.message = String(localized: "Zapisz system plików kontenera jako archiwum tar")

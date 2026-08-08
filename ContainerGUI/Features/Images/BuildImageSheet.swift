@@ -9,6 +9,7 @@ struct BuildImageSheet: View {
     @State private var dockerfile = ""
     @State private var tag = ""
     @State private var noCache = false
+    @State private var forwardSSH = false
     @State private var isBuilding = false
     @State private var finished = false
     @State private var output: [LogLine] = []
@@ -41,6 +42,10 @@ struct BuildImageSheet: View {
                 Section {
                     tagRow
                     Toggle("Bez cache", isOn: $noCache)
+                    HStack(spacing: 4) {
+                        Toggle("Przekaż agenta SSH", isOn: $forwardSSH)
+                        InfoTip(text: String(localized: "Udostępnia budowaniu agenta SSH z hosta, dzięki czemu instrukcje RUN mogą klonować prywatne repozytoria (RUN --mount=type=ssh). Wymaga uruchomionego ssh-agent z wczytanym kluczem."))
+                    }
                 } header: {
                     HStack(spacing: 5) {
                         Image(systemName: "gearshape.fill")
@@ -117,6 +122,9 @@ struct BuildImageSheet: View {
 
         var args = ["build", "--progress", "plain", "--tag", tag]
         if noCache { args.append("--no-cache") }
+        // container 1.2.1+. Unlike `run --ssh` (a bare flag) the build variant
+        // takes a value; "default" forwards the host's SSH_AUTH_SOCK agent.
+        if forwardSSH { args.append(contentsOf: ["--ssh", "default"]) }
         if !dockerfile.isEmpty { args.append(contentsOf: ["--file", dockerfile]) }
         args.append(contextDir)
 

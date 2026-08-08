@@ -33,6 +33,11 @@ struct ContainerInfo: Codable, Identifiable, Sendable, Hashable {
         let ssh: Bool?
         let virtualization: Bool?
         let networks: [NetworkRef]?
+        /// `--read-only-path` (container 1.2.1). Note the lowercase "o" — the
+        /// CLI emits `readonlyPaths`, not `readOnlyPaths`.
+        let readonlyPaths: [String]?
+        /// `--masked-path` (container 1.2.1).
+        let maskedPaths: [String]?
 
         struct NetworkRef: Codable, Sendable, Hashable {
             let network: String?
