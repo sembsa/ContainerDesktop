@@ -19,6 +19,7 @@ struct ContainersView: View {
     @State private var confirmation: ContainerConfirmation?
     /// Cards by default — the table stays one click away for dense scanning.
     @AppStorage("containerListStyle") private var listStyle: ContainerListStyle = .cards
+    @State private var search = ""
 
     enum ContainerConfirmation: Identifiable {
         case remove(ContainerInfo)
@@ -34,6 +35,22 @@ struct ContainersView: View {
     }
 
     private var store: ContainerStore { model.containers }
+
+    /// Containers matching the search field. Matches id, image, Compose project
+    /// and service, and the IP — the things you actually remember a container by.
+    private var filteredContainers: [ContainerInfo] {
+        let needle = search.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !needle.isEmpty else { return store.items }
+        return store.items.filter { container in
+            [
+                container.id,
+                container.imageReference,
+                container.composeProject ?? "",
+                container.composeService ?? "",
+                container.primaryIPv4Address ?? "",
+            ].contains { $0.lowercased().contains(needle) }
+        }
+    }
 
     /// Expand/collapse binding for a Compose project group, backed by the store
     /// (so it survives this view being recreated on sidebar navigation). Default
@@ -66,7 +83,7 @@ struct ContainersView: View {
         var projectMap: [String: [ContainerInfo]] = [:]
         var ungrouped: [ContainerInfo] = []
 
-        for container in store.items {
+        for container in filteredContainers {
             if let proj = container.composeProject {
                 projectMap[proj, default: []].append(container)
             } else {
@@ -110,6 +127,7 @@ struct ContainersView: View {
             }
         }
         .navigationTitle("Kontenery")
+        .searchable(text: $search, placement: .toolbar, prompt: Text("Szukaj kontenerów"))
         .task { await store.refresh() }
         .toolbar { toolbarContent }
         .sheet(isPresented: $showRunSheet) {
@@ -172,7 +190,14 @@ struct ContainersView: View {
 
     @ViewBuilder
     private var listSection: some View {
-        if store.items.isEmpty {
+        if !search.isEmpty && filteredContainers.isEmpty {
+            EmptyStateView(
+                symbol: "magnifyingglass",
+                title: String(localized: "Brak wyników"),
+                message: String(format: String(localized: "Żaden kontener nie pasuje do „%@”."), search),
+                tint: .secondary
+            )
+        } else if store.items.isEmpty {
             if model.system.serviceState.isRunning {
                 EmptyStateView(
                     symbol: "shippingbox",
@@ -188,6 +213,7 @@ struct ContainersView: View {
         } else if listStyle == .cards {
             ContainerCardsView(
                 selection: $selection,
+                containers: filteredContainers,
                 onRecreate: { recreateTarget = $0 },
                 onRemove: { confirmation = .remove($0) },
                 onRemoveProject: { confirmation = .removeProject($0, $1) }

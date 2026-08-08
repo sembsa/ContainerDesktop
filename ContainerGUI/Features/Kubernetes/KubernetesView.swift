@@ -6,6 +6,7 @@ struct KubernetesView: View {
     @Environment(AppModel.self) private var model
 
     @State private var showCreate = false
+    @State private var selection: String?
     @State private var loadImageTarget: K8sCluster?
     @State private var deleteTarget: K8sCluster?
 
@@ -54,7 +55,27 @@ struct KubernetesView: View {
 
     // MARK: - Cluster list
 
+    private var selectedCluster: K8sCluster? {
+        selection.flatMap { id in store.clusters.first { $0.id == id } }
+    }
+
     private var clusterList: some View {
+        GeometryReader { geo in
+            VSplitView {
+                clusterScroll
+                    .frame(
+                        minHeight: 120,
+                        maxHeight: selectedCluster == nil ? .infinity : max(geo.size.height * 0.45, 120)
+                    )
+                if let cluster = selectedCluster {
+                    ClusterDetailView(cluster: cluster)
+                        .frame(minHeight: 260, maxHeight: .infinity)
+                }
+            }
+        }
+    }
+
+    private var clusterScroll: some View {
         ScrollView {
             LazyVStack(spacing: 12) {
                 if let error = store.error {
@@ -122,7 +143,17 @@ struct KubernetesView: View {
             }
         }
         .padding(12)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(selection == cluster.id ? AnyShapeStyle(Color.accentColor.opacity(0.12)) : AnyShapeStyle(.quaternary.opacity(0.4)))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .strokeBorder(selection == cluster.id ? Color.accentColor.opacity(0.55) : .clear, lineWidth: 1.5)
+        )
+        .contentShape(RoundedRectangle(cornerRadius: 10))
+        .onTapGesture { selection = selection == cluster.id ? nil : cluster.id }
+        .animation(.smooth(duration: 0.18), value: selection)
     }
 
     private func nodeSummary(_ node: K8sNode) -> String {

@@ -619,3 +619,29 @@
 "Karty" = "Karty";
 "Tabela" = "Tabela";
 "Przełącz między kartami a tabelą" = "Przełącz między kartami a tabelą";
+
+/* Search, values list editor, cluster detail */
+"Szukaj kontenerów" = "Szukaj kontenerów";
+"Brak wyników" = "Brak wyników";
+"Żaden kontener nie pasuje do „%@”." = "Żaden kontener nie pasuje do „%@”.";
+"Wszystkie repozytoria" = "Wszystkie repozytoria";
+"Filtruj po nazwie…" = "Filtruj po nazwie…";
+"Wybierz repozytorium, aby zobaczyć wszystkie jego charty, albo wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne." = "Wybierz repozytorium, aby zobaczyć wszystkie jego charty, albo wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne.";
+"Dodaj pozycję" = "Dodaj pozycję";
+"Edytuj YAML" = "Edytuj YAML";
+"Węzły" = "Węzły";
+"Dostęp" = "Dostęp";
+"Klaster działa" = "Klaster działa";
+"Klaster zatrzymany" = "Klaster zatrzymany";
+"Wdrożenia Helm" = "Wdrożenia Helm";
+"Rdzenie" = "Rdzenie";
+"Adres" = "Adres";
+"API serwera" = "API serwera";
+"Zainstaluj helm (brew install helm), aby zobaczyć wdrożenia." = "Zainstaluj helm (brew install helm), aby zobaczyć wdrożenia.";
+"Uruchom klaster, aby zobaczyć wdrożenia." = "Uruchom klaster, aby zobaczyć wdrożenia.";
+"Brak wdrożeń w tym klastrze." = "Brak wdrożeń w tym klastrze.";
+"Aplikacja używa własnego pliku kubeconfig dla tego klastra i nie modyfikuje Twojego ~/.kube/config." = "Aplikacja używa własnego pliku kubeconfig dla tego klastra i nie modyfikuje Twojego ~/.kube/config.";
+"Plik kubeconfig aplikacji" = "Plik kubeconfig aplikacji";
+"Pody" = "Pody";
+"Adres API" = "Adres API";
+"Kopiuj" = "Kopiuj";

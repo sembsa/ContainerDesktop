@@ -24,6 +24,7 @@ struct HelmView: View {
     @State private var historyTarget: HelmRelease?
     @State private var uninstallTarget: HelmRelease?
     @State private var search = ""
+    @State private var selectedRepository = ""
     @State private var newRepoName = ""
     @State private var newRepoURL = ""
 
@@ -218,11 +219,24 @@ struct HelmView: View {
 
     private var chartsTab: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 6) {
+            HStack(spacing: 8) {
+                // Picking a repository lists everything in it, which is how you
+                // browse when you don't already know a chart's name.
+                Picker("", selection: repositoryBinding) {
+                    Text("Wszystkie repozytoria").tag("")
+                    ForEach(store.repositories) { repository in
+                        Text(repository.name).tag(repository.name)
+                    }
+                }
+                .labelsHidden()
+                .frame(maxWidth: 190)
+
+                Divider().frame(height: 16)
+
                 Image(systemName: "magnifyingglass").foregroundStyle(.secondary)
-                TextField("Szukaj chartów w repozytoriach…", text: $search)
+                TextField("Filtruj po nazwie…", text: $search)
                     .textFieldStyle(.plain)
-                    .onSubmit { Task { await store.search(search) } }
+                    .onSubmit { Task { await runSearch() } }
                 if store.isSearching { ProgressView().controlSize(.small) }
             }
             .padding(10)
@@ -232,7 +246,7 @@ struct HelmView: View {
                 EmptyStateView(
                     symbol: "square.stack.3d.up",
                     title: String(localized: "Znajdź chart"),
-                    message: String(localized: "Wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne."),
+                    message: String(localized: "Wybierz repozytorium, aby zobaczyć wszystkie jego charty, albo wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne."),
                     tint: .cyan
                 )
             } else {
@@ -266,6 +280,29 @@ struct HelmView: View {
                     }
                 }
             }
+        }
+    }
+
+    private var repositoryBinding: Binding<String> {
+        Binding(
+            get: { selectedRepository },
+            set: { name in
+                selectedRepository = name
+                Task { await runSearch() }
+            }
+        )
+    }
+
+    /// `helm search repo <name>/` returns every chart in that repository, which
+    /// is what makes the picker a browser rather than another filter.
+    private func runSearch() async {
+        let filter = search.trimmingCharacters(in: .whitespaces)
+        if selectedRepository.isEmpty {
+            await store.search(filter)
+        } else if filter.isEmpty {
+            await store.search("\(selectedRepository)/")
+        } else {
+            await store.search("\(selectedRepository)/\(filter)")
         }
     }
 

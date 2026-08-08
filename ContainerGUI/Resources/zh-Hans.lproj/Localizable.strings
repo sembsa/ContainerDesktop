@@ -619,3 +619,29 @@
 "Karty" = "卡片";
 "Tabela" = "表格";
 "Przełącz między kartami a tabelą" = "在卡片与表格之间切换";
+
+/* Search, values list editor, cluster detail */
+"Szukaj kontenerów" = "搜索容器";
+"Brak wyników" = "没有结果";
+"Żaden kontener nie pasuje do „%@”." = "没有容器匹配“%@”。";
+"Wszystkie repozytoria" = "所有仓库";
+"Filtruj po nazwie…" = "按名称筛选…";
+"Wybierz repozytorium, aby zobaczyć wszystkie jego charty, albo wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne." = "选择一个仓库以列出其中所有 chart，或输入名称并按回车。搜索范围是“仓库”标签页中添加的仓库——若结果看起来过时，请刷新它们。";
+"Dodaj pozycję" = "添加条目";
+"Edytuj YAML" = "编辑 YAML";
+"Węzły" = "节点";
+"Dostęp" = "访问";
+"Klaster działa" = "集群运行中";
+"Klaster zatrzymany" = "集群已停止";
+"Wdrożenia Helm" = "Helm 发布";
+"Rdzenie" = "核心数";
+"Adres" = "地址";
+"API serwera" = "API 服务器";
+"Zainstaluj helm (brew install helm), aby zobaczyć wdrożenia." = "安装 helm（brew install helm）以查看发布。";
+"Uruchom klaster, aby zobaczyć wdrożenia." = "启动集群以查看其发布。";
+"Brak wdrożeń w tym klastrze." = "此集群中没有发布。";
+"Aplikacja używa własnego pliku kubeconfig dla tego klastra i nie modyfikuje Twojego ~/.kube/config." = "应用为此集群使用自己的 kubeconfig，绝不修改你的 ~/.kube/config。";
+"Plik kubeconfig aplikacji" = "应用的 kubeconfig 文件";
+"Pody" = "Pod";
+"Adres API" = "API 地址";
+"Kopiuj" = "复制";
