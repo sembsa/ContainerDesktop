@@ -38,8 +38,11 @@ struct InstallChartSheet: View {
     @State private var editor: Editor = .form
     @State private var filter = ""
     @State private var expandedGroups: Set<String> = []
+    /// String fields the user opened into a multi-line box.
+    @State private var expandedStrings: Set<String> = []
 
     @State private var isLoadingValues = true
+    @State private var isLoadingSchema = false
     @State private var isRunning = false
     @State private var finished = false
     @State private var validationError: String?
@@ -165,6 +168,14 @@ struct InstallChartSheet: View {
                     }
                 }
                 Spacer()
+                if isLoadingSchema {
+                    HStack(spacing: 4) {
+                        ProgressView().controlSize(.small)
+                        Text("wczytuję schemat chartu…")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
                 LoadFromFileButton(message: String(localized: "Wybierz plik values.yaml z nadpisaniami")) { contents in
                     overridesYAML = contents
                     editor = .yaml
@@ -243,7 +254,15 @@ struct InstallChartSheet: View {
                 Text(field.label)
                     .font(.callout)
                     .foregroundStyle(isEdited ? Color.accentColor : .primary)
-                if field.isRequired {
+                if !field.oneOfAlternatives.isEmpty {
+                    Text("jedno z")
+                        .font(.system(size: 9, weight: .semibold))
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(Color.orange.opacity(0.14), in: Capsule())
+                        .foregroundStyle(Color.orange)
+                        .help(String(format: String(localized: "Chart wymaga dokładnie jednego z: %@"), field.oneOfAlternatives.joined(separator: ", ")))
+                } else if field.isRequired {
                     Text("wymagane")
                         .font(.system(size: 9, weight: .semibold))
                         .padding(.horizontal, 5)
@@ -262,7 +281,7 @@ struct InstallChartSheet: View {
                         edits[field.path] = contents
                     }
                 }
-                if field.kind.isInline {
+                if isInline(field) {
                     control(for: field)
                         .frame(width: 200, alignment: .trailing)
                 }
@@ -281,7 +300,7 @@ struct InstallChartSheet: View {
                 .accessibilityHidden(!isEdited)
                 .frame(width: 20)
             }
-            if !field.kind.isInline {
+            if !isInline(field) {
                 control(for: field)
                     .padding(.trailing, 26)
             }
@@ -304,7 +323,13 @@ struct InstallChartSheet: View {
                 ForEach(field.enumValues, id: \.self) { Text($0).tag($0) }
             }
             .labelsHidden()
-        case .number, .string:
+        case .string:
+            ExpandableTextField(
+                text: textBinding(field),
+                placeholder: field.defaultValue,
+                isExpanded: expansionBinding(forString: field)
+            )
+        case .number:
             TextField(field.defaultValue, text: textBinding(field), prompt: Text(field.defaultValue))
                 .textFieldStyle(.roundedBorder)
                 .font(.caption.monospaced())
@@ -383,6 +408,37 @@ struct InstallChartSheet: View {
             byGroup[field.group, default: []].append(field)
         }
         return order.map { FieldGroup(name: $0, fields: byGroup[$0] ?? []) }
+    }
+
+    /// A string field is inline while it is a one-liner; once expanded it
+    /// claims the full width of the pane on its own row.
+    private func isInline(_ field: ValuesField) -> Bool {
+        guard field.kind.isInline else { return false }
+        guard field.kind == .string else { return true }
+        return !isStringExpanded(field)
+    }
+
+    /// Auto-expands for content a single line cannot show, and for a required
+    /// key the chart never defaults — almost always a "paste the document here"
+    /// field, like the Soneta chart's XML database list.
+    private func isStringExpanded(_ field: ValuesField) -> Bool {
+        if expandedStrings.contains(field.path) { return true }
+        let value = edits[field.path] ?? field.defaultValue
+        if value.contains("\n") || value.count > 60 { return true }
+        return field.isRequired && field.defaultValue.isEmpty
+    }
+
+    private func expansionBinding(forString field: ValuesField) -> Binding<Bool> {
+        Binding(
+            get: { isStringExpanded(field) },
+            set: { expanded in
+                if expanded {
+                    expandedStrings.insert(field.path)
+                } else {
+                    expandedStrings.remove(field.path)
+                }
+            }
+        )
     }
 
     private func expansionBinding(for group: String) -> Binding<Bool> {
@@ -470,17 +526,28 @@ struct InstallChartSheet: View {
 
     private func reloadDefaults() async {
         isLoadingValues = true
-        defer { isLoadingValues = false }
+        defer { isLoadingValues = false; isLoadingSchema = false }
         do {
             let yaml = try await store.defaultValues(of: chart.name, version: version)
-            let parsed = try ChartValues.fields(from: yaml)
-            // Charts can require keys they do not default (the Soneta chart's
-            // `dblist`), so the schema is folded in — otherwise the form has no
-            // field for the very value blocking the install.
-            let schema = await store.schema(of: chart.name, version: version)
-            fields = ChartValues.merge(fields: parsed, schema: schema)
+            fields = try ChartValues.fields(from: yaml)
             // Open the first few groups so the pane isn't a wall of arrows.
             expandedGroups = Set(groupedFields.prefix(3).map(\.name))
+            isLoadingValues = false
+
+            // Charts can require keys they never default (the Soneta chart's
+            // `dblist`), and those only exist in values.schema.json — which helm
+            // has no command for, so the chart has to be unpacked. That is a
+            // download, so it happens *after* the form is already usable rather
+            // than holding it hostage; the extra fields appear when it lands.
+            let requestedVersion = version
+            isLoadingSchema = true
+            let schema = await store.schema(of: chart.name, version: requestedVersion)
+            // A version switch may have raced past this request.
+            guard requestedVersion == version else { return }
+            isLoadingSchema = false
+            guard !schema.isEmpty else { return }
+            fields = ChartValues.merge(fields: fields, schema: schema)
+            expandedGroups.formUnion(groupedFields.prefix(3).map(\.name))
         } catch {
             fields = []
             validationError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription

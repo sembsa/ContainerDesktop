@@ -42,6 +42,74 @@ extension ValuesField.Kind {
     }
 }
 
+/// Single-line by default, expandable to a real text box.
+///
+/// Some string values are documents — an XML database list, a certificate, an
+/// appsettings blob. One line is fine for a tag or a hostname and useless for
+/// those, so the field grows: automatically once the value has line breaks or
+/// runs long, and on demand via the expand button.
+struct ExpandableTextField: View {
+    @Binding var text: String
+    let placeholder: String
+    /// Owned by the row, which needs to know too: an expanded editor takes the
+    /// full width of the pane instead of the inline control slot.
+    @Binding var isExpanded: Bool
+
+    var body: some View {
+        Group {
+            if isExpanded {
+                VStack(alignment: .leading, spacing: 2) {
+                    TextEditor(text: $text)
+                        .font(.caption.monospaced())
+                        .frame(minHeight: 78, maxHeight: 190)
+                        .scrollContentBackground(.hidden)
+                        .padding(4)
+                        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 6))
+                        .overlay(alignment: .topLeading) {
+                            if text.isEmpty {
+                                Text(placeholder)
+                                    .font(.caption.monospaced())
+                                    .foregroundStyle(.tertiary)
+                                    .padding(.horizontal, 9)
+                                    .padding(.vertical, 8)
+                                    .allowsHitTesting(false)
+                            }
+                        }
+                    HStack(spacing: 6) {
+                        Spacer()
+                        if !text.isEmpty {
+                            Text(String(format: String(localized: "%lld znaków"), Int64(text.count)))
+                                .font(.system(size: 9).monospacedDigit())
+                                .foregroundStyle(.tertiary)
+                        }
+                        Button("Zwiń", systemImage: "arrow.down.right.and.arrow.up.left") {
+                            isExpanded = false
+                        }
+                        .buttonStyle(.borderless)
+                        .labelStyle(.iconOnly)
+                        .controlSize(.small)
+                        .disabled(text.contains("\n"))
+                        .help("Zwiń pole")
+                    }
+                }
+            } else {
+                HStack(spacing: 4) {
+                    TextField(placeholder, text: $text, prompt: Text(placeholder))
+                        .textFieldStyle(.roundedBorder)
+                        .font(.caption.monospaced())
+                    Button("Rozwiń", systemImage: "arrow.up.left.and.arrow.down.right") {
+                        isExpanded = true
+                    }
+                    .buttonStyle(.borderless)
+                    .labelStyle(.iconOnly)
+                    .controlSize(.small)
+                    .help("Rozwiń do pola wielolinijkowego")
+                }
+            }
+        }
+    }
+}
+
 /// Row editor for a list of scalars — `imagePullSecrets`, `args`, `tolerations`
 /// and the many `envs.<component>: []` keys charts are full of.
 ///

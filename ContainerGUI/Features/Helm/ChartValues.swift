@@ -13,8 +13,11 @@ struct ValuesField: Identifiable, Hashable {
     /// Comment lines sitting directly above the key in `values.yaml`, or the
     /// schema's `description` for keys that only exist in the schema.
     let comment: String?
-    /// Declared in the schema's `required` (or one of its `oneOf` branches).
+    /// Declared in the schema's `required` (or common to every `oneOf` branch).
     var isRequired = false
+    /// Non-empty when the schema demands *one of* several keys and this is one
+    /// of them. Flagging each as plainly "required" would overstate it.
+    var oneOfAlternatives: [String] = []
     /// Schema `enum` — turns a free-text field into a picker.
     var enumValues: [String] = []
 

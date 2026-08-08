@@ -653,3 +653,13 @@
 "Wybierz plik values.yaml z nadpisaniami" = "选择包含覆盖项的 values.yaml 文件";
 "Wczytaj cały plik values.yaml jako nadpisania" = "将整个 values.yaml 作为覆盖项载入";
 "wymagane" = "必填";
+
+/* One-of requirements, expandable fields, background schema load */
+"jedno z" = "二选一";
+"Chart wymaga dokładnie jednego z: %@" = "该 chart 需要且仅需其中之一：%@";
+"Rozwiń" = "展开";
+"Zwiń" = "收起";
+"Rozwiń do pola wielolinijkowego" = "展开为多行文本框";
+"Zwiń pole" = "收起字段";
+"%lld znaków" = "%lld 个字符";
+"wczytuję schemat chartu…" = "正在载入 chart 架构…";
