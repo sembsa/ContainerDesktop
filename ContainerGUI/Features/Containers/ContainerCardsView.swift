@@ -89,8 +89,6 @@ struct ContainerCard: View {
     @Binding var selection: String?
     let onRecreate: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
-    /// Compose members sit inside a project card and drop their own inset.
-    var nested = false
 
     @State private var isHovering = false
 
@@ -367,8 +365,7 @@ struct ComposeProjectCard: View {
                         container: container,
                         selection: $selection,
                         onRecreate: onRecreate,
-                        onRemove: onRemove,
-                        nested: true
+                        onRemove: onRemove
                     )
                     .padding(.leading, 14)
                 }
