@@ -645,3 +645,11 @@
 "Pody" = "Pods";
 "Adres API" = "API address";
 "Kopiuj" = "Copy";
+
+/* Values from a file, schema-required keys */
+"Wczytaj z pliku…" = "Load from file…";
+"Wczytaj wartość z pliku na dysku" = "Load the value from a file on disk";
+"Wybierz plik z wartością dla „%@”" = "Choose a file with the value for “%@”";
+"Wybierz plik values.yaml z nadpisaniami" = "Choose a values.yaml file with overrides";
+"Wczytaj cały plik values.yaml jako nadpisania" = "Load a whole values.yaml as the overrides";
+"wymagane" = "required";

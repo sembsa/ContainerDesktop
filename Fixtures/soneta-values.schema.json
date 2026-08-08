@@ -1,0 +1,507 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$defs": {
+        "Quantity": {
+            "oneOf": [
+                { "type": "string" },
+                { "type": "number" }
+            ],
+            "description": "A Kubernetes resource quantity, e.g. '100m', '1Gi', '42'."
+        },
+        "ResourceList": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/Quantity" },
+            "description": "A map of resource names to quantities."
+        },
+        "resourceRequirements": {
+            "type": "object",
+            "properties": {
+                "limits": {
+                    "$ref": "#/$defs/ResourceList",
+                    "description": "Maximum amount of compute resources allowed."
+                },
+                "requests": {
+                    "$ref": "#/$defs/ResourceList",
+                    "description": "Minimum amount of compute resources required."
+                }
+            },
+            "description": "Describes the compute resource requirements."
+        },
+        "pvcSpec": {
+            "type": "object",
+            "properties": {
+                "accessModes": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "List of access modes for the PVC (e.g. ReadWriteOnce, ReadOnlyMany, ReadWriteMany)"
+                },
+                "resources": {
+                    "type": "object",
+                    "properties": {
+                        "requests": {
+                            "type": "object",
+                            "properties": {
+                                "storage": { 
+                                    "$ref": "#/$defs/Quantity", 
+                                    "description": "Requested storage size (e.g. 10Mi, 1Gi)" }
+                            },
+                            "required": ["storage"]
+                        }
+                    },
+                    "required": ["requests"]
+                },
+                "storageClassName": {
+                    "type": "string",
+                    "description": "Name of the StorageClass to use"
+                },
+                "selector": {
+                    "type": "object",
+                    "properties": {
+                        "matchLabels": {
+                            "type": "object",
+                            "additionalProperties": { "type": "string" }
+                        },
+                        "matchExpressions": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "key": { "type": "string" },
+                                    "operator": { "type": "string" },
+                                    "values": {
+                                        "type": "array",
+                                        "items": { "type": "string" }
+                                    }
+                                },
+                                "required": ["key", "operator"]
+                            }
+                        }
+                    }
+                },
+                "volumeMode": {
+                    "type": "string",
+                    "enum": ["Filesystem", "Block"],
+                    "description": "Defines whether the volume is a filesystem or block device"
+                },
+                "dataSource": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "kind": { "type": "string" },
+                        "apiGroup": { "type": "string" }
+                    },
+                    "required": ["name", "kind"]
+                },
+                "dataSourceRef": {
+                    "type": "object",
+                    "properties": {
+                        "name": { "type": "string" },
+                        "kind": { "type": "string" },
+                        "apiGroup": { "type": "string" }
+                    },
+                    "required": ["name", "kind"]
+                },
+                "volumeName": {
+                    "type": "string",
+                    "description": "Bind to a specific PersistentVolume by name"
+                }
+            },
+            "required": ["accessModes", "resources"]
+        }
+    },
+    "type": "object",
+    "title": "Values",
+    "oneOf": [ 
+        { "required": ["image", "dblist"] },
+        { "required": ["image", "listaBazDanych"] }
+    ],
+    "properties": {
+        "image": {
+            "type": "object",
+            "description": "Container image configuration, including repository, tag, product type, and postfixes for different components. Allows you to specify which components should be enabled (e.g., webapi, scheduler, webwcf). Example: product: 'standard', tag: '2504.2.4', webTagPostfix: -alpine, serverTagPostfix: -alpine, repository: ''",
+            "properties": {
+                "repository": {
+                    "type" :"string",
+                    "default": "",
+                    "description": "Repository url, if empty then dockerhub"
+                },
+                "product": {
+                    "type" :"string",
+                    "default": "standard",
+                    "description": "Product type, used to determine the image name",
+                    "enum": ["standard", "premium"]
+                },
+                "tag":{
+                    "type": "string"
+                },
+                "scheduler": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "webapi": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "webwcf": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "webTagpostfix": {
+                    "type": "string",
+                    "default": "",
+                    "enum": ["-alpine", "-windowsservercore"]
+                },
+                "serverTagpostfix": {
+                    "type": "string",
+                    "default": "",
+                    "enum": ["-alpine", "-windowsservercore"]
+                }
+            }
+        },
+        "dblist": {
+            "type": "string",
+            "description": "XML string containing database connection definitions. Used by the business logic to provide a list of databases. Example: <DatabaseCollection><MsSqlDatabase>...</MsSqlDatabase></DatabaseCollection>"
+        },
+        "listaBazDanych": {
+            "type": "string",
+            "description": "[DEPRECATED] Use 'dblist' instead. This property is obsolete and will be removed in a future release.",
+            "deprecated": true
+        },
+        "replicaCount": {
+            "type": "number",
+            "description": "Number of replicas for the main container (e.g., web)."
+        },
+
+        "imagePullSecrets": {
+            "type": "array",
+            "description": "List of Kubernetes secrets used to pull images from private registries."
+        },
+
+        "nameOverride": {
+            "type": "string",
+            "description": "Overrides the default Helm release name for resources."
+        },
+
+        "fullnameOverride": {
+            "type": "string",
+            "description": "Overrides the full Helm release name for resources."
+        },
+        "adminMode": {
+            "type": "boolean",
+            "description": "Enables the application's admin mode."
+        },
+        "appsettings": {
+            "type": "object",
+            "description": "Object with application settings passed to ConfigMap. Allows you to provide configuration such as orchestrator.kubernetes, RoutingMethod, Logging, Telemetry, HealthCheck, etc. Example: { 'orchestrator': { 'kubernetes': { ... } }, 'RoutingMethod': 'CommHub', ... }",
+            "additionalProperties": true
+        },
+        "service": {
+            "type": "object",
+            "description": "Kubernetes Service configuration for individual components, e.g., service type (NodePort, ClusterIP).",
+            "properties": {
+                "type": {
+                    "type": "string"
+                },
+                "server": {
+                    "type": "object",
+                    "description": "Configuration for the server in the service",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+
+        "ingress": {
+            "type": "object",
+            "description": "Ingress resource configuration, including host, class, TLS, and annotations. Allows exposing the application outside the cluster.",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "host": {
+                    "type": "string",
+                    "description": "The host address for the ingress"
+                }
+            }
+        },
+
+        "nodeSelector": {
+            "type": "array",
+            "description": "List of Kubernetes node selectors on which pods should be scheduled."
+        },
+
+        "tolerations": {
+            "type": "array",
+            "description": "List of pod tolerations, allowing scheduling on nodes with specific taints."
+        },
+
+        "affinity": {
+            "type": "object",
+            "description": "Pod affinity rules, e.g., colocation preferences."
+        },
+
+        "resources": {
+            "type": "object",
+            "description": "Resource configuration (CPU, RAM) for individual components and PVC definition. Example: web: { limits: { cpu: '200m', memory: '256Mi' }, requests: { cpu: '50m', memory: '128Mi' } }, pvc: { spec: { ... } }",
+            "properties": {
+                "web": { "$ref": "#/$defs/resourceRequirements" },
+                "webapi": { "$ref": "#/$defs/resourceRequirements" },
+                "server": { "$ref": "#/$defs/resourceRequirements" },
+                "scheduler": { "$ref": "#/$defs/resourceRequirements" },
+                "orchestrator": { "$ref": "#/$defs/resourceRequirements" },
+                "router": { "$ref": "#/$defs/resourceRequirements" },
+                "commhub": { "$ref": "#/$defs/resourceRequirements" },
+                "webwcf": { "$ref": "#/$defs/resourceRequirements" },
+                "admin": { "$ref": "#/$defs/resourceRequirements" },
+                "pvc": {
+                    "type": "object",
+                    "description": "PersistentVolumeClaim configuration for the chart",
+                    "properties": {
+                        "spec": {
+                            "$ref": "#/$defs/pvcSpec"
+                        }
+                    }
+                }
+            }
+        },
+
+        "volumes": {
+            "type": "object",
+            "description": "Volume definitions mounted to pods. Allows mounting host directories or other volume types to selected components (e.g., backend, frontend, web, webapi). Each entry contains a name, mount path, and volume specification. Example: { all: [ { name: 'dotmemory', mountPath: '/dotmemory', spec: { hostPath: { path: '/run/desktop/mnt/host/c/...', type: 'Directory' } } } ] }",
+            "properties": {
+                "all": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "frontend:": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "backend": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "web": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "webapi": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "webwcf": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "server": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                },
+                "scheduler": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "mountPath": {
+                            "type": "string"
+                        },
+                        "spec": {
+                            "type":"object",
+                            "description": "Kubernetes volume specification"
+                        }
+                    }
+                }
+            }  
+        },
+
+        "envs": {
+            "type": "object",
+            "description": "Set of environment variables passed to pods, divided by component. Example: { all: [ { name: 'DOTNET_USE_POLLING_FILE_WATCHER', value: '1' } ] }",
+            "properties": {
+                "all": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "frontend:": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "backend": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "web": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "webapi": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "webwcf": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "server": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "scheduler": {
+                    "type": "array",
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+
+        "args": {
+            "type": "object",
+            "description": "Startup arguments passed to containers of individual components. Example: { web: ['--urls', 'http://*:8080'] }",
+            "properties": {
+                "frontend": { "type": "array", "items": {"type": "string"} },
+                "web": { "type": "array", "items": {"type": "string"} },
+                "webapi": { "type": "array", "items": {"type": "string"} },
+                "webwcf": { "type": "array", "items": {"type": "string"} },
+                "backend": { "type": "array", "items": {"type": "string"} },
+                "server": { "type": "array", "items": {"type": "string"} },
+                "scheduler": { "type": "array", "items": {"type": "string"} }
+            }
+        } 
+    }
+}

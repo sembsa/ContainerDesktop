@@ -645,3 +645,11 @@
 "Pody" = "Pody";
 "Adres API" = "Adres API";
 "Kopiuj" = "Kopiuj";
+
+/* Values from a file, schema-required keys */
+"Wczytaj z pliku…" = "Wczytaj z pliku…";
+"Wczytaj wartość z pliku na dysku" = "Wczytaj wartość z pliku na dysku";
+"Wybierz plik z wartością dla „%@”" = "Wybierz plik z wartością dla „%@”";
+"Wybierz plik values.yaml z nadpisaniami" = "Wybierz plik values.yaml z nadpisaniami";
+"Wczytaj cały plik values.yaml jako nadpisania" = "Wczytaj cały plik values.yaml jako nadpisania";
+"wymagane" = "wymagane";

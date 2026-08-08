@@ -143,6 +143,7 @@ targets:
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
+      - path: ContainerGUI/Features/Helm/ChartSchema.swift
       - path: ContainerGUI/Widget/WidgetSnapshot.swift
       - path: ContainerGUI/Terminal/TerminalEngine.swift
       - path: ContainerGUI/Compose
