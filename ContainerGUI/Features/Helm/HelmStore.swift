@@ -54,7 +54,9 @@ final class HelmStore {
 
     func refreshReleases() async {
         guard isHelmInstalled, let target else { return }
-        isLoadingReleases = true
+        // The 3s poll calls this too — only show the spinner on a cold load, or
+        // it blinks forever in the cluster bar.
+        if releases.isEmpty { isLoadingReleases = true }
         defer { isLoadingReleases = false }
         do {
             releases = try await helm.json(["list", "--all-namespaces"], on: target, as: [HelmRelease].self)
@@ -105,14 +107,6 @@ final class HelmStore {
         )
         // With no overrides helm prints the literal "null".
         return output == "null" ? "" : output
-    }
-
-    func notes(of release: HelmRelease) async throws -> String {
-        guard let target else { return "" }
-        return try await helm.run(
-            ["get", "notes", release.name, "--namespace", release.namespace],
-            on: target
-        )
     }
 
     // MARK: - Repositories

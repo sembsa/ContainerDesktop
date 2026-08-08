@@ -23,7 +23,6 @@ final class K8sStore {
     var clusters: [K8sCluster] = []
     var availability: Availability = .unknown
     var error: String?
-    var isBusy = false
     /// Cluster names with an action in flight.
     var pendingNames: Set<String> = []
 
