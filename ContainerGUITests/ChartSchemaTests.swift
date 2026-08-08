@@ -12,19 +12,39 @@ final class ChartSchemaTests: XCTestCase {
         return try Data(contentsOf: try XCTUnwrap(url, "Brak fixtury schematu"))
     }
 
-    func testFindsKeysRequiredThroughOneOfBranches() throws {
+    /// The chart spells "image, plus either dblist or listaBazDanych" as a
+    /// top-level `oneOf`. Badging all three a flat "required" overstates it —
+    /// only `image` is unconditional; the other two are alternatives.
+    func testSeparatesUnconditionalRequirementsFromOneOfAlternatives() throws {
         let properties = ChartSchema.properties(fromSchema: try schemaFixture())
         let byPath = Dictionary(properties.map { ($0.path, $0) }, uniquingKeysWith: { first, _ in first })
 
-        // The chart spells "either dblist or listaBazDanych" as a top-level
-        // oneOf; both must surface or the user cannot satisfy either branch.
-        XCTAssertEqual(byPath["dblist"]?.isRequired, true)
-        XCTAssertEqual(byPath["listaBazDanych"]?.isRequired, true)
+        // Present in every branch → genuinely required, with no alternatives.
         XCTAssertEqual(byPath["image"]?.isRequired, true)
+        XCTAssertEqual(byPath["image"]?.oneOfAlternatives, [])
+
+        // One of these two, not both.
+        XCTAssertEqual(byPath["dblist"]?.oneOfAlternatives, ["dblist", "listaBazDanych"])
+        XCTAssertEqual(byPath["listaBazDanych"]?.oneOfAlternatives, ["dblist", "listaBazDanych"])
         XCTAssertEqual(byPath["dblist"]?.type, "string")
         XCTAssertNotNil(byPath["dblist"]?.description)
-        // Something not in any required list stays optional.
+
+        // Something in no required list at all stays optional.
         XCTAssertEqual(byPath["replicaCount"]?.isRequired, false)
+        XCTAssertEqual(byPath["replicaCount"]?.oneOfAlternatives, [])
+    }
+
+    /// `image` already has `image.tag` and friends from values.yaml. Adding a
+    /// second, empty YAML box for the parent object asks the user to retype
+    /// what is already on screen.
+    func testObjectsAlreadyExpandedInTheFormAreNotAddedAgain() throws {
+        let fields = try ChartValues.fields(from: "image:\n  tag: \"1.0\"\n  product: standard\n")
+        let merged = ChartValues.merge(fields: fields, schema: ChartSchema.properties(fromSchema: try schemaFixture()))
+
+        XCTAssertFalse(merged.contains { $0.path == "image" })
+        XCTAssertTrue(merged.contains { $0.path == "image.tag" })
+        // The keys that genuinely have nowhere else to appear still do.
+        XCTAssertTrue(merged.contains { $0.path == "dblist" })
     }
 
     func testResolvesLocalRefsAndMixedTypeOneOf() throws {
@@ -48,6 +68,7 @@ final class ChartSchemaTests: XCTestCase {
         XCTAssertEqual(byPath["cpu"]?.type, "string")
         XCTAssertEqual(byPath["cpu"]?.description, "A Kubernetes quantity.")
         XCTAssertEqual(byPath["cpu"]?.isRequired, true)
+        XCTAssertEqual(byPath["cpu"]?.oneOfAlternatives, [])
         XCTAssertEqual(byPath["mode"]?.enumValues, ["fast", "slow"])
     }
 
@@ -90,7 +111,7 @@ final class ChartSchemaTests: XCTestCase {
         let byPath = Dictionary(merged.map { ($0.path, $0) }, uniquingKeysWith: { first, _ in first })
 
         let dblist = try XCTUnwrap(byPath["dblist"], "dblist musi trafić do formularza ze schematu")
-        XCTAssertTrue(dblist.isRequired)
+        XCTAssertEqual(dblist.oneOfAlternatives, ["dblist", "listaBazDanych"])
         XCTAssertEqual(dblist.kind, .string)
         XCTAssertEqual(dblist.defaultValue, "")
         XCTAssertNotNil(dblist.comment)

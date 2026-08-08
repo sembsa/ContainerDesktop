@@ -653,3 +653,13 @@
 "Wybierz plik values.yaml z nadpisaniami" = "Choose a values.yaml file with overrides";
 "Wczytaj cały plik values.yaml jako nadpisania" = "Load a whole values.yaml as the overrides";
 "wymagane" = "required";
+
+/* One-of requirements, expandable fields, background schema load */
+"jedno z" = "one of";
+"Chart wymaga dokładnie jednego z: %@" = "The chart requires exactly one of: %@";
+"Rozwiń" = "Expand";
+"Zwiń" = "Collapse";
+"Rozwiń do pola wielolinijkowego" = "Expand into a multi-line box";
+"Zwiń pole" = "Collapse the field";
+"%lld znaków" = "%lld characters";
+"wczytuję schemat chartu…" = "loading the chart's schema…";

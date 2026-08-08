@@ -14,6 +14,10 @@ struct SchemaProperty: Hashable, Sendable {
     let description: String?
     let enumValues: [String]
     let isRequired: Bool
+    /// When the schema demands *one of* several keys (a top-level `oneOf`), the
+    /// full set of alternatives. Marking each of them a flat "required" would be
+    /// a lie: satisfying any one of them is enough.
+    let oneOfAlternatives: [String]
 
     var kind: ValuesField.Kind {
         switch type {
@@ -34,27 +38,57 @@ enum ChartSchema {
         guard let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] else { return [] }
         let defs = (root["$defs"] as? [String: Any]) ?? (root["definitions"] as? [String: Any]) ?? [:]
         var result: [SchemaProperty] = []
-        walk(root, path: [], required: requiredKeys(in: root), defs: defs, depth: 0, into: &result)
+        walk(root, path: [], requirements: requirements(in: root), defs: defs, depth: 0, into: &result)
         return result
     }
 
     /// Keys the schema insists on, including the branches of a `oneOf` — the
     /// Soneta chart expresses "either dblist or listaBazDanych" that way, and
     /// both are worth surfacing so the user can pick one.
-    private static func requiredKeys(in object: [String: Any]) -> Set<String> {
-        var keys = Set((object["required"] as? [String]) ?? [])
-        for branchKey in ["oneOf", "anyOf", "allOf"] {
-            for branch in (object[branchKey] as? [[String: Any]]) ?? [] {
-                keys.formUnion((branch["required"] as? [String]) ?? [])
+    private struct Requirements {
+        /// Demanded outright.
+        var always: Set<String> = []
+        /// key → the alternatives it competes with, itself included.
+        var oneOf: [String: [String]] = [:]
+
+        func alternatives(for key: String) -> [String] { oneOf[key] ?? [] }
+        func isRequired(_ key: String) -> Bool { always.contains(key) || oneOf[key] != nil }
+    }
+
+    private static func requirements(in object: [String: Any]) -> Requirements {
+        var result = Requirements()
+        result.always = Set((object["required"] as? [String]) ?? [])
+        // `allOf` branches all apply, so their keys are unconditionally required.
+        for branch in (object["allOf"] as? [[String: Any]]) ?? [] {
+            result.always.formUnion((branch["required"] as? [String]) ?? [])
+        }
+
+        // `oneOf`/`anyOf` express a choice. Keys common to every branch are
+        // required whichever branch you pick; the rest are alternatives.
+        for branchKey in ["oneOf", "anyOf"] {
+            let branches = (object[branchKey] as? [[String: Any]]) ?? []
+            guard branches.count > 1 else {
+                result.always.formUnion((branches.first?["required"] as? [String]) ?? [])
+                continue
+            }
+            let sets = branches.map { Set(($0["required"] as? [String]) ?? []) }
+            let common = sets.dropFirst().reduce(sets[0]) { $0.intersection($1) }
+            result.always.formUnion(common)
+
+            let choices = sets.map { $0.subtracting(common) }
+            let all = choices.reduce(into: Set<String>()) { $0.formUnion($1) }
+            let ordered = all.sorted()
+            for key in all where !result.always.contains(key) {
+                result.oneOf[key] = ordered
             }
         }
-        return keys
+        return result
     }
 
     private static func walk(
         _ object: [String: Any],
         path: [String],
-        required: Set<String>,
+        requirements: Requirements,
         defs: [String: Any],
         depth: Int,
         into result: inout [SchemaProperty]
@@ -77,7 +111,8 @@ enum ChartSchema {
                     type: type,
                     description: value["description"] as? String,
                     enumValues: (value["enum"] as? [Any])?.compactMap { $0 as? String } ?? [],
-                    isRequired: required.contains(key)
+                    isRequired: requirements.isRequired(key),
+                    oneOfAlternatives: requirements.alternatives(for: key)
                 )
             )
 
@@ -85,7 +120,8 @@ enum ChartSchema {
                 walk(
                     value,
                     path: childPath,
-                    required: requiredKeys(in: value),
+                    // `Self.` because the parameter shadows the function name.
+                    requirements: Self.requirements(in: value),
                     defs: defs,
                     depth: depth + 1,
                     into: &result
@@ -143,6 +179,7 @@ extension ChartValues {
                 defaultValue: field.defaultValue,
                 comment: field.comment ?? property.description,
                 isRequired: property.isRequired,
+                oneOfAlternatives: property.oneOfAlternatives,
                 enumValues: property.enumValues
             )
         }
@@ -152,8 +189,13 @@ extension ChartValues {
         let additions = schema
             .filter { !known.contains($0.path) }
             .filter { property in
-                // Only leaves; a bare object header with no value to type is noise.
-                property.type != "object" || property.isRequired
+                // Only leaves. An object whose children the form already lists
+                // (`image`, whose `image.tag` came from values.yaml) would
+                // otherwise appear a second time as an empty YAML box asking the
+                // user to retype what is already on screen.
+                guard property.type == "object" else { return true }
+                let prefix = property.path + "."
+                return !known.contains { $0.hasPrefix(prefix) } && !schema.contains { $0.path.hasPrefix(prefix) }
             }
             .sorted { lhs, rhs in
                 lhs.isRequired == rhs.isRequired ? lhs.path < rhs.path : lhs.isRequired
@@ -166,6 +208,7 @@ extension ChartValues {
                     defaultValue: "",
                     comment: property.description,
                     isRequired: property.isRequired,
+                    oneOfAlternatives: property.oneOfAlternatives,
                     enumValues: property.enumValues
                 )
             }
