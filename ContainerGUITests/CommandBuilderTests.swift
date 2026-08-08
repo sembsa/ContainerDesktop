@@ -272,4 +272,56 @@ final class CommandBuilderTests: XCTestCase {
         XCTAssertEqual(args.last, "alpine:latest")
     }
 
+    // MARK: - Hardening (container 1.2.1)
+
+    func testReadOnlyRootFSEmitsFlag() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+        config.readOnlyRootFS = true
+        let args = RunCommandBuilder.arguments(for: config)
+        XCTAssertTrue(args.contains("--read-only"))
+        // The bare flag must not be confused with the per-path variant.
+        XCTAssertFalse(args.contains("--read-only-path"))
+    }
+
+    func testHardeningPathsEmitRepeatedFlags() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+        config.readOnlyPaths = [.init(path: "/etc"), .init(path: "/srv")]
+        config.maskedPaths = [.init(path: "/proc/kcore"), .init(path: "/sys/firmware")]
+
+        let args = RunCommandBuilder.arguments(for: config)
+
+        XCTAssertEqual(args.filter { $0 == "--read-only-path" }.count, 2)
+        XCTAssertEqual(args.filter { $0 == "--masked-path" }.count, 2)
+        assertPair(args, "--read-only-path", "/etc")
+        assertPair(args, "--masked-path", "/proc/kcore")
+
+        // Every flag keeps its own value, and the image stays last.
+        let roIndexes = args.indices.filter { args[$0] == "--read-only-path" }
+        XCTAssertEqual(roIndexes.map { args[$0 + 1] }, ["/etc", "/srv"])
+        XCTAssertEqual(args.last, "alpine:latest")
+    }
+
+    func testBlankHardeningPathsAreSkipped() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+        config.readOnlyPaths = [.init(path: ""), .init(path: "/etc")]
+        config.maskedPaths = [.init(path: "")]
+
+        let args = RunCommandBuilder.arguments(for: config)
+
+        XCTAssertEqual(args.filter { $0 == "--read-only-path" }.count, 1)
+        XCTAssertFalse(args.contains("--masked-path"))
+    }
+
+    func testHardeningAbsentByDefault() {
+        var config = RunConfiguration()
+        config.image = "alpine:latest"
+        let args = RunCommandBuilder.arguments(for: config)
+        XCTAssertFalse(args.contains("--read-only"))
+        XCTAssertFalse(args.contains("--read-only-path"))
+        XCTAssertFalse(args.contains("--masked-path"))
+    }
+
 }

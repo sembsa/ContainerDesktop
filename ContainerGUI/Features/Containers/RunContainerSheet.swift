@@ -8,6 +8,7 @@ struct RunContainerSheet: View {
     @State private var config: RunConfiguration
     @State private var isRunning = false
     @State private var showAdvanced = false
+    @State private var showHardening = false
     @State private var errorText: String?
     @State private var output: [LogLine] = []
     @State private var runTask: Task<Void, Never>?
@@ -98,6 +99,16 @@ struct RunContainerSheet: View {
 
         // Rosetta
         initial.rosetta = cfg.rosetta ?? false
+
+        // Hardening (container 1.2.1) — preserve on recreate, minus the paths
+        // the runtime hardens on its own (see RunConfiguration.default*Paths).
+        initial.readOnlyRootFS = cfg.readOnly ?? false
+        initial.readOnlyPaths = (cfg.readonlyPaths ?? [])
+            .filter { !RunConfiguration.defaultReadOnlyPaths.contains($0) }
+            .map { RunConfiguration.PathEntry(path: $0) }
+        initial.maskedPaths = (cfg.maskedPaths ?? [])
+            .filter { !RunConfiguration.defaultMaskedPaths.contains($0) }
+            .map { RunConfiguration.PathEntry(path: $0) }
 
         // Working directory (skip "/" — it's the default)
         if let wd = cfg.initProcess?.workingDirectory, wd != "/" {
@@ -325,8 +336,77 @@ struct RunContainerSheet: View {
                     Text("Zaawansowane")
                 }
             }
+
+            hardeningSection
         }
         .formStyle(.grouped)
+    }
+
+    /// Read-only root filesystem plus the per-path hardening flags added in
+    /// container 1.2.1 (`--read-only-path`, `--masked-path`; both EXPERIMENTAL).
+    @ViewBuilder
+    private var hardeningSection: some View {
+        DisclosureGroup(isExpanded: $showHardening) {
+            HStack(spacing: 4) {
+                Toggle("System plików tylko do odczytu (--read-only)", isOn: $config.readOnlyRootFS)
+                InfoTip(text: String(localized: "Cały główny system plików kontenera jest montowany tylko do odczytu. Katalogi, do których aplikacja musi pisać, dołóż jako wolumeny."))
+            }
+            pathListEditor(
+                title: String(localized: "Ścieżki tylko do odczytu"),
+                prompt: String(localized: "np. /etc"),
+                items: $config.readOnlyPaths
+            )
+            pathListEditor(
+                title: String(localized: "Ścieżki ukryte"),
+                prompt: String(localized: "np. /proc/kcore"),
+                items: $config.maskedPaths
+            )
+        } label: {
+            HStack(spacing: 5) {
+                Image(systemName: "lock.shield.fill")
+                    .foregroundStyle(Color.red.gradient)
+                Text("Zabezpieczenia")
+                ExperimentalBadge()
+                InfoTip(text: String(localized: "Ograniczenia zgodne z tym, co robią Kubernetes i Docker: wybrane ścieżki są tylko do odczytu albo całkiem ukryte przed procesem w kontenerze. Dokładają się do domyślnych ustawień środowiska uruchomieniowego. Wymaga container 1.2.1 lub nowszego."))
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func pathListEditor(
+        title: String,
+        prompt: String,
+        items: Binding<[RunConfiguration.PathEntry]>
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Button("Dodaj", systemImage: "plus") { items.wrappedValue.append(.init()) }
+                    .buttonStyle(.borderless)
+                    .controlSize(.small)
+                    .labelStyle(.iconOnly)
+            }
+            ForEach(items.wrappedValue) { item in
+                if let index = items.wrappedValue.firstIndex(where: { $0.id == item.id }) {
+                    HStack(spacing: 6) {
+                        TextField(prompt, text: items[index].path, prompt: Text(prompt))
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity)
+                        Button("Usuń", systemImage: "minus.circle") {
+                            items.wrappedValue.removeAll { $0.id == item.id }
+                        }
+                        .buttonStyle(.borderless)
+                        .controlSize(.small)
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.red)
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 2)
     }
 
     private var footer: some View {

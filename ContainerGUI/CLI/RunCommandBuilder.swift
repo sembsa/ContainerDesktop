@@ -19,6 +19,36 @@ struct RunConfiguration {
     var volumes: [VolumeMount] = []
     var labels: [KeyValue] = []
 
+    /// Mount the whole root filesystem read-only (`--read-only`).
+    var readOnlyRootFS = false
+    /// `--read-only-path` (container 1.2.1, EXPERIMENTAL): extra paths marked
+    /// read-only on top of the runtime defaults.
+    var readOnlyPaths: [PathEntry] = []
+    /// `--masked-path` (container 1.2.1, EXPERIMENTAL): extra paths hidden
+    /// inside the container on top of the runtime defaults.
+    var maskedPaths: [PathEntry] = []
+
+    struct PathEntry: Identifiable, Hashable {
+        let id = UUID()
+        var path = ""
+    }
+
+    /// Paths the runtime always hardens. `container inspect` reports them only
+    /// once at least one `--read-only-path`/`--masked-path` was passed (a plain
+    /// container reports empty arrays), so the recreate flow filters them out to
+    /// show just what the user added. Re-passing them would be harmless — the
+    /// runtime applies them either way — this is purely about a readable form.
+    /// Captured from container 1.2.2; drift in either direction is benign.
+    static let defaultReadOnlyPaths: Set<String> = [
+        "/proc/bus", "/proc/fs", "/proc/irq", "/proc/sys", "/proc/sysrq-trigger",
+    ]
+
+    static let defaultMaskedPaths: Set<String> = [
+        "/proc/asound", "/proc/acpi", "/proc/keys", "/proc/latency_stats",
+        "/proc/timer_list", "/proc/timer_stats", "/proc/sched_debug", "/proc/scsi",
+        "/sys/devices/virtual/powercap",
+    ]
+
     struct PortMapping: Identifiable, Hashable {
         let id = UUID()
         var host = ""
@@ -51,6 +81,7 @@ enum RunCommandBuilder {
 
         if config.removeOnExit { args.append("--rm") }
         if config.rosetta { args.append("--rosetta") }
+        if config.readOnlyRootFS { args.append("--read-only") }
         if !config.arch.isEmpty { args.append(contentsOf: ["--arch", config.arch]) }
 
         appendOption(&args, "--name", config.name)
@@ -84,6 +115,16 @@ enum RunCommandBuilder {
 
         for label in config.labels where !label.key.isEmpty {
             args.append(contentsOf: ["--label", "\(label.key)=\(label.value)"])
+        }
+
+        // container 1.2.1+, both EXPERIMENTAL. Repeatable; the CLI also accepts
+        // the literal "NONE" to clear prior values plus the runtime defaults.
+        for entry in config.readOnlyPaths where !entry.path.isEmpty {
+            args.append(contentsOf: ["--read-only-path", entry.path])
+        }
+
+        for entry in config.maskedPaths where !entry.path.isEmpty {
+            args.append(contentsOf: ["--masked-path", entry.path])
         }
 
         for mount in config.volumes where !mount.source.isEmpty && !mount.destination.isEmpty {

@@ -99,7 +99,6 @@
 "Zmień konfigurację…" = "Zmień konfigurację…";
 "Wykonuję…" = "Wykonuję…";
 "Restart" = "Restart";
-"Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie." = "Eksport wymaga zatrzymanego kontenera. Zatrzymaj kontener i spróbuj ponownie.";
 "Zapisz system plików kontenera jako archiwum tar" = "Zapisz system plików kontenera jako archiwum tar";
 
 /* Features/Containers/ContainersView.swift */
@@ -497,3 +496,17 @@
 "Powłoka zakończona." = "Powłoka zakończona.";
 "Powłoka zakończona (kod %d)." = "Powłoka zakończona (kod %d).";
 "Połącz ponownie" = "Połącz ponownie";
+
+/* container 1.2.1 — build --ssh, run hardening */
+"Przekaż agenta SSH" = "Przekaż agenta SSH";
+"Udostępnia budowaniu agenta SSH z hosta, dzięki czemu instrukcje RUN mogą klonować prywatne repozytoria (RUN --mount=type=ssh). Wymaga uruchomionego ssh-agent z wczytanym kluczem." = "Udostępnia budowaniu agenta SSH z hosta, dzięki czemu instrukcje RUN mogą klonować prywatne repozytoria (RUN --mount=type=ssh). Wymaga uruchomionego ssh-agent z wczytanym kluczem.";
+"EKSPERYMENTALNE" = "EKSPERYMENTALNE";
+"Funkcja oznaczona przez Apple jako eksperymentalna — jej działanie może się zmienić w kolejnych wersjach container." = "Funkcja oznaczona przez Apple jako eksperymentalna — jej działanie może się zmienić w kolejnych wersjach container.";
+"Zabezpieczenia" = "Zabezpieczenia";
+"Ograniczenia zgodne z tym, co robią Kubernetes i Docker: wybrane ścieżki są tylko do odczytu albo całkiem ukryte przed procesem w kontenerze. Dokładają się do domyślnych ustawień środowiska uruchomieniowego. Wymaga container 1.2.1 lub nowszego." = "Ograniczenia zgodne z tym, co robią Kubernetes i Docker: wybrane ścieżki są tylko do odczytu albo całkiem ukryte przed procesem w kontenerze. Dokładają się do domyślnych ustawień środowiska uruchomieniowego. Wymaga container 1.2.1 lub nowszego.";
+"System plików tylko do odczytu (--read-only)" = "System plików tylko do odczytu (--read-only)";
+"Cały główny system plików kontenera jest montowany tylko do odczytu. Katalogi, do których aplikacja musi pisać, dołóż jako wolumeny." = "Cały główny system plików kontenera jest montowany tylko do odczytu. Katalogi, do których aplikacja musi pisać, dołóż jako wolumeny.";
+"Ścieżki tylko do odczytu" = "Ścieżki tylko do odczytu";
+"Ścieżki ukryte" = "Ścieżki ukryte";
+"np. /etc" = "np. /etc";
+"np. /proc/kcore" = "np. /proc/kcore";
