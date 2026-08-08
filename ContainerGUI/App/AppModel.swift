@@ -92,8 +92,16 @@ final class AppModel {
             return
         }
         defer { containers.publishWidgetSnapshot(serviceRunning: true) }
+
+        // Containers refresh on every tick regardless of the visible section:
+        // the menu-bar extra, the sidebar count and the desktop widget all read
+        // this store. Without it a user parked on, say, Helm would publish an
+        // hour-old snapshot stamped with the current time — which would make the
+        // widget's "how fresh is this" label a lie.
+        await containers.refresh()
+
         switch selection {
-        case .containers: await containers.refresh()
+        case .containers: break // just refreshed
         case .images: await images.refresh()
         case .volumes: await volumes.refresh()
         case .networks: await networks.refresh()
