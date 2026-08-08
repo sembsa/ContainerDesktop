@@ -189,6 +189,47 @@ final class HelmStore {
         return try await helm.runRepo(args)
     }
 
+    /// The chart's `values.schema.json`, when it ships one.
+    ///
+    /// `helm show` has no schema subcommand, so the chart has to be unpacked.
+    /// It is a small tarball and helm caches the download; the result is cached
+    /// here per chart+version so switching versions back and forth is free.
+    /// Returns nil for charts without a schema — most of them.
+    func schema(of chart: String, version: String?) async -> [SchemaProperty] {
+        let key = "\(chart)@\(version ?? "latest")"
+        if let cached = schemaCache[key] { return cached }
+
+        let root = KubeconfigManager.directory
+            .deletingLastPathComponent()
+            .appending(path: "charts")
+        let destination = root.appending(path: UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: destination) }
+
+        do {
+            try FileManager.default.createDirectory(at: destination, withIntermediateDirectories: true)
+            var args = ["pull", chart, "--untar", "--untardir", destination.path]
+            if let version, !version.isEmpty { args.append(contentsOf: ["--version", version]) }
+            try await helm.runRepo(args, timeout: .seconds(120))
+
+            let contents = try FileManager.default.contentsOfDirectory(at: destination, includingPropertiesForKeys: nil)
+            guard let chartDirectory = contents.first(where: { $0.hasDirectoryPath }) else { return [] }
+            let schemaURL = chartDirectory.appending(path: "values.schema.json")
+            guard let data = try? Data(contentsOf: schemaURL) else {
+                schemaCache[key] = []
+                return []
+            }
+            let properties = ChartSchema.properties(fromSchema: data)
+            schemaCache[key] = properties
+            return properties
+        } catch {
+            // A chart that cannot be pulled still gets the values.yaml form.
+            schemaCache[key] = []
+            return []
+        }
+    }
+
+    private var schemaCache: [String: [SchemaProperty]] = [:]
+
     // MARK: - Install / upgrade
 
     /// Renders the release without touching the cluster, so schema violations

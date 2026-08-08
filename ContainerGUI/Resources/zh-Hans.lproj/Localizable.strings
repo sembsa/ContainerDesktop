@@ -645,3 +645,11 @@
 "Pody" = "Pod";
 "Adres API" = "API 地址";
 "Kopiuj" = "复制";
+
+/* Values from a file, schema-required keys */
+"Wczytaj z pliku…" = "从文件载入…";
+"Wczytaj wartość z pliku na dysku" = "从磁盘上的文件载入该值";
+"Wybierz plik z wartością dla „%@”" = "为“%@”选择包含值的文件";
+"Wybierz plik values.yaml z nadpisaniami" = "选择包含覆盖项的 values.yaml 文件";
+"Wczytaj cały plik values.yaml jako nadpisania" = "将整个 values.yaml 作为覆盖项载入";
+"wymagane" = "必填";

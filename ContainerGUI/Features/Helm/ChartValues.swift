@@ -8,10 +8,15 @@ struct ValuesField: Identifiable, Hashable {
     let path: String
     let components: [String]
     let kind: Kind
-    /// The chart's default, rendered as text (for `.complex`, as YAML).
+    /// The chart's default, rendered as text (for `.yaml`, as YAML).
     let defaultValue: String
-    /// Comment lines sitting directly above the key in `values.yaml`.
+    /// Comment lines sitting directly above the key in `values.yaml`, or the
+    /// schema's `description` for keys that only exist in the schema.
     let comment: String?
+    /// Declared in the schema's `required` (or one of its `oneOf` branches).
+    var isRequired = false
+    /// Schema `enum` — turns a free-text field into a picker.
+    var enumValues: [String] = []
 
     var id: String { path }
     var label: String { components.last ?? path }

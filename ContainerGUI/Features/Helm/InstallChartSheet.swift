@@ -165,6 +165,12 @@ struct InstallChartSheet: View {
                     }
                 }
                 Spacer()
+                LoadFromFileButton(message: String(localized: "Wybierz plik values.yaml z nadpisaniami")) { contents in
+                    overridesYAML = contents
+                    editor = .yaml
+                    validationError = ChartValues.validate(contents)
+                }
+                .help("Wczytaj cały plik values.yaml jako nadpisania")
                 if !edits.isEmpty {
                     Text(String(format: String(localized: "zmienione: %d"), edits.count))
                         .font(.caption)
@@ -237,10 +243,25 @@ struct InstallChartSheet: View {
                 Text(field.label)
                     .font(.callout)
                     .foregroundStyle(isEdited ? Color.accentColor : .primary)
+                if field.isRequired {
+                    Text("wymagane")
+                        .font(.system(size: 9, weight: .semibold))
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(Color.orange.opacity(0.18), in: Capsule())
+                        .foregroundStyle(Color.orange)
+                }
                 if let comment = field.comment {
                     InfoTip(text: comment)
                 }
                 Spacer(minLength: 8)
+                // Whole-document values (an XML database list, a certificate)
+                // usually already exist as a file.
+                if field.kind == .string || field.kind == .yaml {
+                    LoadFromFileButton(message: String(format: String(localized: "Wybierz plik z wartością dla „%@”"), field.path)) { contents in
+                        edits[field.path] = contents
+                    }
+                }
                 if field.kind.isInline {
                     control(for: field)
                         .frame(width: 200, alignment: .trailing)
@@ -277,6 +298,12 @@ struct InstallChartSheet: View {
                 .labelsHidden()
                 .toggleStyle(.switch)
                 .controlSize(.mini)
+        case .number, .string where !field.enumValues.isEmpty:
+            Picker("", selection: textBinding(field)) {
+                if field.defaultValue.isEmpty { Text("—").tag("") }
+                ForEach(field.enumValues, id: \.self) { Text($0).tag($0) }
+            }
+            .labelsHidden()
         case .number, .string:
             TextField(field.defaultValue, text: textBinding(field), prompt: Text(field.defaultValue))
                 .textFieldStyle(.roundedBorder)
@@ -446,7 +473,12 @@ struct InstallChartSheet: View {
         defer { isLoadingValues = false }
         do {
             let yaml = try await store.defaultValues(of: chart.name, version: version)
-            fields = try ChartValues.fields(from: yaml)
+            let parsed = try ChartValues.fields(from: yaml)
+            // Charts can require keys they do not default (the Soneta chart's
+            // `dblist`), so the schema is folded in — otherwise the form has no
+            // field for the very value blocking the install.
+            let schema = await store.schema(of: chart.name, version: version)
+            fields = ChartValues.merge(fields: parsed, schema: schema)
             // Open the first few groups so the pane isn't a wall of arrows.
             expandedGroups = Set(groupedFields.prefix(3).map(\.name))
         } catch {

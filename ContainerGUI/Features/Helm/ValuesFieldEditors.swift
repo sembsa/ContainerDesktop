@@ -1,4 +1,34 @@
 import SwiftUI
+import AppKit
+
+/// Loads a value from a file on disk.
+///
+/// Some chart values are whole documents — the Soneta chart's `dblist` is an
+/// XML block listing database connections. Pasting one into a text field is
+/// miserable, and it is exactly the thing that already exists as a file.
+struct LoadFromFileButton: View {
+    let message: String
+    let onLoad: (String) -> Void
+
+    var body: some View {
+        Button("Wczytaj z pliku…", systemImage: "folder") {
+            let panel = NSOpenPanel()
+            panel.canChooseFiles = true
+            panel.canChooseDirectories = false
+            panel.allowsMultipleSelection = false
+            panel.message = message
+            guard panel.runModal() == .OK,
+                  let url = panel.url,
+                  let contents = try? String(contentsOf: url, encoding: .utf8)
+            else { return }
+            onLoad(contents.trimmingCharacters(in: .newlines))
+        }
+        .buttonStyle(.borderless)
+        .labelStyle(.iconOnly)
+        .controlSize(.small)
+        .help("Wczytaj wartość z pliku na dysku")
+    }
+}
 
 extension ValuesField.Kind {
     /// Whether the control fits on the same line as the key's label. Lists and
