@@ -87,7 +87,11 @@ final class AppModel {
 
     func refreshCurrent() async {
         if system.serviceState == .unknown { await system.refreshState() }
-        guard system.serviceState.isRunning else { return }
+        guard system.serviceState.isRunning else {
+            containers.publishWidgetSnapshot(serviceRunning: false)
+            return
+        }
+        defer { containers.publishWidgetSnapshot(serviceRunning: true) }
         switch selection {
         case .containers: await containers.refresh()
         case .images: await images.refresh()

@@ -39,6 +39,16 @@ SwiftUI views (Features/<X>/) → @Observable stores → ContainerCLI (actor) �
 
 Adding a sidebar section means touching **five** places: `AppModel.Section` (case + `title`/`symbol`/`tint`), `SidebarView`'s section arrays, `RootView`'s routing switch, `AppModel.refreshCurrent()` and `AppModel.clearStores()`. Verify any new SF Symbol actually exists on macOS 26 before shipping it.
 
+### Desktop widget
+
+`ContainerGUIWidget/` is a WidgetKit app-extension target, embedded into `ContainerGUI.app/Contents/PlugIns/` by an `embed: true` target dependency (so Sparkle's atomic bundle replacement carries it along).
+
+- **A widget extension is always sandboxed**, even though the host app is not — so it cannot spawn `container`. The app writes `WidgetSnapshot` to `~/Library/Application Support/ContainerDesktop/widget-snapshot.json` after each refresh; the widget only reads it.
+- **Do not reach for App Groups.** `com.apple.security.application-groups` requires a provisioning profile, and adding it makes `xcodebuild` fail outright on this ad-hoc signed project (`"requires a provisioning profile"`). The read-only `temporary-exception.files.home-relative-path` in `ContainerGUIWidget.entitlements` achieves the same thing and keeps the build working with no signing identity. Verified empirically: with that exception a sandboxed ad-hoc binary reads the file; without it the same binary gets `NSCocoaErrorDomain 257`.
+- **Resolve the path from the real home directory** (`getpwuid`), never `NSHomeDirectory()` — inside the sandbox the latter returns the extension's own container, while the entitlement grants the actual home.
+- **Writes and reloads are on different clocks.** WidgetKit budgets roughly 40–70 reloads a day, so `reloadAllTimelines()` is requested only when state a widget shows actually changes (and at most once a minute). The file itself is rewritten every 30s regardless, because CPU percentages only exist from the second sample onwards — tying the write to the reload means they never reach the widget at all.
+- The extension is a separate bundle, so it has **its own** `Resources/*.lproj/Localizable.strings` (same convention: Polish source strings as keys).
+
 ### Kubernetes and Helm
 
 `Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.

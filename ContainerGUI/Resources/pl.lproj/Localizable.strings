@@ -606,3 +606,16 @@
 "Nie wybrano klastra." = "Nie wybrano klastra.";
 "Nie znaleziono narzędzia helm. Zainstaluj je poleceniem „brew install helm” lub wskaż ścieżkę w Ustawieniach." = "Nie znaleziono narzędzia helm. Zainstaluj je poleceniem „brew install helm” lub wskaż ścieżkę w Ustawieniach.";
 "# Tylko nadpisania — puste oznacza wartości domyślne chartu\n# np.\n# replicaCount: 2" = "# Tylko nadpisania — puste oznacza wartości domyślne chartu\n# np.\n# replicaCount: 2";
+
+/* Container cards */
+"Kontener %@, stan %@" = "Kontener %@, stan %@";
+"RAM" = "RAM";
+"Otwórz terminal" = "Otwórz terminal";
+"Adres IP kontenera" = "Adres IP kontenera";
+"%lld proc." = "%lld proc.";
+"tylko do odczytu" = "tylko do odczytu";
+"%lld z %lld działa" = "%lld z %lld działa";
+"Kopiuj identyfikator" = "Kopiuj identyfikator";
+"Karty" = "Karty";
+"Tabela" = "Tabela";
+"Przełącz między kartami a tabelą" = "Przełącz między kartami a tabelą";

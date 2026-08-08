@@ -1,0 +1,11 @@
+/* Container Desktop — desktop widget. Keys are the Polish source strings. */
+"Kontenery" = "Containers";
+"Container Desktop" = "Container Desktop";
+"Stan usługi i kontenerów na jednym spojrzeniu." = "Service and container state, at a glance.";
+"działa" = "running";
+"zatrzymanych" = "stopped";
+"Brak kontenerów" = "No containers";
+"Usługa działa" = "Service running";
+"Usługa zatrzymana" = "Service stopped";
+"Uruchom Container Desktop" = "Open Container Desktop";
+"Widżet pokazuje dane zapisane przez aplikację." = "The widget shows the data the app last wrote.";

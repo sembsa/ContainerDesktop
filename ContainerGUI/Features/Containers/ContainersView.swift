@@ -17,6 +17,8 @@ struct ContainersView: View {
     @State private var showComposeSheet = false
     @State private var recreateTarget: ContainerInfo?
     @State private var confirmation: ContainerConfirmation?
+    /// Cards by default — the table stays one click away for dense scanning.
+    @AppStorage("containerListStyle") private var listStyle: ContainerListStyle = .cards
 
     enum ContainerConfirmation: Identifiable {
         case remove(ContainerInfo)
@@ -183,6 +185,13 @@ struct ContainersView: View {
             } else {
                 Color.clear
             }
+        } else if listStyle == .cards {
+            ContainerCardsView(
+                selection: $selection,
+                onRecreate: { recreateTarget = $0 },
+                onRemove: { confirmation = .remove($0) },
+                onRemoveProject: { confirmation = .removeProject($0, $1) }
+            )
         } else {
             Table(of: ContainerRow.self, selection: $selection) {
                 // Status indicator column
@@ -473,6 +482,15 @@ struct ContainersView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup {
+            Picker("Widok", selection: $listStyle) {
+                ForEach(ContainerListStyle.allCases) { style in
+                    Label(style.title, systemImage: style.symbol).tag(style)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelStyle(.iconOnly)
+            .help("Przełącz między kartami a tabelą")
+
             Button {
                 showComposeSheet = true
             } label: {

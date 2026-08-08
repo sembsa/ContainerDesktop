@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- WidgetKit extensions are launched by the system inside the App Sandbox;
+	     this is not optional the way it is for the host app. -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<!-- Read the snapshot the (unsandboxed) app writes. Deliberately NOT an App
+	     Group: app-group entitlements require a provisioning profile, which an
+	     ad-hoc signed build cannot have, and adding one fails the build outright.
+	     The path is relative to the REAL home directory, not the extension's
+	     sandbox container — see WidgetSnapshotStore.realHomeDirectory. -->
+	<key>com.apple.security.temporary-exception.files.home-relative-path.read-only</key>
+	<array>
+		<string>/Library/Application Support/ContainerDesktop/</string>
+	</array>
+</dict>
+</plist>

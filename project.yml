@@ -68,6 +68,11 @@ targets:
         product: Sparkle
       - package: libghostty
         product: GhosttyTerminal
+      # Embeds the .appex into ContainerGUI.app/Contents/PlugIns/. Sparkle
+      # replaces the whole bundle atomically, so the widget updates with the app.
+      - target: ContainerGUIWidget
+        embed: true
+        codeSign: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
@@ -92,6 +97,34 @@ targets:
         SUEnableAutomaticChecks: true
         SUPublicEDKey: D/C+a86F4ZfbqGMnz4YoO/EjNZKxYRSJ8eUgcjvHKbY=
 
+  # Desktop widget. A WidgetKit extension is always sandboxed, so it cannot run
+  # the `container` CLI itself — it reads the snapshot the app writes (see
+  # WidgetSnapshot.swift). No App Group: that entitlement needs a provisioning
+  # profile and would break the ad-hoc build.
+  ContainerGUIWidget:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: ContainerGUIWidget
+      - path: ContainerGUI/Widget/WidgetSnapshot.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI.Widget
+        PRODUCT_NAME: ContainerGUIWidget
+        CODE_SIGN_ENTITLEMENTS: ContainerGUIWidget/ContainerGUIWidget.entitlements
+        SKIP_INSTALL: YES
+    info:
+      path: ContainerGUIWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Container Desktop
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleDevelopmentRegion: en
+        CFBundleLocalizations: [en, pl, zh-Hans]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
   # Self-contained logic test bundle: compiles the model + CLI sources directly
   # and bundles the captured fixtures, so it runs headless without a GUI host.
   ContainerGUITests:
@@ -110,6 +143,7 @@ targets:
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
+      - path: ContainerGUI/Widget/WidgetSnapshot.swift
       - path: ContainerGUI/Terminal/TerminalEngine.swift
       - path: ContainerGUI/Compose
       - path: Fixtures

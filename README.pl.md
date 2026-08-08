@@ -13,6 +13,7 @@ Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje 
 ## Możliwości
 
 ### Kontenery
+- **Widok kart albo tabeli**: karty dają każdemu kontenerowi kafelek stanu, żywe mierniki CPU i pamięci, porty jako klikalne chipy oraz sterowanie dopasowane do bieżącego stanu; tabela pozostaje o jedno kliknięcie stąd, do gęstego przeglądania
 - Lista ze stanem na żywo, adresem IP i opublikowanymi portami (ze strzałkami **otwórz w przeglądarce**); panel szczegółów z **logami, statystykami na żywo, przeglądarką plików, inspect i wbudowanym terminalem** (`exec -it` przez SwiftTerm)
 - Natywny podgląd logów: ciągłe zaznaczanie, kopiowanie całości, opcjonalne znaczniki czasu i **kolorowanie poziomów** (błędy na czerwono, ostrzeżenia na pomarańczowo) tolerujące składnie serilog/.NET/logfmt/klog
 - Start / stop / restart / kill / usuń / wyczyść, ze wskaźnikami postępu per kontener
@@ -48,6 +49,10 @@ Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
 - **Helm**: repozytoria (dodawanie / usuwanie / aktualizacja), wyszukiwanie chartów oraz wdrożenia z aktualizacją, wycofaniem przez `helm history` i odinstalowaniem
 - **Dynamiczny edytor values** budowany z `values.yaml` samego chartu: generowany formularz z kontrolkami dobranymi do typu, podpowiedziami wyciągniętymi z komentarzy w pliku, filtrem kluczy i zakładką surowego YAML-a trzymaną w synchronizacji. Do `-f` trafiają wyłącznie klucze, które faktycznie zmieniłeś, więc domyślne wartości nadal wędrują razem z aktualizacjami chartu. **Sprawdź (dry-run)** renderuje wdrożenie na klastrze, pokazując błędy szablonów i niezgodności z `values.schema.json` zanim cokolwiek zostanie zastosowane
 - Każde polecenie helm jest przypięte do wybranego klastra własnym plikiem kubeconfig aplikacji — **Twój `~/.kube/config` nigdy nie jest odczytywany ani zmieniany**, więc akcja z GUI nie sięgnie klastra produkcyjnego
+
+### Widżet na pulpit
+- **Widżet WidgetKit** w trzech rozmiarach: licznik działających ze stanem usługi (mały), żywa lista z użyciem CPU per kontener (średni) i całość pogrupowana po projektach Compose (duży).
+- Rozszerzenie widżetu zawsze działa w sandboksie i nie może uruchamiać CLI `container`, więc aplikacja po każdym odświeżeniu zapisuje snapshot, a widżet go czyta — dzięki temu widżet pokazuje ostatni znany stan także wtedy, gdy aplikacja jest zamknięta, i podaje, jak stary jest ten odczyt.
 
 ### System
 ![System](docs/screenshots/pl/system.png)
