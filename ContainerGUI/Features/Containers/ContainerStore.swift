@@ -34,7 +34,10 @@ final class ContainerStore {
         defer { isLoading = false }
         do {
             let args = showAll ? ["ls", "-a"] : ["ls"]
+            // Kubernetes node containers belong to the Kubernetes section; showing
+            // them here invites deleting a cluster's control plane by mistake.
             items = try await cli.json(args, as: [ContainerInfo].self)
+                .filter { $0.configuration.labels?["com.apple.container.plugin"] != "k8s" }
             error = nil
         } catch let cliError as CLIError {
             error = cliError

@@ -31,10 +31,24 @@ SwiftUI views (Features/<X>/) → @Observable stores → ContainerCLI (actor) �
    (SwiftTerm, PTY)
 ```
 
-- `CLI/ContainerCLI.swift` — the only place that runs the binary (`json`, `run`, `run(input:)` for stdin, `runElevated` for admin, `stream` for `logs -f`/`stats`). `BinaryResolver` finds the binary (GUI apps don't inherit shell PATH). `RunCommandBuilder` maps a `RunConfiguration` to `container run` args (emits `--label`, `--network`, `--arch`, `--publish`, `--env`, `--volume`, …).
-- `Models/` — `Codable` structs mirroring real CLI JSON; keys verified against live output. `Configuration` includes `labels`, `networks`, `platform`, etc.
-- `Features/<Containers|Images|Volumes|Networks|Registries|Machines|System>/` — store + views per section. `Compose/` translates `docker-compose.yml` to `container run` calls (labels `compose.project` / `compose.service` drive grouping).
+- `CLI/ContainerCLI.swift` — the only place that runs the `container` binary (`json`, `run`, `run(input:)` for stdin, `runElevated` for admin, `stream` for `logs -f`/`stats`). `BinaryResolver` finds the binary (GUI apps don't inherit shell PATH). `RunCommandBuilder` maps a `RunConfiguration` to `container run` args (emits `--label`, `--network`, `--arch`, `--publish`, `--env`, `--volume`, `--read-only-path`, `--masked-path`, …).
+- `CLI/ProcessRunner.swift` — the actual `Process` launch/drain/timeout plumbing, shared by `ContainerCLI` and `HelmCLI`. One CLI actor per external binary; neither reimplements process handling.
+- `Models/` — `Codable` structs mirroring real CLI JSON; keys verified against live output. `Configuration` includes `labels`, `networks`, `platform`, `readonlyPaths` (lowercase "o" — that's what the CLI emits), `maskedPaths`, etc.
+- `Features/<Containers|Images|Volumes|Networks|Kubernetes|Helm|Registries|Machines|System>/` — store + views per section. `Compose/` translates `docker-compose.yml` to `container run` calls (labels `compose.project` / `compose.service` drive grouping).
 - Deps (SPM in `project.yml`): `SwiftTerm`, `Yams`, `Sparkle`, `libghostty-spm`.
+
+Adding a sidebar section means touching **five** places: `AppModel.Section` (case + `title`/`symbol`/`tint`), `SidebarView`'s section arrays, `RootView`'s routing switch, `AppModel.refreshCurrent()` and `AppModel.clearStores()`. Verify any new SF Symbol actually exists on macOS 26 before shipping it.
+
+### Kubernetes and Helm
+
+`Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.
+
+- **The plugin has no `--format json`.** `K8sListParser` (in `Models/K8sModels.swift`) slices the fixed-width `k8s list` table on header-column offsets — splitting on whitespace loses `6144 MB` and mangles rows with blank trailing columns. Covered by `K8sListParserTests`.
+- **Cluster nodes are ordinary containers** labelled `com.apple.container.plugin=k8s` and `com.apple.container.resource.role`. `ContainerStore.refresh()` filters them out so nobody deletes a control plane from the Containers list.
+- **Version skew is the common failure.** A `.pkg` upgrade leaves a new CLI talking to the old background apiserver, and `k8s` fails until `container system stop && start`. `K8sStore.diagnose` compares `container --version` with `apiserver.version` from `container system status` and offers a restart instead of surfacing the raw XPC error.
+- **Never touch `~/.kube/config`.** This is the rule that matters. `helm` acts on whatever the current context points at, `k8s create` rewrites that file *and* switches the current context, and the people using this app have real clusters in there. Every cluster therefore gets its own kubeconfig under Application Support via `KubeconfigManager` (`container k8s write-config` — note it *appends*, so the old file is deleted first), and `HelmCLI.ClusterTarget` makes the kubeconfig argument mandatory rather than optional. Pass **both** `--kubeconfig` and `--kube-context`: the file `write-config` writes has no `current-context`, so `--kubeconfig` alone fails with "cluster unreachable … localhost:8080".
+- `HelmBinaryResolver` probes `/opt/homebrew/bin` first (Homebrew on Apple silicon). Helm timeouts are minutes, not seconds — `install --wait` pulls images inside the cluster.
+- `ChartValues` builds the values editor from the chart's own `values.yaml` and emits **only edited keys** as overrides; a full copy would pin every default and block chart upgrades from moving them. Yams resolves YAML anchors while composing, so aliased blocks arrive as real editable fields. Schema validation is delegated to helm itself (`--dry-run=server` reports `at '/replicaCount': got string, want number`) rather than reimplemented against `values.schema.json`.
 
 ### Terminal engines
 
