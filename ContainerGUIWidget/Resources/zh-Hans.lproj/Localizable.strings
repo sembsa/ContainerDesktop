@@ -1,0 +1,11 @@
+/* Container Desktop — desktop widget. Keys are the Polish source strings. */
+"Kontenery" = "容器";
+"Container Desktop" = "Container Desktop";
+"Stan usługi i kontenerów na jednym spojrzeniu." = "一眼掌握服务与容器状态。";
+"działa" = "运行中";
+"zatrzymanych" = "已停止";
+"Brak kontenerów" = "没有容器";
+"Usługa działa" = "服务运行中";
+"Usługa zatrzymana" = "服务已停止";
+"Uruchom Container Desktop" = "请打开 Container Desktop";
+"Widżet pokazuje dane zapisane przez aplikację." = "微件显示应用最近写入的数据。";

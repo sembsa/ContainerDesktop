@@ -606,3 +606,16 @@
 "Nie wybrano klastra." = "未选择集群。";
 "Nie znaleziono narzędzia helm. Zainstaluj je poleceniem „brew install helm” lub wskaż ścieżkę w Ustawieniach." = "未找到 helm。请使用“brew install helm”安装，或在“设置”中指定其路径。";
 "# Tylko nadpisania — puste oznacza wartości domyślne chartu\n# np.\n# replicaCount: 2" = "# 仅覆盖项——留空表示使用 chart 的默认值\n# 例如\n# replicaCount: 2";
+
+/* Container cards */
+"Kontener %@, stan %@" = "容器 %@，状态 %@";
+"RAM" = "内存";
+"Otwórz terminal" = "打开终端";
+"Adres IP kontenera" = "容器 IP 地址";
+"%lld proc." = "%lld 进程";
+"tylko do odczytu" = "只读";
+"%lld z %lld działa" = "%lld / %lld 运行中";
+"Kopiuj identyfikator" = "复制标识符";
+"Karty" = "卡片";
+"Tabela" = "表格";
+"Przełącz między kartami a tabelą" = "在卡片与表格之间切换";

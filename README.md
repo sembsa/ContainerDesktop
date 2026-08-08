@@ -13,6 +13,7 @@ Container Desktop does not reimplement any container logic: every action shells 
 ## Features
 
 ### Containers
+- **Card or table view** for the list: cards give each container a state tile, live CPU and memory meters, its ports as clickable chips and the controls that fit its current state; the table stays one click away for dense scanning
 - List with live state, IP address and published ports (with one-click **open in browser** arrows); details panel with **logs, live statistics, file browser, inspect and an embedded terminal** (`exec -it` via SwiftTerm)
 - Native log viewer: continuous selection, copy-all, optional timestamps and **severity colouring** (errors red, warnings orange) tolerant of serilog/.NET/logfmt/klog syntaxes
 - Start / stop / restart / kill / remove / prune, with per-container progress indicators
@@ -48,6 +49,10 @@ Logs with severity colouring, and a full terminal inside the container:
 - **Helm**: repositories (add / remove / update), chart search across them, and releases with upgrade, rollback through `helm history`, and uninstall
 - **Dynamic values editor** built from the chart's own `values.yaml`: a generated form with type-aware controls, help text harvested from the file's comments, a key filter, and a raw-YAML tab that stays in sync. Only the keys you actually change end up in `-f`, so chart defaults keep moving with chart upgrades. **Check (dry run)** renders the release on the cluster first, surfacing template errors and `values.schema.json` violations before anything is applied
 - Every helm command is pinned to the selected cluster with an app-managed kubeconfig — **your `~/.kube/config` is never read or modified**, so a GUI action cannot reach a production cluster
+
+### Desktop widget
+- A **WidgetKit widget** in three sizes: running count with service health (small), a live list with CPU per container (medium), and everything grouped by Compose project (large).
+- A widget extension is always sandboxed and cannot run the `container` CLI, so the app writes a snapshot after each refresh and the widget reads it — which also means the widget keeps showing the last known state while the app is closed, and says how old it is.
 
 ### System
 ![System](docs/screenshots/en/system.png)

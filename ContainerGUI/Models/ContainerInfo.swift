@@ -11,6 +11,12 @@ struct ContainerInfo: Codable, Identifiable, Sendable, Hashable {
     var imageReference: String { configuration.image.reference }
     var primaryIPv4: String? { status?.networks?.first?.ipv4Address }
 
+    /// `primaryIPv4` without the CIDR suffix — the CLI reports `192.168.69.4/24`,
+    /// which is noise anywhere the address is shown as an identifier.
+    var primaryIPv4Address: String? {
+        primaryIPv4.map { String($0.split(separator: "/").first ?? "") }
+    }
+
     // MARK: - Grouping helpers
 
     var composeProject: String? { configuration.labels?["compose.project"] }
