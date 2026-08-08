@@ -41,6 +41,14 @@ Logs with severity colouring, and a full terminal inside the container:
 - Registry logins (password passed securely via stdin)
 - Container machines: create, set default, stop, delete
 
+### Kubernetes and Helm
+- **Local clusters** through the `container k8s` plugin (container 1.2.1+, marked EXPERIMENTAL by Apple): create with a chosen name, CPU, memory and node image, start, delete, and load a locally built image straight into the cluster's containerd (`load-image`) so pods can use `imagePullPolicy: Never`
+- Cluster creation streams its progress — the first run downloads an ~850 MB node image and waits for kubeadm
+- If the CLI was upgraded but the background service still runs the older build, the section says so and offers a one-click **service restart** instead of a cryptic XPC error
+- **Helm**: repositories (add / remove / update), chart search across them, and releases with upgrade, rollback through `helm history`, and uninstall
+- **Dynamic values editor** built from the chart's own `values.yaml`: a generated form with type-aware controls, help text harvested from the file's comments, a key filter, and a raw-YAML tab that stays in sync. Only the keys you actually change end up in `-f`, so chart defaults keep moving with chart upgrades. **Check (dry run)** renders the release on the cluster first, surfacing template errors and `values.schema.json` violations before anything is applied
+- Every helm command is pinned to the selected cluster with an app-managed kubeconfig — **your `~/.kube/config` is never read or modified**, so a GUI action cannot reach a production cluster
+
 ### System
 ![System](docs/screenshots/en/system.png)
 - Service status with safe start/stop (verifies the result — the CLI swallows some failures), disk usage with reclaimable-space bars, builder management, local DNS domains (admin prompt handled), readable system properties and a built-in service log viewer
@@ -57,6 +65,7 @@ Logs with severity colouring, and a full terminal inside the container:
 
 - macOS 26 (Tahoe) on Apple Silicon
 - [`container`](https://github.com/apple/container) CLI installed (default: `/usr/local/bin/container`; a custom path can be set in app Settings)
+- Optional: [`helm`](https://helm.sh) for the Helm section (`brew install helm`), and `container` 1.2.1+ for local Kubernetes clusters
 
 ## Installation
 

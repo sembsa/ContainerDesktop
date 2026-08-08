@@ -41,6 +41,14 @@ Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
 - Logowania do rejestrów (hasło przekazywane bezpiecznie przez stdin)
 - Maszyny: tworzenie, ustawianie domyślnej, zatrzymywanie, usuwanie
 
+### Kubernetes i Helm
+- **Lokalne klastry** przez wtyczkę `container k8s` (container 1.2.1+, oznaczona przez Apple jako EKSPERYMENTALNA): tworzenie z wybraną nazwą, CPU, pamięcią i obrazem węzła, uruchamianie, usuwanie oraz wczytywanie lokalnie zbudowanego obrazu prosto do containerd klastra (`load-image`), dzięki czemu pody mogą używać `imagePullPolicy: Never`
+- Tworzenie klastra pokazuje postęp na żywo — pierwsze uruchomienie pobiera obraz węzła (ok. 850 MB) i czeka na kubeadm
+- Jeśli CLI zostało zaktualizowane, a usługa w tle działa jeszcze na starszej wersji, sekcja to wykrywa i proponuje **restart usługi** jednym kliknięciem zamiast zagadkowego błędu XPC
+- **Helm**: repozytoria (dodawanie / usuwanie / aktualizacja), wyszukiwanie chartów oraz wdrożenia z aktualizacją, wycofaniem przez `helm history` i odinstalowaniem
+- **Dynamiczny edytor values** budowany z `values.yaml` samego chartu: generowany formularz z kontrolkami dobranymi do typu, podpowiedziami wyciągniętymi z komentarzy w pliku, filtrem kluczy i zakładką surowego YAML-a trzymaną w synchronizacji. Do `-f` trafiają wyłącznie klucze, które faktycznie zmieniłeś, więc domyślne wartości nadal wędrują razem z aktualizacjami chartu. **Sprawdź (dry-run)** renderuje wdrożenie na klastrze, pokazując błędy szablonów i niezgodności z `values.schema.json` zanim cokolwiek zostanie zastosowane
+- Każde polecenie helm jest przypięte do wybranego klastra własnym plikiem kubeconfig aplikacji — **Twój `~/.kube/config` nigdy nie jest odczytywany ani zmieniany**, więc akcja z GUI nie sięgnie klastra produkcyjnego
+
 ### System
 ![System](docs/screenshots/pl/system.png)
 - Status usługi z bezpiecznym startem/stopem (z weryfikacją skutku — CLI połyka część błędów), zużycie dysku z paskami miejsca do odzyskania, zarządzanie builderem, lokalne domeny DNS (z obsługą promptu administratora), czytelne właściwości systemu i wbudowany podgląd logów usługi
@@ -57,6 +65,7 @@ Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
 
 - macOS 26 (Tahoe) na Apple Silicon
 - Zainstalowane CLI [`container`](https://github.com/apple/container) (domyślnie `/usr/local/bin/container`; własną ścieżkę można wskazać w Ustawieniach aplikacji)
+- Opcjonalnie: [`helm`](https://helm.sh) dla sekcji Helm (`brew install helm`) oraz `container` 1.2.1+ dla lokalnych klastrów Kubernetes
 
 ## Instalacja
 

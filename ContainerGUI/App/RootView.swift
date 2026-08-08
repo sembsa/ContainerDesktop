@@ -69,6 +69,8 @@ struct DetailContainer: View {
         case .images: ImagesView()
         case .volumes: VolumesView()
         case .networks: NetworksView()
+        case .kubernetes: KubernetesView()
+        case .helm: HelmView()
         case .registries: RegistriesView()
         case .machines: MachinesView()
         case .system: SystemView()

@@ -41,6 +41,14 @@ Container Desktop 不重新实现任何容器逻辑：每个操作都会调用�
 - 注册表登录（密码通过 stdin 安全传递）
 - 容器虚拟机（container machines）：创建、设为默认、停止、删除
 
+### Kubernetes 与 Helm
+- 通过 `container k8s` 插件管理**本地集群**（container 1.2.1+，Apple 标记为实验性）：可指定名称、CPU、内存和节点镜像来创建，启动、删除，并可将本地构建的镜像直接载入集群的 containerd（`load-image`），使 Pod 能够使用 `imagePullPolicy: Never`
+- 创建集群时实时显示进度——首次运行需下载约 850 MB 的节点镜像并等待 kubeadm
+- 若 CLI 已升级但后台服务仍在运行旧版本，该部分会识别出来，并提供一键**重启服务**，而不是抛出难懂的 XPC 错误
+- **Helm**：仓库（添加 / 移除 / 更新）、跨仓库搜索 chart，以及发布的升级、通过 `helm history` 回滚和卸载
+- **动态 values 编辑器**，由 chart 自身的 `values.yaml` 生成：表单控件按类型自动匹配，帮助文本取自文件中的注释，支持键筛选，并有与之保持同步的原始 YAML 标签页。只有你真正修改过的键才会进入 `-f`，因此 chart 的默认值仍会随 chart 升级而更新。**检查（dry run）**会先在集群上渲染发布，在应用任何更改之前暴露模板错误和违反 `values.schema.json` 的值
+- 每条 helm 命令都通过应用自管理的 kubeconfig 锁定到所选集群——**绝不读取或修改你的 `~/.kube/config`**，因此 GUI 操作无法触及生产集群
+
 ### 系统
 ![系统](docs/screenshots/zh-Hans/system.png)
 - 服务状态与安全的启动/停止（会验证结果 —— CLI 会吞掉一部分错误）、磁盘占用及可回收空间进度条、builder 管理、本地 DNS 域名（已处理管理员授权提示）、易读的系统属性，以及内置的服务日志查看器
@@ -57,6 +65,7 @@ Container Desktop 不重新实现任何容器逻辑：每个操作都会调用�
 
 - Apple Silicon 上的 macOS 26 (Tahoe)
 - 已安装 [`container`](https://github.com/apple/container) CLI（默认路径 `/usr/local/bin/container`；可在应用设置中指定自定义路径）
+- 可选：Helm 部分需要 [`helm`](https://helm.sh)（`brew install helm`）；本地 Kubernetes 集群需要 `container` 1.2.1+
 
 ## 安装
 

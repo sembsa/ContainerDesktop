@@ -4,6 +4,7 @@ struct SidebarView: View {
     @Environment(AppModel.self) private var model
 
     private let primary: [AppModel.Section] = [.containers, .images, .volumes, .networks]
+    private let orchestration: [AppModel.Section] = [.kubernetes, .helm]
     private let secondary: [AppModel.Section] = [.registries, .machines, .system]
 
     var body: some View {
@@ -17,6 +18,11 @@ struct SidebarView: View {
         List(selection: selectionBinding) {
             Section("Zasoby") {
                 ForEach(primary) { section in
+                    sidebarRow(section)
+                }
+            }
+            Section("Orkiestracja") {
+                ForEach(orchestration) { section in
                     sidebarRow(section)
                 }
             }
@@ -40,6 +46,11 @@ struct SidebarView: View {
                 Spacer()
                 if section == .containers, model.containers.runningCount > 0 {
                     Text("\(model.containers.runningCount)")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                if section == .kubernetes, !model.kubernetes.clusters.isEmpty {
+                    Text("\(model.kubernetes.clusters.count)")
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
                 }

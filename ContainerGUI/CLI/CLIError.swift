@@ -12,11 +12,15 @@ enum CLIError: Error, LocalizedError, Sendable, Equatable {
     case timeout(seconds: Int, command: String)
     /// The command output could not be decoded into the expected model.
     case decoding(String)
+    /// The `helm` binary could not be located on disk (Kubernetes section).
+    case helmNotInstalled
 
     var errorDescription: String? {
         switch self {
         case .notInstalled:
             return String(localized: "Nie znaleziono narzędzia container. Zainstaluj je lub wskaż ścieżkę w Ustawieniach.")
+        case .helmNotInstalled:
+            return String(localized: "Nie znaleziono narzędzia helm. Zainstaluj je poleceniem „brew install helm” lub wskaż ścieżkę w Ustawieniach.")
         case .serviceNotRunning:
             return String(localized: "Usługa systemowa container nie jest uruchomiona. Uruchom ją, aby kontynuować.")
         case .command(let exitCode, let stderr):

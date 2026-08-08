@@ -4,7 +4,7 @@ import Observation
 @MainActor @Observable
 final class AppModel {
     enum Section: String, CaseIterable, Identifiable {
-        case containers, images, volumes, networks, registries, machines, system
+        case containers, images, volumes, networks, kubernetes, helm, registries, machines, system
 
         var id: String { rawValue }
 
@@ -14,6 +14,8 @@ final class AppModel {
             case .images: String(localized: "Obrazy")
             case .volumes: String(localized: "Wolumeny")
             case .networks: String(localized: "Sieci")
+            case .kubernetes: String(localized: "Kubernetes")
+            case .helm: String(localized: "Helm")
             case .registries: String(localized: "Rejestry")
             case .machines: String(localized: "Maszyny")
             case .system: String(localized: "System")
@@ -26,6 +28,8 @@ final class AppModel {
             case .images: "square.stack.3d.up"
             case .volumes: "externaldrive"
             case .networks: "network"
+            case .kubernetes: "square.stack.3d.up.fill"
+            case .helm: "shippingbox.fill"
             case .registries: "key"
             case .machines: "desktopcomputer"
             case .system: "gearshape"
@@ -38,6 +42,8 @@ final class AppModel {
             case .images: .purple
             case .volumes: .orange
             case .networks: .teal
+            case .kubernetes: .cyan
+            case .helm: .mint
             case .registries: .pink
             case .machines: .indigo
             case .system: .gray
@@ -56,6 +62,8 @@ final class AppModel {
     let networks = NetworkStore()
     let registries = RegistryStore()
     let machines = MachineStore()
+    let kubernetes = K8sStore()
+    let helm = HelmStore()
     let compose = ComposeStore()
 
     private var pollTask: Task<Void, Never>?
@@ -87,6 +95,8 @@ final class AppModel {
         case .networks: await networks.refresh()
         case .registries: await registries.refresh()
         case .machines: await machines.refresh()
+        case .kubernetes: await kubernetes.refresh()
+        case .helm: await helm.refreshReleases()
         case .system:
             await system.refreshDiskUsage()
             await system.refreshBuilder()
@@ -118,6 +128,9 @@ final class AppModel {
         registries.error = nil
         machines.items = []
         machines.error = nil
+        kubernetes.clusters = []
+        kubernetes.error = nil
+        helm.clearTarget()
         system.diskUsage = nil
         system.builderRunning = false
     }
