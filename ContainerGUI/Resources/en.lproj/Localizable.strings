@@ -619,3 +619,29 @@
 "Karty" = "Cards";
 "Tabela" = "Table";
 "Przełącz między kartami a tabelą" = "Switch between cards and table";
+
+/* Search, values list editor, cluster detail */
+"Szukaj kontenerów" = "Search containers";
+"Brak wyników" = "No results";
+"Żaden kontener nie pasuje do „%@”." = "No container matches “%@”.";
+"Wszystkie repozytoria" = "All repositories";
+"Filtruj po nazwie…" = "Filter by name…";
+"Wybierz repozytorium, aby zobaczyć wszystkie jego charty, albo wpisz nazwę i naciśnij Enter. Przeszukiwane są repozytoria dodane w zakładce Repozytoria — odśwież je, jeśli wyniki wyglądają na nieaktualne." = "Pick a repository to list every chart in it, or type a name and press Enter. The repositories added on the Repositories tab are searched — refresh them if the results look stale.";
+"Dodaj pozycję" = "Add item";
+"Edytuj YAML" = "Edit YAML";
+"Węzły" = "Nodes";
+"Dostęp" = "Access";
+"Klaster działa" = "Cluster running";
+"Klaster zatrzymany" = "Cluster stopped";
+"Wdrożenia Helm" = "Helm releases";
+"Rdzenie" = "Cores";
+"Adres" = "Address";
+"API serwera" = "API server";
+"Zainstaluj helm (brew install helm), aby zobaczyć wdrożenia." = "Install helm (brew install helm) to see releases.";
+"Uruchom klaster, aby zobaczyć wdrożenia." = "Start the cluster to see its releases.";
+"Brak wdrożeń w tym klastrze." = "No releases in this cluster.";
+"Aplikacja używa własnego pliku kubeconfig dla tego klastra i nie modyfikuje Twojego ~/.kube/config." = "The app uses its own kubeconfig for this cluster and never modifies your ~/.kube/config.";
+"Plik kubeconfig aplikacji" = "The app's kubeconfig file";
+"Pody" = "Pods";
+"Adres API" = "API address";
+"Kopiuj" = "Copy";

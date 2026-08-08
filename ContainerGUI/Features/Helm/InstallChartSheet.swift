@@ -232,7 +232,7 @@ struct InstallChartSheet: View {
     @ViewBuilder
     private func fieldRow(_ field: ValuesField) -> some View {
         let isEdited = edits[field.path] != nil
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 6) {
                 Text(field.label)
                     .font(.callout)
@@ -240,24 +240,29 @@ struct InstallChartSheet: View {
                 if let comment = field.comment {
                     InfoTip(text: comment)
                 }
-                Spacer()
-                control(for: field)
-                    .frame(maxWidth: 220)
-                if isEdited {
-                    Button("Przywróć", systemImage: "arrow.uturn.backward") {
-                        edits[field.path] = nil
-                    }
-                    .buttonStyle(.borderless)
-                    .labelStyle(.iconOnly)
-                    .controlSize(.small)
-                    .help("Przywróć wartość domyślną chartu")
+                Spacer(minLength: 8)
+                if field.kind.isInline {
+                    control(for: field)
+                        .frame(width: 200, alignment: .trailing)
                 }
+                // The reset button holds its slot whether or not it is visible.
+                // Letting it appear only once edited shifted every control
+                // leftwards the moment a switch was flipped.
+                Button("Przywróć", systemImage: "arrow.uturn.backward") {
+                    edits[field.path] = nil
+                }
+                .buttonStyle(.borderless)
+                .labelStyle(.iconOnly)
+                .controlSize(.small)
+                .help("Przywróć wartość domyślną chartu")
+                .opacity(isEdited ? 1 : 0)
+                .disabled(!isEdited)
+                .accessibilityHidden(!isEdited)
+                .frame(width: 20)
             }
-            if field.kind == .complex {
-                Text(field.defaultValue.isEmpty ? "—" : field.defaultValue)
-                    .font(.caption.monospaced())
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
+            if !field.kind.isInline {
+                control(for: field)
+                    .padding(.trailing, 26)
             }
         }
         .padding(.leading, 14)
@@ -276,10 +281,10 @@ struct InstallChartSheet: View {
             TextField(field.defaultValue, text: textBinding(field), prompt: Text(field.defaultValue))
                 .textFieldStyle(.roundedBorder)
                 .font(.caption.monospaced())
-        case .complex:
-            TextField(String(localized: "YAML"), text: textBinding(field), prompt: Text(verbatim: "[]"))
-                .textFieldStyle(.roundedBorder)
-                .font(.caption.monospaced())
+        case .stringList:
+            ValuesListEditor(items: listBinding(field))
+        case .yaml:
+            ValuesYAMLEditor(text: textBinding(field), placeholder: field.defaultValue)
         }
     }
 
@@ -370,6 +375,23 @@ struct InstallChartSheet: View {
                     edits[field.path] = nil
                 } else {
                     edits[field.path] = newValue
+                }
+            }
+        )
+    }
+
+    /// Rows for a `.stringList` field. The edit itself stays a single flow-style
+    /// string (`["a", "b"]`) so the YAML tab and the form remain one source of
+    /// truth; this only presents it as rows.
+    private func listBinding(_ field: ValuesField) -> Binding<[String]> {
+        Binding(
+            get: { ChartValues.listItems(edits[field.path] ?? field.defaultValue) },
+            set: { items in
+                let encoded = ChartValues.flowList(items)
+                if encoded == field.defaultValue {
+                    edits[field.path] = nil
+                } else {
+                    edits[field.path] = encoded
                 }
             }
         )

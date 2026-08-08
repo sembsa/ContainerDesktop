@@ -22,8 +22,12 @@ struct ValuesField: Identifiable, Hashable {
         case boolean
         case number
         case string
-        /// Lists and anything else that is easier to edit as raw YAML.
-        case complex
+        /// A sequence of scalars (`imagePullSecrets: []`, `args: [--flag]`).
+        /// Gets a real row editor — charts are full of these.
+        case stringList
+        /// Sequences of objects, map-valued leaves, unresolved aliases: shapes a
+        /// row editor cannot represent, so they get a multi-line YAML box.
+        case yaml
     }
 }
 
@@ -53,7 +57,7 @@ enum ChartValues {
         switch node {
         case .mapping(let mapping) where !path.isEmpty && mapping.isEmpty:
             // An empty map is a value the user may want to fill in.
-            append(node, path: path, kind: .complex, comments: comments, into: &fields)
+            append(node, path: path, kind: .yaml, comments: comments, into: &fields)
 
         case .mapping(let mapping):
             for (keyNode, valueNode) in mapping {
@@ -61,8 +65,15 @@ enum ChartValues {
                 walk(valueNode, path: path + [key], comments: comments, into: &fields)
             }
 
-        case .sequence:
-            append(node, path: path, kind: .complex, comments: comments, into: &fields)
+        case .sequence(let sequence):
+            // An empty sequence is the overwhelmingly common case in charts
+            // (`imagePullSecrets: []`, `envs.web: []`) and is where the user
+            // most wants to add entries — treat it as a scalar list.
+            let isScalarList = sequence.allSatisfy { element in
+                if case .scalar = element { return true }
+                return false
+            }
+            append(node, path: path, kind: isScalarList ? .stringList : .yaml, comments: comments, into: &fields)
 
         case .scalar(let scalar):
             guard !path.isEmpty else { return }
@@ -74,7 +85,7 @@ enum ChartValues {
             // only catches an alias that could not be resolved (a dangling
             // anchor); show it as raw YAML instead of dropping the key.
             guard !path.isEmpty else { return }
-            append(node, path: path, kind: .complex, comments: comments, into: &fields)
+            append(node, path: path, kind: .yaml, comments: comments, into: &fields)
         }
     }
 
@@ -111,9 +122,46 @@ enum ChartValues {
             return ["null", "~"].contains(scalar.string) ? "" : scalar.string
         case .alias(let alias):
             return "*\(alias.anchor.rawValue)"
-        case .sequence, .mapping:
+        case .sequence(let sequence):
+            // Scalar lists round-trip in flow style (`["a", "b"]`) so the row
+            // editor and the stored edit are the same one-line string. Block
+            // style would reformat on every trip through the two editors.
+            let scalars: [String]? = sequence.reduce(into: [String]()) { result, element in
+                if case .scalar(let scalar) = element { result.append(scalar.string) }
+            }
+            if let scalars, scalars.count == sequence.count {
+                return flowList(scalars)
+            }
             let dumped = (try? Yams.serialize(node: node)) ?? ""
             return dumped.trimmingCharacters(in: .whitespacesAndNewlines)
+        case .mapping:
+            let dumped = (try? Yams.serialize(node: node)) ?? ""
+            return dumped.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+
+    // MARK: - Scalar lists
+
+    /// `["a", "b"]` — JSON is valid YAML, so this parses straight back.
+    static func flowList(_ items: [String]) -> String {
+        guard !items.isEmpty else { return "[]" }
+        let encoded = items.map { item -> String in
+            let data = (try? JSONEncoder().encode(item)) ?? Data("\"\"".utf8)
+            return String(decoding: data, as: UTF8.self)
+        }
+        return "[" + encoded.joined(separator: ", ") + "]"
+    }
+
+    /// Reads a `.stringList` value back into rows for the editor.
+    static func listItems(_ text: String) -> [String] {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, trimmed != "[]" else { return [] }
+        guard let loaded = try? Yams.load(yaml: trimmed) else { return [] }
+        guard let array = loaded as? [Any] else { return [] }
+        return array.map { element in
+            if let string = element as? String { return string }
+            if let bool = element as? Bool { return bool ? "true" : "false" }
+            return String(describing: element)
         }
     }
 
@@ -204,7 +252,11 @@ enum ChartValues {
             // what charts branch on with `if .Values.x`.
             if text.isEmpty { return NSNull() }
             return text
-        case .complex:
+        case .stringList:
+            // An emptied list must stay a list — `null` would make a chart's
+            // `range .Values.args` fail rather than iterate nothing.
+            return listItems(text)
+        case .yaml:
             if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return NSNull() }
             return (try? Yams.load(yaml: text)) ?? text
         }

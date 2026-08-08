@@ -11,6 +11,8 @@ struct ContainerCardsView: View {
     @Environment(AppModel.self) private var model
 
     @Binding var selection: String?
+    /// Already filtered by the search field in `ContainersView`.
+    let containers: [ContainerInfo]
     let onRecreate: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
     let onRemoveProject: (String, [ContainerInfo]) -> Void
@@ -19,7 +21,7 @@ struct ContainerCardsView: View {
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 8) {
+            LazyVStack(spacing: 5) {
                 ForEach(groups) { group in
                     if let project = group.project {
                         ComposeProjectCard(
@@ -42,8 +44,9 @@ struct ContainerCardsView: View {
                     }
                 }
             }
-            .padding(12)
-            .animation(.smooth(duration: 0.25), value: store.items.map(\.id))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
+            .animation(.smooth(duration: 0.25), value: containers.map(\.id))
         }
         .scrollContentBackground(.hidden)
     }
@@ -56,25 +59,41 @@ struct ContainerCardsView: View {
         let containers: [ContainerInfo]
     }
 
+    /// Running containers first — they are the ones you act on. Within each
+    /// half, and within a project, ordering stays alphabetical so nothing
+    /// jumps around as usage fluctuates.
+    private static func runningFirst(_ containers: [ContainerInfo]) -> [ContainerInfo] {
+        containers.sorted { lhs, rhs in
+            lhs.isRunning == rhs.isRunning ? lhs.id < rhs.id : lhs.isRunning
+        }
+    }
+
     private var groups: [Group] {
         var byProject: [String: [ContainerInfo]] = [:]
         var loose: [ContainerInfo] = []
-        for container in store.items {
+        for container in containers {
             if let project = container.composeProject {
                 byProject[project, default: []].append(container)
             } else {
                 loose.append(container)
             }
         }
-        var result = byProject.keys.sorted().map { project in
-            Group(
-                id: "project:\(project)",
-                project: project,
-                containers: byProject[project]?.sorted { $0.id < $1.id } ?? []
-            )
-        }
+        // Projects with something running float above idle ones.
+        var result = byProject.keys
+            .sorted { lhs, rhs in
+                let lhsRunning = byProject[lhs]?.contains(where: \.isRunning) ?? false
+                let rhsRunning = byProject[rhs]?.contains(where: \.isRunning) ?? false
+                return lhsRunning == rhsRunning ? lhs < rhs : lhsRunning
+            }
+            .map { project in
+                Group(
+                    id: "project:\(project)",
+                    project: project,
+                    containers: Self.runningFirst(byProject[project] ?? [])
+                )
+            }
         if !loose.isEmpty {
-            result.append(Group(id: "loose", project: nil, containers: loose))
+            result.append(Group(id: "loose", project: nil, containers: Self.runningFirst(loose)))
         }
         return result
     }
@@ -98,8 +117,8 @@ struct ContainerCard: View {
     private var usage: ContainerStore.LiveUsage? { store.liveStats[container.id] }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .center, spacing: 12) {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .center, spacing: 10) {
                 stateTile
                 identity
                 Spacer(minLength: 8)
@@ -110,8 +129,8 @@ struct ContainerCard: View {
                 chipRow
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
         .background(background)
         .overlay(border)
         .contentShape(RoundedRectangle(cornerRadius: 12))
@@ -130,16 +149,16 @@ struct ContainerCard: View {
     /// without relying on colour alone.
     private var stateTile: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 9)
+            RoundedRectangle(cornerRadius: 7)
                 .fill(stateColor.gradient.opacity(container.isRunning ? 1 : 0.35))
-                .frame(width: 38, height: 38)
+                .frame(width: 30, height: 30)
             if isPending {
                 ProgressView()
                     .controlSize(.small)
                     .tint(.white)
             } else {
                 Image(systemName: container.isRunning ? "shippingbox.fill" : "shippingbox")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(.white)
             }
         }
@@ -177,7 +196,7 @@ struct ContainerCard: View {
     /// CPU and memory, drawn as compact bars. Only for running containers —
     /// meters pinned at zero would be noise.
     private var meters: some View {
-        HStack(spacing: 14) {
+        HStack(spacing: 10) {
             MeterView(
                 label: "CPU",
                 value: usage?.cpuPercent.map { min($0 / 100, 1) },
@@ -191,7 +210,7 @@ struct ContainerCard: View {
                 tint: .purple
             )
         }
-        .frame(width: 168)
+        .frame(width: 176)
         .transition(.opacity.combined(with: .scale(scale: 0.9)))
     }
 
@@ -290,7 +309,7 @@ struct ContainerCard: View {
                     }
                 }
             }
-            .padding(.leading, 50)
+            .padding(.leading, 40)
             .padding(.trailing, 2)
         }
     }
@@ -466,22 +485,30 @@ struct MeterView: View {
                 Text(label)
                     .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.secondary)
-                Spacer()
+                    .lineLimit(1)
+                    .fixedSize()
+                Spacer(minLength: 3)
+                // A fixed, right-aligned slot. Letting the caption size itself
+                // made the whole meter shuffle as soon as the number grew from
+                // "0%" to "100%" or from "18 MB" to "1,2 GB".
                 Text(caption ?? "—")
                     .font(.system(size: 9, weight: .medium).monospacedDigit())
                     .foregroundStyle(value == nil ? .tertiary : .secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+                    .frame(width: 46, alignment: .trailing)
             }
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
                     Capsule().fill(.quaternary.opacity(0.7))
                     Capsule()
                         .fill(tint.gradient)
-                        .frame(width: max(2, geo.size.width * (value ?? 0)))
+                        .frame(width: max(2, geo.size.width * min(max(value ?? 0, 0), 1)))
                 }
             }
             .frame(height: 4)
         }
-        .frame(width: 74)
+        .frame(width: 83)
         .animation(.smooth(duration: 0.35), value: value)
     }
 }
