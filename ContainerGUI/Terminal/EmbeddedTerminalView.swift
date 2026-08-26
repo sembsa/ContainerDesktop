@@ -81,8 +81,10 @@ struct TerminalExitBanner: View {
 ///
 /// The engine is switchable (Settings → Terminal) because Ghostty's embedding API
 /// is not stable upstream yet; see `TerminalEngine`.
-struct ContainerTerminalView: View {
-    let containerID: String
+/// The embedded shell, for whatever `TerminalTarget` names — a container or a
+/// machine. The two differ by nothing but their arguments, so they share this.
+struct TerminalSessionView: View {
+    let target: TerminalTarget
 
     @AppStorage(TerminalEngine.storageKey) private var engineRawValue = TerminalEngine.default.rawValue
     /// Recreates the terminal after the shell exits — the views key off this.
@@ -94,7 +96,7 @@ struct ContainerTerminalView: View {
         TerminalEngine(rawValue: engineRawValue) ?? .default
     }
 
-    private var arguments: [String] { ["exec", "-it", containerID, "sh"] }
+    private var arguments: [String] { target.arguments }
 
     var body: some View {
         if let binary = BinaryResolver.resolve() {

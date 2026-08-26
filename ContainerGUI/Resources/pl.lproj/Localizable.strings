@@ -262,7 +262,6 @@
 
 /* Features/Machines/MachinesView.swift */
 "Brak maszyn" = "Brak maszyn";
-"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego." = "Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego.";
 "Utwórz maszynę…" = "Utwórz maszynę…";
 "Utworzona" = "Utworzona";
 "Ustaw jako domyślną" = "Ustaw jako domyślną";
@@ -270,8 +269,51 @@
 "Usunąć maszynę?" = "Usunąć maszynę?";
 "Maszyna %@ zostanie usunięta." = "Maszyna %@ zostanie usunięta.";
 "Nowa maszyna" = "Nowa maszyna";
-"Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać." = "Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać.";
-"Obraz bazowy (np. alpine:3.22)" = "Obraz bazowy (np. alpine:3.22)";
+
+
+/* Features/Machines/MachineCommands.swift */
+"do zapisu (rw)" = "do zapisu (rw)";
+"tylko do odczytu (ro)" = "tylko do odczytu (ro)";
+"nie montuj (none)" = "nie montuj (none)";
+
+/* Features/Machines/MachineDetailView.swift */
+"Maszyna działa" = "Maszyna działa";
+"Maszyna zatrzymana" = "Maszyna zatrzymana";
+"Katalog domowy" = "Katalog domowy";
+"Uruchomiona" = "Uruchomiona";
+"Obraz źródłowy" = "Obraz źródłowy";
+"Digest" = "Digest";
+"Kontener maszyny" = "Kontener maszyny";
+"Jako root" = "Jako root";
+"Bez tego shell działa jako Twój użytkownik z hosta." = "Bez tego shell działa jako Twój użytkownik z hosta.";
+"Otwarcie shella uruchomi maszynę" = "Otwarcie shella uruchomi maszynę";
+
+/* Features/Machines/MachineLogsView.swift */
+"Standardowe wyjście" = "Standardowe wyjście";
+"Log rozruchu" = "Log rozruchu";
+"Śledź" = "Śledź";
+"%lld linii" = "%lld linii";
+"Nie udało się odczytać logów" = "Nie udało się odczytać logów";
+"Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona." = "Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona.";
+"Maszyna nie wypisała nic na stdout/stderr. Obraz bez systemu init często nie generuje żadnych logów." = "Maszyna nie wypisała nic na stdout/stderr. Obraz bez systemu init często nie generuje żadnych logów.";
+
+/* Features/Machines/MachineConfigView.swift */
+"Liczba wirtualnych procesorów." = "Liczba wirtualnych procesorów.";
+"Np. 2G, 8G." = "Np. 2G, 8G.";
+"Wirtualizacja zagnieżdżona" = "Wirtualizacja zagnieżdżona";
+"Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y.";
+"Własne jądro" = "Własne jądro";
+"Puste pole przywraca jądro systemowe." = "Puste pole przywraca jądro systemowe.";
+"Odpowiedź CLI" = "Odpowiedź CLI";
+"Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny";
+"Zapisz" = "Zapisz";
+
+/* Features/Machines/MachinesView.swift — 0.6.0 */
+"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz otworzyć w niej shell, przejrzeć jej logi, zmienić przydział CPU i pamięci oraz zamontować katalog domowy." = "Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz otworzyć w niej shell, przejrzeć jej logi, zmienić przydział CPU i pamięci oraz zamontować katalog domowy.";
+"Obraz bazowy" = "Obraz bazowy";
+"Nie uruchamiaj po utworzeniu" = "Nie uruchamiaj po utworzeniu";
+"Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu." = "Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu.";
+"Pobieranie obrazu i uruchamianie maszyny wirtualnej." = "Pobieranie obrazu i uruchamianie maszyny wirtualnej.";
 
 /* Features/Networks/NetworksView.swift */
 "Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci." = "Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci.";

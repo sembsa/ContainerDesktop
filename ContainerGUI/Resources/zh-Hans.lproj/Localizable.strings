@@ -262,7 +262,6 @@
 
 /* Features/Machines/MachinesView.swift */
 "Brak maszyn" = "暂无虚拟机";
-"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego." = "虚拟机是一种持久的轻量级 Linux 虚拟机 — 与容器不同，它不会在进程结束后消失。你可以在其中运行命令（container machine run）、挂载主目录，并将其用作小型开发服务器。";
 "Utwórz maszynę…" = "创建虚拟机…";
 "Utworzona" = "已创建";
 "Ustaw jako domyślną" = "设为默认";
@@ -270,8 +269,51 @@
 "Usunąć maszynę?" = "删除虚拟机？";
 "Maszyna %@ zostanie usunięta." = "虚拟机 %@ 将被删除。";
 "Nowa maszyna" = "新建虚拟机";
-"Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać." = "创建虚拟机将拉取镜像并启动虚拟机 — 这可能需要一些时间。";
-"Obraz bazowy (np. alpine:3.22)" = "基础镜像（例如 alpine:3.22）";
+
+
+/* Features/Machines/MachineCommands.swift */
+"do zapisu (rw)" = "可读写 (rw)";
+"tylko do odczytu (ro)" = "只读 (ro)";
+"nie montuj (none)" = "不挂载 (none)";
+
+/* Features/Machines/MachineDetailView.swift */
+"Maszyna działa" = "虚拟机运行中";
+"Maszyna zatrzymana" = "虚拟机已停止";
+"Katalog domowy" = "主目录";
+"Uruchomiona" = "启动时间";
+"Obraz źródłowy" = "源镜像";
+"Digest" = "摘要";
+"Kontener maszyny" = "虚拟机容器";
+"Jako root" = "以 root 身份";
+"Bez tego shell działa jako Twój użytkownik z hosta." = "未启用时，Shell 以你的主机用户身份运行。";
+"Otwarcie shella uruchomi maszynę" = "打开 Shell 将启动此虚拟机";
+
+/* Features/Machines/MachineLogsView.swift */
+"Standardowe wyjście" = "标准输出";
+"Log rozruchu" = "启动日志";
+"Śledź" = "跟随";
+"%lld linii" = "%lld 行";
+"Nie udało się odczytać logów" = "无法读取日志";
+"Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona." = "该虚拟机没有启动日志——通常说明它从未被启动过。";
+"Maszyna nie wypisała nic na stdout/stderr. Obraz bez systemu init często nie generuje żadnych logów." = "该虚拟机未向 stdout/stderr 输出任何内容。没有 init 系统的镜像通常不会产生任何日志。";
+
+/* Features/Machines/MachineConfigView.swift */
+"Liczba wirtualnych procesorów." = "虚拟 CPU 的数量。";
+"Np. 2G, 8G." = "例如 2G、8G。";
+"Wirtualizacja zagnieżdżona" = "嵌套虚拟化";
+"Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "需要 Apple Silicon M3 或更新机型、macOS 15+，以及启用 CONFIG_KVM=y 的内核。";
+"Własne jądro" = "自定义内核";
+"Puste pole przywraca jądro systemowe." = "留空将恢复系统内核。";
+"Odpowiedź CLI" = "CLI 响应";
+"Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "更改将在停止并重新启动虚拟机后生效";
+"Zapisz" = "保存";
+
+/* Features/Machines/MachinesView.swift — 0.6.0 */
+"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz otworzyć w niej shell, przejrzeć jej logi, zmienić przydział CPU i pamięci oraz zamontować katalog domowy." = "虚拟机是常驻的轻量级 Linux 虚拟机——与容器不同，它不会在进程结束后消失。你可以在其中打开 Shell、查看日志、调整 CPU 与内存分配，并挂载主目录。";
+"Obraz bazowy" = "基础镜像";
+"Nie uruchamiaj po utworzeniu" = "创建后不启动";
+"Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu." = "留空则由 CLI 决定——默认为系统内存的一半。";
+"Pobieranie obrazu i uruchamianie maszyny wirtualnej." = "正在获取镜像并启动虚拟机。";
 
 /* Features/Networks/NetworksView.swift */
 "Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci." = "同一网络中的容器可以通过名称相互访问。默认网络连接所有未指定网络的容器。";

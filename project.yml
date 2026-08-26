@@ -143,6 +143,8 @@ targets:
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
+      - path: ContainerGUI/Features/Machines/MachineCommands.swift
+      - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
       - path: ContainerGUI/Features/Helm/ChartSchema.swift
       - path: ContainerGUI/Widget/WidgetSnapshot.swift

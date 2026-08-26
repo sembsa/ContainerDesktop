@@ -262,7 +262,6 @@
 
 /* Features/Machines/MachinesView.swift */
 "Brak maszyn" = "No machines";
-"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz w niej uruchamiać polecenia (container machine run), montować katalog domowy i używać jej jak małego serwera deweloperskiego." = "A machine is a persistent, lightweight Linux virtual machine — unlike a container, it does not disappear when its process ends. You can run commands in it (container machine run), mount your home directory, and use it as a small development server.";
 "Utwórz maszynę…" = "Create machine…";
 "Utworzona" = "Created";
 "Ustaw jako domyślną" = "Set as default";
@@ -270,8 +269,51 @@
 "Usunąć maszynę?" = "Delete machine?";
 "Maszyna %@ zostanie usunięta." = "Machine %@ will be deleted.";
 "Nowa maszyna" = "New machine";
-"Utworzenie maszyny pobierze obraz i uruchomi maszynę wirtualną — może to chwilę potrwać." = "Creating a machine pulls an image and starts a virtual machine — this may take a moment.";
-"Obraz bazowy (np. alpine:3.22)" = "Base image (e.g. alpine:3.22)";
+
+
+/* Features/Machines/MachineCommands.swift */
+"do zapisu (rw)" = "read-write (rw)";
+"tylko do odczytu (ro)" = "read-only (ro)";
+"nie montuj (none)" = "not mounted (none)";
+
+/* Features/Machines/MachineDetailView.swift */
+"Maszyna działa" = "Machine is running";
+"Maszyna zatrzymana" = "Machine stopped";
+"Katalog domowy" = "Home directory";
+"Uruchomiona" = "Started";
+"Obraz źródłowy" = "Source image";
+"Digest" = "Digest";
+"Kontener maszyny" = "Machine container";
+"Jako root" = "As root";
+"Bez tego shell działa jako Twój użytkownik z hosta." = "Without this the shell runs as your host user.";
+"Otwarcie shella uruchomi maszynę" = "Opening a shell will start the machine";
+
+/* Features/Machines/MachineLogsView.swift */
+"Standardowe wyjście" = "Standard output";
+"Log rozruchu" = "Boot log";
+"Śledź" = "Follow";
+"%lld linii" = "%lld lines";
+"Nie udało się odczytać logów" = "Could not read the logs";
+"Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona." = "The machine has written no boot log — usually that means it was never started.";
+"Maszyna nie wypisała nic na stdout/stderr. Obraz bez systemu init często nie generuje żadnych logów." = "The machine printed nothing to stdout/stderr. An image without an init system often produces no logs at all.";
+
+/* Features/Machines/MachineConfigView.swift */
+"Liczba wirtualnych procesorów." = "Number of virtual CPUs.";
+"Np. 2G, 8G." = "For example 2G, 8G.";
+"Wirtualizacja zagnieżdżona" = "Nested virtualization";
+"Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "Requires Apple Silicon M3 or newer, macOS 15+ and a kernel built with CONFIG_KVM=y.";
+"Własne jądro" = "Custom kernel";
+"Puste pole przywraca jądro systemowe." = "An empty field restores the system kernel.";
+"Odpowiedź CLI" = "CLI reply";
+"Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "Changes take effect after stopping and restarting the machine";
+"Zapisz" = "Save";
+
+/* Features/Machines/MachinesView.swift — 0.6.0 */
+"Maszyna to trwała, lekka maszyna wirtualna Linux — w odróżnieniu od kontenera nie znika po zakończeniu procesu. Możesz otworzyć w niej shell, przejrzeć jej logi, zmienić przydział CPU i pamięci oraz zamontować katalog domowy." = "A machine is a persistent, lightweight Linux virtual machine — unlike a container it does not disappear when its process ends. You can open a shell in it, read its logs, change its CPU and memory allocation and mount your home directory.";
+"Obraz bazowy" = "Base image";
+"Nie uruchamiaj po utworzeniu" = "Do not start after creating";
+"Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu." = "Empty fields leave the decision to the CLI — the default is half of system memory.";
+"Pobieranie obrazu i uruchamianie maszyny wirtualnej." = "Fetching the image and booting the virtual machine.";
 
 /* Features/Networks/NetworksView.swift */
 "Kontenery w tej samej sieci widzą się nawzajem po nazwie. Domyślna sieć łączy wszystkie kontenery bez przypisanej sieci." = "Containers on the same network can reach each other by name. The default network connects all containers that have no explicit network assigned.";
