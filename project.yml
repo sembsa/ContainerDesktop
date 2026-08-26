@@ -142,6 +142,7 @@ targets:
       - path: ContainerGUI/CLI/ProcessLineReader.swift
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
+      - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
       - path: ContainerGUI/Features/Helm/ChartSchema.swift
       - path: ContainerGUI/Widget/WidgetSnapshot.swift
