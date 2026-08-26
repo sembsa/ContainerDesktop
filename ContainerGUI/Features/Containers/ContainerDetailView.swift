@@ -77,7 +77,7 @@ struct ContainerDetailView: View {
                 .id(container.id)
         case .terminal:
             if container.isRunning {
-                ContainerTerminalView(containerID: container.id)
+                TerminalSessionView(target: .container(id: container.id))
                     .id(container.id)
             } else {
                 EmptyStateView(

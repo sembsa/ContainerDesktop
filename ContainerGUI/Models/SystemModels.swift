@@ -70,3 +70,60 @@ struct MachineInfo: Decodable, Identifiable, Sendable, Hashable {
         case isDefault = "default"
     }
 }
+
+/// `container machine inspect` — deliberately separate from `MachineInfo`, which
+/// mirrors `machine ls --format json`.
+///
+/// Inspect carries four things the list does not: how the home directory is
+/// mounted, which image the machine was built from, its platform, and which host
+/// user the shell runs as. It also rejects `--format json` outright (it already
+/// prints JSON), so it has to be fetched with `appendFormat: false`.
+struct MachineInspect: Decodable, Sendable, Hashable {
+    let id: String
+    let containerId: String?
+    let status: String?
+    let cpus: Int?
+    let memoryBytes: Int64?
+    let diskSizeBytes: Int64?
+    let ipAddress: String?
+    let homeMount: String?
+    let createdDate: Date?
+    let startedDate: Date?
+    let platform: Platform?
+    let image: SourceImage?
+    let userSetup: UserSetup?
+
+    struct Platform: Decodable, Sendable, Hashable {
+        let architecture: String?
+        let os: String?
+
+        var label: String {
+            [os, architecture].compactMap { $0 }.joined(separator: "/")
+        }
+    }
+
+    struct SourceImage: Decodable, Sendable, Hashable {
+        let reference: String?
+        let descriptor: Descriptor?
+
+        struct Descriptor: Decodable, Sendable, Hashable {
+            let digest: String?
+            let size: Int64?
+        }
+    }
+
+    struct UserSetup: Decodable, Sendable, Hashable {
+        let uid: Int?
+        let gid: Int?
+        let username: String?
+    }
+
+    var isRunning: Bool { status?.lowercased() == "running" }
+
+    enum CodingKeys: String, CodingKey {
+        case id, containerId, status, cpus, ipAddress, homeMount
+        case createdDate, startedDate, platform, image, userSetup
+        case memoryBytes = "memory"
+        case diskSizeBytes = "diskSize"
+    }
+}
