@@ -15,6 +15,9 @@ struct MachineLogsView: View {
     @State private var kind: Kind = .stdio
     @State private var follow = true
     @State private var lines: [LogLine] = []
+    /// Collected but not yet drawn. Publishing per line re-renders the view for
+    /// every one of them, so lines are handed over in batches.
+    @State private var pending: [LogLine] = []
     @State private var streamEnded = false
     @State private var didLoad = false
     @State private var errorText: String?
@@ -111,6 +114,7 @@ struct MachineLogsView: View {
 
     private func load() async {
         lines = []
+        pending = []
         errorText = nil
         streamEnded = false
         didLoad = false
@@ -121,25 +125,41 @@ struct MachineLogsView: View {
             follow: follow,
             lines: Self.tailLines
         )
-        var pending: [LogLine] = []
+        // The handover is driven by a clock, not by the next line arriving. With
+        // `--follow` the stream never ends, so batching purely on a line count
+        // holds the last partial batch forever: a machine whose init writes three
+        // lines would sit behind a spinner indefinitely, and one that writes none
+        // would never reach the empty state either.
+        let ticker = Task { @MainActor in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .milliseconds(250))
+                if Task.isCancelled { return }
+                flush()
+                didLoad = true
+            }
+        }
+        defer { ticker.cancel() }
+
         do {
             for try await line in ContainerCLI.shared.stream(arguments) {
                 pending.append(LogLine(text: line))
-                // Publishing per line re-renders the view for every one of them.
-                if pending.count >= 40 {
-                    lines.append(contentsOf: pending)
-                    pending = []
-                    didLoad = true
-                }
+                if pending.count >= 40 { flush() }
             }
-            lines.append(contentsOf: pending)
+            flush()
             streamEnded = true
         } catch is CancellationError {
             return
         } catch {
-            lines.append(contentsOf: pending)
+            flush()
             if lines.isEmpty { errorText = error.localizedDescription }
         }
+        didLoad = true
+    }
+
+    private func flush() {
+        guard !pending.isEmpty else { return }
+        lines.append(contentsOf: pending)
+        pending = []
         didLoad = true
     }
 
