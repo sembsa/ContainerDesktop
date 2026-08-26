@@ -23,6 +23,9 @@ struct ImageDetailSheet: View {
                     .font(.title3)
                 Text(image.reference)
                     .font(.headline)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .help(image.reference)
                     .textSelection(.enabled)
                 Spacer()
             }
@@ -120,13 +123,26 @@ struct ImageDetailSheet: View {
 
     @ViewBuilder
     private func variantPicker(_ variants: [ImageInspect.Variant]) -> some View {
-        Picker(String(localized: "Wariant"), selection: $selectedVariantIndex) {
+        let picker = Picker(String(localized: "Wariant"), selection: $selectedVariantIndex) {
             ForEach(variants.indices, id: \.self) { idx in
                 Text(variants[idx].platformLabel).tag(idx)
             }
         }
-        .pickerStyle(.segmented)
-        .padding(.horizontal, 2)
+
+        // A segmented control claims the sum of its label widths and will not
+        // compress, so past a handful of platforms it pushes the sheet's content
+        // out of the frame (issue #19). A menu hugs its selection instead.
+        switch ImageVariantPickerStyle.style(forVariantCount: variants.count) {
+        case .segmented:
+            picker
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 2)
+        case .menu:
+            picker
+                .pickerStyle(.menu)
+                .fixedSize()
+                .padding(.horizontal, 2)
+        }
     }
 
     // MARK: - Load
@@ -339,8 +355,13 @@ private struct ImageConfigCard: View {
             Text(label)
                 .foregroundStyle(.secondary)
                 .gridColumnAlignment(.trailing)
+            // An entrypoint or command line has no length bound, so it gets the
+            // same treatment as the environment rows: truncate, full value on hover.
             Text(mono)
                 .font(.system(.body, design: .monospaced))
+                .lineLimit(1)
+                .truncationMode(.middle)
+                .help(mono)
                 .textSelection(.enabled)
         }
     }
