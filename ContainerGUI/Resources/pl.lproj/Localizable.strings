@@ -303,7 +303,7 @@
 "Wirtualizacja zagnieżdżona" = "Wirtualizacja zagnieżdżona";
 "Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y.";
 "Własne jądro" = "Własne jądro";
-"Puste pole przywraca jądro systemowe." = "Puste pole przywraca jądro systemowe.";
+"Wirtualizacja i jądro nie są raportowane przez CLI, więc trafiają do zapisu tylko wtedy, gdy je tu zmienisz. Wyczyszczenie pola jądra przywraca jądro systemowe." = "Wirtualizacja i jądro nie są raportowane przez CLI, więc trafiają do zapisu tylko wtedy, gdy je tu zmienisz. Wyczyszczenie pola jądra przywraca jądro systemowe.";
 "Odpowiedź CLI" = "Odpowiedź CLI";
 "Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny";
 "Zapisz" = "Zapisz";

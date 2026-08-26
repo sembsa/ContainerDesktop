@@ -6,6 +6,19 @@ import SwiftUI
 /// `machine set` writes what it is given, so re-submitting an unchanged CPU count
 /// pins it against whatever the CLI's own default would have become.
 ///
+/// Two subtleties decide how "edited" is worked out, and neither is cosmetic:
+///
+/// - Fields the CLI *reports* (cpus, memory, home-mount) are compared against
+///   what it reported. The baseline therefore has to be reloaded when `inspect`
+///   arrives — it lands a moment after the view appears. Loading a `rw` baseline
+///   for an `ro` machine and then comparing against it would show a change nobody
+///   made, and saving it would quietly remount the home directory read-write.
+/// - Fields the CLI does *not* report (virtualization, kernel) have no baseline to
+///   compare against, so they are tracked by whether the user touched them at all:
+///   `nil` means untouched and unsent. That is what lets the form send
+///   `virtualization=false` and the empty `kernel=` that resets to the system
+///   kernel — a value comparison could express neither.
+///
 /// The honest part of this screen is the warning. `machine set` changes nothing
 /// about the machine that is already running, and yet `machine ls` and
 /// `machine inspect` start reporting the new numbers immediately — verified: after
@@ -20,11 +33,11 @@ struct MachineConfigView: View {
     @State private var cpus = ""
     @State private var memory = ""
     @State private var homeMount: MachineCommands.HomeMount = .readWrite
-    @State private var nestedVirtualization = false
-    @State private var kernelPath = ""
+    /// nil until the user touches it — see the note above.
+    @State private var virtualization: Bool?
+    @State private var kernelPath: String?
     @State private var isApplying = false
     @State private var reply: String?
-    @State private var loadedFor: String?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -48,12 +61,12 @@ struct MachineConfigView: View {
                 }
 
                 Section {
-                    Toggle("Wirtualizacja zagnieżdżona", isOn: $nestedVirtualization)
+                    Toggle("Wirtualizacja zagnieżdżona", isOn: virtualizationBinding)
                     Text("Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    TextField("Własne jądro", text: $kernelPath, prompt: Text(verbatim: "/ścieżka/do/vmlinux"))
-                    Text("Puste pole przywraca jądro systemowe.")
+                    TextField("Własne jądro", text: kernelBinding, prompt: Text(verbatim: "/ścieżka/do/vmlinux"))
+                    Text("Wirtualizacja i jądro nie są raportowane przez CLI, więc trafiają do zapisu tylko wtedy, gdy je tu zmienisz. Wyczyszczenie pola jądra przywraca jądro systemowe.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } header: {
@@ -84,8 +97,9 @@ struct MachineConfigView: View {
             Divider()
             footer
         }
-        .task(id: machine.id) { loadCurrentValues() }
-        .onChange(of: inspect) { _, _ in loadCurrentValues() }
+        // Keyed on everything the baseline is drawn from, so the form reloads when
+        // `inspect` lands and again after a save refreshes the row.
+        .task(id: baselineKey) { loadCurrentValues() }
     }
 
     private var footer: some View {
@@ -96,7 +110,7 @@ struct MachineConfigView: View {
                     .foregroundStyle(.orange)
             }
             Spacer()
-            Button("Przywróć") { loadCurrentValues(force: true) }
+            Button("Przywróć") { loadCurrentValues() }
                 .disabled(isApplying || !hasChanges)
             Button {
                 Task { await apply() }
@@ -109,7 +123,21 @@ struct MachineConfigView: View {
         .padding(12)
     }
 
+    // MARK: - Bindings for the untouched-until-edited fields
+
+    private var virtualizationBinding: Binding<Bool> {
+        Binding(get: { virtualization ?? false }, set: { virtualization = $0 })
+    }
+
+    private var kernelBinding: Binding<String> {
+        Binding(get: { kernelPath ?? "" }, set: { kernelPath = $0 })
+    }
+
     // MARK: - Change tracking
+
+    private var baselineKey: String {
+        "\(machine.id)|\(currentCpus)|\(currentMemory)|\(inspect?.homeMount ?? "?")"
+    }
 
     private var currentCpus: String { machine.cpus.map(String.init) ?? "" }
 
@@ -127,22 +155,19 @@ struct MachineConfigView: View {
         var settings: [MachineCommands.Setting] = []
         if cpus != currentCpus, !cpus.isEmpty { settings.append(.cpus(cpus)) }
         if memory != currentMemory, !memory.isEmpty { settings.append(.memory(memory)) }
-        if homeMount != currentHomeMount { settings.append(.homeMount(homeMount)) }
-        if nestedVirtualization { settings.append(.virtualization(true)) }
-        // An empty kernel path is only sent when the user cleared a set one —
-        // otherwise every save would reset a kernel nobody touched.
-        if !kernelPath.isEmpty { settings.append(.kernel(kernelPath)) }
+        // Only trust the home-mount comparison once the CLI has told us what it is.
+        if inspect != nil, homeMount != currentHomeMount { settings.append(.homeMount(homeMount)) }
+        if let virtualization { settings.append(.virtualization(virtualization)) }
+        if let kernelPath { settings.append(.kernel(kernelPath)) }
         return settings
     }
 
-    private func loadCurrentValues(force: Bool = false) {
-        guard force || loadedFor != machine.id else { return }
-        loadedFor = machine.id
+    private func loadCurrentValues() {
         cpus = currentCpus
         memory = currentMemory
         homeMount = currentHomeMount
-        nestedVirtualization = false
-        kernelPath = ""
+        virtualization = nil
+        kernelPath = nil
         reply = nil
     }
 
@@ -152,8 +177,11 @@ struct MachineConfigView: View {
         isApplying = true
         defer { isApplying = false }
         do {
-            reply = try await model.machines.apply(settings, to: machine)
-            loadedFor = nil
+            let output = try await model.machines.apply(settings, to: machine)
+            // Cleared after the reload the refreshed row triggers, so it survives
+            // long enough to read.
+            loadCurrentValues()
+            reply = output
         } catch {
             model.present(error)
         }

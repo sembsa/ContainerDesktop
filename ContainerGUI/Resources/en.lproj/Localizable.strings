@@ -303,7 +303,7 @@
 "Wirtualizacja zagnieżdżona" = "Nested virtualization";
 "Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "Requires Apple Silicon M3 or newer, macOS 15+ and a kernel built with CONFIG_KVM=y.";
 "Własne jądro" = "Custom kernel";
-"Puste pole przywraca jądro systemowe." = "An empty field restores the system kernel.";
+"Wirtualizacja i jądro nie są raportowane przez CLI, więc trafiają do zapisu tylko wtedy, gdy je tu zmienisz. Wyczyszczenie pola jądra przywraca jądro systemowe." = "Virtualization and the kernel are not reported by the CLI, so they are only saved if you change them here. Clearing the kernel field restores the system kernel.";
 "Odpowiedź CLI" = "CLI reply";
 "Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "Changes take effect after stopping and restarting the machine";
 "Zapisz" = "Save";

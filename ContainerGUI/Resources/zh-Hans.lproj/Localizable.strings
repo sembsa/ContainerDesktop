@@ -303,7 +303,7 @@
 "Wirtualizacja zagnieżdżona" = "嵌套虚拟化";
 "Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y." = "需要 Apple Silicon M3 或更新机型、macOS 15+，以及启用 CONFIG_KVM=y 的内核。";
 "Własne jądro" = "自定义内核";
-"Puste pole przywraca jądro systemowe." = "留空将恢复系统内核。";
+"Wirtualizacja i jądro nie są raportowane przez CLI, więc trafiają do zapisu tylko wtedy, gdy je tu zmienisz. Wyczyszczenie pola jądra przywraca jądro systemowe." = "CLI 不会报告虚拟化与内核设置，因此只有在此处修改后才会保存。清空内核字段将恢复系统内核。";
 "Odpowiedź CLI" = "CLI 响应";
 "Zmiany zadziałają po zatrzymaniu i ponownym uruchomieniu maszyny" = "更改将在停止并重新启动虚拟机后生效";
 "Zapisz" = "保存";

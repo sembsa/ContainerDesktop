@@ -51,7 +51,9 @@ struct MachineDetailView: View {
             case .configuration: MachineConfigView(machine: machine, inspect: inspect)
             }
         }
-        .task(id: machine.id) { await loadInspect() }
+        // Keyed on the whole row, not just its id: booting or stopping the machine
+        // changes its address and state, and `inspect` would otherwise stay stale.
+        .task(id: machine) { await loadInspect() }
     }
 
     // MARK: - Header
