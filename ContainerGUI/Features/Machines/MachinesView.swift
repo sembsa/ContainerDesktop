@@ -72,6 +72,11 @@ struct MachinesView: View {
                     if machine.isDefault == true {
                         Text("domyślna")
                             .font(.caption2)
+                            // A table cell compresses flexible text, and a badge
+                            // reading "domyś…" is worse than no badge. Widening the
+                            // column alone did not help — the label itself has to
+                            // refuse to shrink.
+                            .fixedSize()
                             .padding(.horizontal, 5).padding(.vertical, 1)
                             .background(.tint.opacity(0.2), in: Capsule())
                     }
@@ -80,6 +85,7 @@ struct MachinesView: View {
                     }
                 }
             }
+            .width(min: 200)
             TableColumn("Stan") { machine in
                 HStack(spacing: 5) {
                     StatusDot(state: machine.status ?? "")
