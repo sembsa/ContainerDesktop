@@ -53,8 +53,12 @@ final class MachineTemplateTests: XCTestCase {
 
     func testBothEnvironmentsBringAnXServerAndAVNCServer() {
         for environment in MachineDesktopEnvironment.allCases {
-            XCTAssertTrue(environment.packages.contains("xvfb"), "\(environment) bez xvfb")
-            XCTAssertTrue(environment.packages.contains("x11vnc"), "\(environment) bez x11vnc")
+            for manager in [MachinePackageManager.apk, .apt] {
+                XCTAssertTrue(environment.packages(for: manager).contains("xvfb"),
+                              "\(environment)/\(manager) bez xvfb")
+                XCTAssertTrue(environment.packages(for: manager).contains("x11vnc"),
+                              "\(environment)/\(manager) bez x11vnc")
+            }
             XCTAssertFalse(environment.startExecutable.isEmpty)
             XCTAssertFalse(environment.probeProcess.isEmpty)
         }
@@ -66,7 +70,9 @@ final class MachineTemplateTests: XCTestCase {
         // which left the VNC session showing a black screen — an X server with
         // nothing drawing on it.
         for environment in MachineDesktopEnvironment.allCases {
-            XCTAssertFalse(environment.packages.contains("fluxbox"))
+            for manager in [MachinePackageManager.apk, .apt] {
+                XCTAssertFalse(environment.packages(for: manager).contains("fluxbox"))
+            }
             XCTAssertNotEqual(environment.startExecutable, "fluxbox")
         }
     }
@@ -75,7 +81,7 @@ final class MachineTemplateTests: XCTestCase {
         let ice = MachineDesktopEnvironment.iceWM
         XCTAssertEqual(ice.startExecutable, "icewm")
         XCTAssertEqual(ice.probeProcess, "icewm")
-        XCTAssertTrue(ice.packages.contains("xterm"))
+        XCTAssertTrue(ice.packages(for: .apk).contains("xterm"))
         // A window manager alone is a taskbar over an empty root window.
         XCTAssertFalse(ice.providesTerminal)
     }
@@ -87,7 +93,7 @@ final class MachineTemplateTests: XCTestCase {
         // what appears in the process list, which is why that is the probe.
         XCTAssertEqual(xfce.startExecutable, "startxfce4")
         XCTAssertEqual(xfce.probeProcess, "xfwm4")
-        XCTAssertTrue(xfce.packages.contains("dbus"))
+        XCTAssertTrue(xfce.packages(for: .apk).contains("dbus"))
         XCTAssertTrue(xfce.providesTerminal)
     }
 
@@ -113,21 +119,119 @@ final class MachineTemplateTests: XCTestCase {
         }
     }
 
-    // MARK: - Provisioning argv
+    // MARK: - Distributions
 
-    func testInstallingPackagesRunsApkAsRootBehindTheSeparator() {
-        // apk carries its own flags, so `--` is mandatory — without it the CLI
-        // eats them.
-        let args = MachineCommands.install(packages: ["x11vnc", "xvfb"], on: "gui")
+    func testUbuntuIsOfferedPlainAndWithADesktop() {
+        let ubuntu = MachineTemplate.all.filter { $0.packageManager == .apt }
+        XCTAssertEqual(ubuntu.count, 2, "Ubuntu zwykłe i z pulpitem")
+        XCTAssertTrue(ubuntu.contains { !$0.providesDesktop })
+        XCTAssertTrue(ubuntu.contains { $0.providesDesktop })
+    }
+
+    func testUbuntuNeedsItsBaseImageBuiltBecauseTheOfficialOneHasNoInit() {
+        // A machine will not boot from an image without /sbin/init. Alpine's is a
+        // busybox symlink; ubuntu:24.04 has no init at all — no systemd, no
+        // busybox — and `machine create` fails with "container must be running".
+        // So the base is built: ubuntu plus busybox-static linked as /sbin/init.
+        // Verified: the built image boots and reports Ubuntu 24.04.4 LTS.
+        for template in MachineTemplate.all where template.packageManager == .apt {
+            guard let dockerfile = template.baseImageDockerfile else {
+                return XCTFail("\(template.id) bez Dockerfile")
+            }
+            XCTAssertTrue(dockerfile.contains("FROM ubuntu:"))
+            XCTAssertTrue(dockerfile.contains("/sbin/init"))
+            XCTAssertTrue(dockerfile.contains("busybox"))
+            XCTAssertFalse(template.image.isEmpty, "brak tagu budowanego obrazu")
+        }
+    }
+
+    func testDebianIsNotOfferedAnyMore() {
+        // It never worked: debian:bookworm-slim has no /sbin/init either, so the
+        // template shipped broken. Ubuntu covers the apt world instead.
+        XCTAssertFalse(MachineTemplate.all.contains { $0.id == "debian" })
+    }
+
+    func testAlpineTemplatesUseApk() {
+        for template in MachineTemplate.all
+        where template.image.hasPrefix("alpine") {
+            XCTAssertEqual(template.packageManager, .apk)
+        }
+    }
+
+    // MARK: - Package managers
+
+    func testApkInstallsInOneCommand() {
+        let commands = MachinePackageManager.apk.installCommands(
+            packages: ["icewm", "xterm"], on: "gui"
+        )
+        XCTAssertEqual(commands.count, 1)
         XCTAssertEqual(
-            args,
+            commands[0],
             ["machine", "run", "-n", "gui", "--root", "--",
-             "apk", "add", "--no-progress", "x11vnc", "xvfb"]
+             "apk", "add", "--no-progress", "icewm", "xterm"]
         )
     }
 
-    func testInstallingNothingIsNotACommand() {
-        XCTAssertTrue(MachineCommands.install(packages: [], on: "gui").isEmpty)
+    func testAptNeedsAnUpdateFirstAndMustNotAskQuestions() {
+        let commands = MachinePackageManager.apt.installCommands(
+            packages: ["icewm", "xterm"], on: "gui"
+        )
+        XCTAssertEqual(commands.count, 2, "update i install")
+        XCTAssertEqual(
+            commands[0],
+            ["machine", "run", "-n", "gui", "--root", "--", "apt-get", "update"]
+        )
+        // Without DEBIAN_FRONTEND the install can stop on a prompt nobody can answer.
+        XCTAssertTrue(commands[1].contains("DEBIAN_FRONTEND=noninteractive"))
+        XCTAssertTrue(commands[1].contains("--no-install-recommends"))
+        XCTAssertEqual(commands[1].suffix(2), ["icewm", "xterm"])
+    }
+
+    func testNeitherManagerInstallsNothing() {
+        XCTAssertTrue(MachinePackageManager.apk.installCommands(packages: [], on: "gui").isEmpty)
+        XCTAssertTrue(MachinePackageManager.apt.installCommands(packages: [], on: "gui").isEmpty)
+    }
+
+    func testXfceNeedsADifferentDbusPackageOnUbuntu() {
+        // dbus-launch lives in dbus-x11 on Debian and Ubuntu; the Alpine package
+        // is simply dbus. Verified: startxfce4 brought the session up on both.
+        XCTAssertTrue(MachineDesktopEnvironment.xfce.packages(for: .apk).contains("dbus"))
+        XCTAssertTrue(MachineDesktopEnvironment.xfce.packages(for: .apt).contains("dbus-x11"))
+    }
+
+    func testIceWMNeedsTheSamePackagesEverywhere() {
+        XCTAssertEqual(
+            MachineDesktopEnvironment.iceWM.packages(for: .apk),
+            MachineDesktopEnvironment.iceWM.packages(for: .apt)
+        )
+    }
+
+    // MARK: - Building a base image
+
+    func testBuildingTheBaseImageTagsItAndPointsAtAContext() {
+        let args = MachineCommands.buildBaseImage(
+            tag: "containerdesktop/ubuntu-machine:24.04",
+            contextDirectory: "/tmp/ctx"
+        )
+        XCTAssertEqual(args.first, "build")
+        XCTAssertTrue(args.contains("--tag"))
+        XCTAssertTrue(args.contains("containerdesktop/ubuntu-machine:24.04"))
+        XCTAssertEqual(args.last, "/tmp/ctx")
+    }
+
+    // MARK: - Provisioning argv
+
+    func testInstallingPackagesKeepsThemBehindTheSeparator() {
+        // The package manager carries its own flags, so `--` is mandatory —
+        // without it the CLI eats them.
+        for manager in [MachinePackageManager.apk, .apt] {
+            for command in manager.installCommands(packages: ["x11vnc"], on: "gui") {
+                guard let separator = command.firstIndex(of: "--") else {
+                    return XCTFail("brak separatora w \(command)")
+                }
+                XCTAssertLessThan(separator, command.count - 1)
+            }
+        }
     }
 
     func testAReadinessProbeIsThePlainestCommandThereIs() {

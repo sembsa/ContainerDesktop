@@ -378,9 +378,14 @@ struct MachineDetailView: View {
                 desktopError = String(localized: "Maszyna nie odpowiada.")
                 return
             }
+            guard let manager = await model.machines.detectPackageManager(machine) else {
+                desktopError = String(localized: "Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu).")
+                return
+            }
             let stream = model.machines.provisionStream(
-                packages: environment.packages,
-                on: machine.name
+                packages: environment.packages(for: manager),
+                on: machine.name,
+                using: manager
             )
             for try await line in stream {
                 desktopOutput.append(LogLine(text: line))

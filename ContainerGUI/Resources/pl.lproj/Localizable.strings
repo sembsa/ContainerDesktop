@@ -770,13 +770,11 @@
 "Alpine (minimalna)" = "Alpine (minimalna)";
 "Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk." = "Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk.";
 "Debian" = "Debian";
-"Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma." = "Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma.";
 "Dev .NET" = "Dev .NET";
 "Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet." = "Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet.";
 "Pulpit z VNC" = "Pulpit z VNC";
 "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB." = "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB.";
 "Własna" = "Własna";
-"Wpisz obraz bazowy sam." = "Wpisz obraz bazowy sam.";
 "Podaj liczbę całkowitą większą od zera." = "Podaj liczbę całkowitą większą od zera.";
 "Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB)." = "Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB).";
 "Podaj pełną ścieżkę, zaczynającą się od /." = "Podaj pełną ścieżkę, zaczynającą się od /.";
@@ -821,3 +819,13 @@
 /* Features/Machines/MachineTemplate.swift — pulpit */
 "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu." = "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu.";
 "Doinstalowywanie pulpitu." = "Doinstalowywanie pulpitu.";
+
+/* Features/Machines/MachineTemplate.swift — Ubuntu */
+"Ubuntu 24.04" = "Ubuntu 24.04";
+"Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje." = "Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje.";
+"Alpine z pulpitem VNC" = "Alpine z pulpitem VNC";
+"Ubuntu z pulpitem VNC" = "Ubuntu z pulpitem VNC";
+"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama." = "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama.";
+"Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie." = "Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie.";
+"Przygotowywanie obrazu bazowego…" = "Przygotowywanie obrazu bazowego…";
+"Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu)." = "Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu).";

@@ -123,13 +123,10 @@ enum MachineCommands {
     /// real disk.
     static let vncPasswordPath = "/etc/x11vnc.pass"
 
-    /// `apk add` as root. Nothing is wrapped in a shell anywhere here: `machine
-    /// run -- sh -c "…"` executes but swallows stdout, so provisioning output
-    /// would vanish.
-    static func install(packages: [String], on name: String) -> [String] {
-        guard !packages.isEmpty else { return [] }
-        return ["machine", "run", "-n", name, "--root", "--",
-                "apk", "add", "--no-progress"] + packages
+    /// Builds a base image for a template whose distribution has no init of its
+    /// own. `--progress plain` keeps the output usable in a log box.
+    static func buildBaseImage(tag: String, contextDirectory: String) -> [String] {
+        ["build", "--progress", "plain", "--tag", tag, contextDirectory]
     }
 
     /// The cheapest thing that can be asked of a machine, used to find out

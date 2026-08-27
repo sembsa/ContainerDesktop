@@ -378,9 +378,22 @@ struct MachineCreateSheet: View {
         let name = options.name
         // A desktop template installs whatever the chosen environment needs; every
         // other template carries its own list.
-        let packages = template.providesDesktop ? environment.packages : template.packages
+        let manager = template.packageManager
+        let packages = template.providesDesktop
+            ? environment.packages(for: manager)
+            : template.packages
+        let buildTemplate = template
         var succeeded = false
         do {
+            // Some distributions need their base image built first: a machine will
+            // not boot from an image without /sbin/init, and the official Ubuntu
+            // image has none.
+            if buildTemplate.needsBaseImageBuild {
+                output.append(LogLine(text: String(localized: "Przygotowywanie obrazu bazowego…")))
+                for try await line in model.machines.buildBaseImageStream(for: buildTemplate) {
+                    output.append(LogLine(text: line))
+                }
+            }
             for try await line in model.machines.createStream(options) {
                 output.append(LogLine(text: line))
             }
@@ -401,7 +414,9 @@ struct MachineCreateSheet: View {
                 : String(localized: "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit.")))
             do {
                 guard ready else { throw CLIError.command(exitCode: -1, stderr: String(localized: "Maszyna nie odpowiada.")) }
-                for try await line in model.machines.provisionStream(packages: packages, on: name) {
+                for try await line in model.machines.provisionStream(
+                    packages: packages, on: name, using: manager
+                ) {
                     output.append(LogLine(text: line))
                 }
             } catch {
