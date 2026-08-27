@@ -141,8 +141,12 @@ struct MachineCreateSheet: View {
 
     @State private var options = MachineCommands.CreateOptions(image: "")
     @State private var isCreating = false
-    @State private var finished = false
+    @State private var failed = false
     @State private var output: [LogLine] = []
+
+    /// Once creation starts the form gives way to the progress log. Appending the
+    /// log below three sections of form meant scrolling down to watch it.
+    private var isShowingProgress: Bool { isCreating || failed }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -157,6 +161,36 @@ struct MachineCreateSheet: View {
             .padding(12)
             Divider()
 
+            if isShowingProgress {
+                progress
+            } else {
+                form
+            }
+
+            Divider()
+            footer
+        }
+        .frame(width: 640, height: 560)
+    }
+
+    // MARK: - Progress
+
+    private var progress: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            StreamLogBox(lines: output)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if failed {
+                Text("Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie.")
+                    .font(.caption)
+                    .foregroundStyle(.orange)
+            }
+        }
+        .padding(12)
+    }
+
+    // MARK: - Form
+
+    private var form: some View {
             Form {
                 Section {
                     TextField("Obraz bazowy", text: $options.image, prompt: Text(verbatim: "alpine:3.22"))
@@ -205,32 +239,28 @@ struct MachineCreateSheet: View {
                     }
                 }
 
-                if !output.isEmpty {
-                    Section {
-                        StreamLogBox(lines: output)
-                            .frame(minHeight: 140)
-                    } header: {
-                        HStack(spacing: 5) {
-                            Image(systemName: "terminal.fill")
-                                .foregroundStyle(Color.gray.gradient)
-                            Text("Postęp")
-                        }
-                    }
-                }
             }
             .formStyle(.grouped)
-            .disabled(isCreating)
+    }
 
-            Divider()
-            HStack {
-                if isCreating {
-                    Text("Pobieranie obrazu i uruchamianie maszyny wirtualnej.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+    // MARK: - Footer
+
+    private var footer: some View {
+        HStack {
+            if isCreating {
+                Text("Pobieranie obrazu i uruchamianie maszyny wirtualnej.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button(failed ? "Zamknij" : "Anuluj") { dismiss() }
+                .keyboardShortcut(.cancelAction)
+            if failed {
+                Button("Wróć do formularza") {
+                    failed = false
+                    output = []
                 }
-                Spacer()
-                Button(finished ? "Gotowe" : "Anuluj") { dismiss() }
-                    .keyboardShortcut(.cancelAction)
+            } else {
                 Button {
                     Task { await create() }
                 } label: {
@@ -240,25 +270,30 @@ struct MachineCreateSheet: View {
                 .buttonStyle(.glassProminent)
                 .disabled(options.image.isEmpty || isCreating)
             }
-            .padding(12)
         }
-        .frame(width: 640)
+        .padding(12)
     }
 
     private func create() async {
         isCreating = true
-        finished = false
+        failed = false
         output = []
         defer { isCreating = false }
 
+        var succeeded = false
         do {
             for try await line in model.machines.createStream(options) {
                 output.append(LogLine(text: line))
             }
-            finished = true
+            succeeded = true
         } catch {
             output.append(LogLine(text: String(format: String(localized: "[błąd: %@]"), error.localizedDescription)))
+            failed = true
         }
         await model.machines.refresh()
+        // The machine is in the table now, so the sheet has nothing left to say.
+        // Leaving it open also left "Utwórz" armed, and a second press ran
+        // `machine create` again with a name that already existed.
+        if succeeded { dismiss() }
     }
 }

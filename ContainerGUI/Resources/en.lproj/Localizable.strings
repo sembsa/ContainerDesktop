@@ -758,3 +758,7 @@
 "Ukryj" = "Hide";
 "Pokaż" = "Show";
 "wartość binarna" = "binary value";
+
+/* Features/Machines/MachinesView.swift — 0.6.0 */
+"Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie." = "Creating the machine failed. Correct the values and try again.";
+"Wróć do formularza" = "Back to the form";

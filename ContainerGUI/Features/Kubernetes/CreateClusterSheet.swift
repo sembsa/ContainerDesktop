@@ -92,7 +92,10 @@ struct CreateClusterSheet: View {
                 }
                 .keyboardShortcut(.defaultAction)
                 .buttonStyle(.glassProminent)
-                .disabled(name.isEmpty || isCreating)
+                // `finished` matters as much as `isCreating`: leaving the button
+                // armed after a successful create ran `k8s create` a second time
+                // with a name that already existed.
+                .disabled(name.isEmpty || isCreating || finished)
             }
             .padding(12)
         }
