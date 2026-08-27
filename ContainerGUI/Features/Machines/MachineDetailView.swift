@@ -362,6 +362,10 @@ struct MachineDetailView: View {
         desktopOutput = []
         defer { isDesktopWorking = false }
         do {
+            guard await model.machines.waitUntilReady(machine.name) else {
+                desktopError = String(localized: "Maszyna nie odpowiada.")
+                return
+            }
             let stream = model.machines.provisionStream(
                 packages: desktopTemplate.packages,
                 on: machine.name

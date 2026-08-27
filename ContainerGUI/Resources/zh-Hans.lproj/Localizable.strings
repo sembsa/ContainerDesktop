@@ -800,3 +800,8 @@
 "Połącz przez VNC" = "通过 VNC 连接";
 "Maszyna nie ma jeszcze adresu IP." = "虚拟机尚无 IP 地址。";
 "Hasło:" = "密码：";
+
+/* Features/Machines/MachinesView.swift — gotowość */
+"Czekam, aż maszyna przyjmie polecenia…" = "正在等待虚拟机接受命令…";
+"Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit." = "虚拟机无响应——模板的软件包可稍后在「桌面」标签页中安装。";
+"Maszyna nie odpowiada." = "虚拟机无响应。";

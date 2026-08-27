@@ -66,13 +66,38 @@ final class MachineTemplateTests: XCTestCase {
         XCTAssertTrue(MachineCommands.install(packages: [], on: "gui").isEmpty)
     }
 
+    func testAReadinessProbeIsThePlainestCommandThereIs() {
+        // A machine reports created before `machine run` works on it: running
+        // anything two seconds after `machine create` fails with "Operation not
+        // supported by device". Provisioning therefore waits on this first.
+        XCTAssertEqual(
+            MachineCommands.readinessProbe(name: "gui"),
+            ["machine", "run", "-n", "gui", "--", "/bin/true"]
+        )
+    }
+
     // MARK: - Desktop argv
+
+    func testTheWholeDesktopRunsAsOneUser() {
+        // All three as root, and that is not tidiness. With Xvfb owned by the host
+        // user and x11vnc as root, x11vnc attaches to the display and then dies on
+        // "X11 MIT Shared Memory Attach failed" — seen on a live machine, where
+        // the port then refused connections while every command had reported
+        // success.
+        for args in [
+            MachineCommands.desktopDisplayServer(name: "gui"),
+            MachineCommands.desktopWindowManager(name: "gui"),
+            MachineCommands.desktopVNCServer(name: "gui"),
+        ] {
+            XCTAssertTrue(args.contains("--root"), "brak --root w \(args)")
+        }
+    }
 
     func testTheDisplayServerStartsDetached() {
         let args = MachineCommands.desktopDisplayServer(name: "gui")
         XCTAssertEqual(
             args,
-            ["machine", "run", "-n", "gui", "-d", "--",
+            ["machine", "run", "-n", "gui", "-d", "--root", "--",
              "Xvfb", ":1", "-screen", "0", "1440x900x24"]
         )
     }
@@ -83,7 +108,7 @@ final class MachineTemplateTests: XCTestCase {
         let args = MachineCommands.desktopWindowManager(name: "gui")
         XCTAssertEqual(
             args,
-            ["machine", "run", "-n", "gui", "-d", "-e", "DISPLAY=:1", "--", "fluxbox"]
+            ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "fluxbox"]
         )
     }
 

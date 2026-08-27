@@ -800,3 +800,8 @@
 "Połącz przez VNC" = "Połącz przez VNC";
 "Maszyna nie ma jeszcze adresu IP." = "Maszyna nie ma jeszcze adresu IP.";
 "Hasło:" = "Hasło:";
+
+/* Features/Machines/MachinesView.swift — gotowość */
+"Czekam, aż maszyna przyjmie polecenia…" = "Czekam, aż maszyna przyjmie polecenia…";
+"Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit." = "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit.";
+"Maszyna nie odpowiada." = "Maszyna nie odpowiada.";
