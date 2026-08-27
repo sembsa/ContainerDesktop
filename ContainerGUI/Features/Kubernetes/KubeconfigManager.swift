@@ -24,8 +24,8 @@ enum KubeconfigManager {
     /// Two details of `container k8s write-config` matter here:
     /// - it *appends* to an existing file, so a stale copy is removed first;
     /// - the file it writes has no `current-context`, which is why every helm
-    ///   call also passes `--kube-context` (see `HelmCLI.ClusterTarget`).
-    static func target(for cluster: String) async throws -> HelmCLI.ClusterTarget {
+    ///   call also passes `--kube-context` (see `ClusterKubeconfig`).
+    static func target(for cluster: String) async throws -> ClusterKubeconfig {
         let path = path(for: cluster)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try? FileManager.default.removeItem(atPath: path)
@@ -33,7 +33,7 @@ enum KubeconfigManager {
             ["k8s", "write-config", "--name", cluster, "--kubeconfig", path],
             timeout: .seconds(60)
         )
-        return HelmCLI.ClusterTarget(cluster: cluster, kubeconfigPath: path)
+        return ClusterKubeconfig(cluster: cluster, kubeconfigPath: path)
     }
 
     static func removeKubeconfig(for cluster: String) {
