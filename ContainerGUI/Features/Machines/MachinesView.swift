@@ -381,8 +381,13 @@ struct MachineCreateSheet: View {
         // here leaves a usable machine, so it is reported rather than treated as
         // a failed creation.
         if succeeded, !packages.isEmpty, !name.isEmpty {
-            output.append(LogLine(text: String(localized: "Doinstalowywanie pakietów szablonu…")))
+            output.append(LogLine(text: String(localized: "Czekam, aż maszyna przyjmie polecenia…")))
+            let ready = await model.machines.waitUntilReady(name)
+            output.append(LogLine(text: ready
+                ? String(localized: "Doinstalowywanie pakietów szablonu…")
+                : String(localized: "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit.")))
             do {
+                guard ready else { throw CLIError.command(exitCode: -1, stderr: String(localized: "Maszyna nie odpowiada.")) }
                 for try await line in model.machines.provisionStream(packages: packages, on: name) {
                     output.append(LogLine(text: line))
                 }

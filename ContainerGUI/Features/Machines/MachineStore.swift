@@ -93,6 +93,22 @@ final class MachineStore {
         return ContainerCLI.shared.streamChecked(arguments)
     }
 
+    /// Waits until the machine will actually run a command.
+    ///
+    /// `machine create` returns before that is true: running anything two seconds
+    /// later fails with "Operation not supported by device", which is what made
+    /// a template's packages fail to install on a machine that had just been
+    /// created. Verified by creating a machine and probing it in a loop.
+    func waitUntilReady(_ name: String, attempts: Int = 30) async -> Bool {
+        for _ in 0..<attempts {
+            if (try? await cli.run(MachineCommands.readinessProbe(name: name), timeout: .seconds(30))) != nil {
+                return true
+            }
+            try? await Task.sleep(for: .seconds(1))
+        }
+        return false
+    }
+
     // MARK: - Desktop
 
     /// Passwords live here and nowhere else — in memory, for this run of the app.

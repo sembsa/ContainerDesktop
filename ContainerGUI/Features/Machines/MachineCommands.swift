@@ -132,15 +132,25 @@ enum MachineCommands {
                 "apk", "add", "--no-progress"] + packages
     }
 
+    /// The cheapest thing that can be asked of a machine, used to find out
+    /// whether it will run anything yet.
+    static func readinessProbe(name: String) -> [String] {
+        ["machine", "run", "-n", name, "--", "/bin/true"]
+    }
+
+    /// All three desktop services run as root, and that is not tidiness: with the
+    /// display owned by the host user and x11vnc as root, x11vnc attaches and then
+    /// dies on "X11 MIT Shared Memory Attach failed" while every command still
+    /// reports success — the port simply refuses connections afterwards.
     static func desktopDisplayServer(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "--",
+        ["machine", "run", "-n", name, "-d", "--root", "--",
          "Xvfb", ":1", "-screen", "0", "1440x900x24"]
     }
 
     /// The display comes through `-e` rather than a shell assignment, for the same
     /// reason as above.
     static func desktopWindowManager(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "-e", "DISPLAY=:1", "--", "fluxbox"]
+        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "fluxbox"]
     }
 
     static func desktopVNCServer(name: String) -> [String] {
