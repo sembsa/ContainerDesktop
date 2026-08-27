@@ -19,16 +19,11 @@ import Foundation
 actor HelmCLI {
     static let shared = HelmCLI()
 
-    /// Where a helm command is allowed to act. Constructing one requires a
-    /// cluster name, so there is no way to spell "whatever kubectl points at".
-    struct ClusterTarget: Sendable, Hashable {
-        let cluster: String
-        let kubeconfigPath: String
-
-        var arguments: [String] {
-            ["--kubeconfig", kubeconfigPath, "--kube-context", cluster]
-        }
-    }
+    /// Where a helm command is allowed to act. The type is shared with kubectl —
+    /// see `ClusterKubeconfig`, which renders each CLI's own spelling of the
+    /// context flag — so both are bound to the same app-managed kubeconfig and
+    /// neither can be aimed at `~/.kube/config`.
+    typealias ClusterTarget = ClusterKubeconfig
 
     private let decoder = JSONDecoder()
 
@@ -51,7 +46,7 @@ actor HelmCLI {
         on target: ClusterTarget,
         timeout: Duration? = HelmCLI.defaultTimeout
     ) async throws -> String {
-        try await execute(arguments + target.arguments, timeout: timeout)
+        try await execute(arguments + target.helmArguments, timeout: timeout)
     }
 
     func json<T: Decodable>(
@@ -60,7 +55,7 @@ actor HelmCLI {
         as type: T.Type = T.self,
         timeout: Duration? = HelmCLI.defaultTimeout
     ) async throws -> T {
-        try await decode(arguments + ["-o", "json"] + target.arguments, timeout: timeout)
+        try await decode(arguments + ["-o", "json"] + target.helmArguments, timeout: timeout)
     }
 
     /// Line stream for long operations (`install`, `upgrade`) so the sheet can
@@ -71,7 +66,7 @@ actor HelmCLI {
         }
         return ProcessLineReader(
             binary: binary,
-            arguments: arguments + target.arguments,
+            arguments: arguments + target.helmArguments,
             failOnNonZeroExit: true
         ).lines()
     }

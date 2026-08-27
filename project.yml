@@ -145,6 +145,9 @@ targets:
       - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
       - path: ContainerGUI/Features/Machines/MachineCommands.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
+      - path: ContainerGUI/CLI/ClusterKubeconfig.swift
+      - path: ContainerGUI/CLI/KubectlCommands.swift
+      - path: ContainerGUI/CLI/KubectlJSON.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
       - path: ContainerGUI/Features/Helm/ChartSchema.swift
       - path: ContainerGUI/Widget/WidgetSnapshot.swift
