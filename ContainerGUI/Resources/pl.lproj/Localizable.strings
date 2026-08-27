@@ -805,3 +805,19 @@
 "Czekam, aż maszyna przyjmie polecenia…" = "Czekam, aż maszyna przyjmie polecenia…";
 "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit." = "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit.";
 "Maszyna nie odpowiada." = "Maszyna nie odpowiada.";
+
+/* Features/Machines/MachineDesktop.swift */
+"IceWM — lekki pulpit z paskiem zadań" = "IceWM — lekki pulpit z paskiem zadań";
+"XFCE — pełny pulpit" = "XFCE — pełny pulpit";
+"Pasek zadań z menu i okno terminala. Około 300 MB paczek." = "Pasek zadań z menu i okno terminala. Około 300 MB paczek.";
+"Panel, ikony na pulpicie, menedżer plików i własny terminal. Około 650 MB paczek." = "Panel, ikony na pulpicie, menedżer plików i własny terminal. Około 650 MB paczek.";
+"Środowisko graficzne" = "Środowisko graficzne";
+
+/* Features/Machines/MachineStore.swift — pulpit */
+"Serwer X nie wystartował." = "Serwer X nie wystartował.";
+"Środowisko graficzne nie wystartowało." = "Środowisko graficzne nie wystartowało.";
+"Serwer VNC nie wystartował." = "Serwer VNC nie wystartował.";
+
+/* Features/Machines/MachineTemplate.swift — pulpit */
+"Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu." = "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu.";
+"Doinstalowywanie pulpitu." = "Doinstalowywanie pulpitu.";

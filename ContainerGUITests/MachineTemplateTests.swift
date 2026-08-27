@@ -39,26 +39,78 @@ final class MachineTemplateTests: XCTestCase {
         XCTAssertFalse(template.providesDesktop)
     }
 
-    func testTheDesktopTemplateInstallsAnXServerAVNCServerAndAWindowManager() {
+    func testTheDesktopTemplateLeavesThePackagesToTheChosenEnvironment() {
         guard let template = MachineTemplate.all.first(where: { $0.id == "desktop" }) else {
             return XCTFail("brak szablonu pulpitu")
         }
         XCTAssertTrue(template.providesDesktop)
-        for package in ["x11vnc", "xvfb", "icewm", "xterm"] {
-            XCTAssertTrue(template.packages.contains(package), "brak \(package)")
+        // The environment decides what gets installed, so the template itself
+        // names nothing.
+        XCTAssertTrue(template.packages.isEmpty)
+    }
+
+    // MARK: - Graphical environments
+
+    func testBothEnvironmentsBringAnXServerAndAVNCServer() {
+        for environment in MachineDesktopEnvironment.allCases {
+            XCTAssertTrue(environment.packages.contains("xvfb"), "\(environment) bez xvfb")
+            XCTAssertTrue(environment.packages.contains("x11vnc"), "\(environment) bez x11vnc")
+            XCTAssertFalse(environment.startExecutable.isEmpty)
+            XCTAssertFalse(environment.probeProcess.isEmpty)
         }
     }
 
-    func testTheDesktopDoesNotUseFluxbox() {
+    func testNoEnvironmentUsesFluxbox() {
         // fluxbox segfaults on Alpine aarch64 inside a machine: it reads its
         // config, prints the usual "Setting default value" lines and exits 139,
         // which left the VNC session showing a black screen — an X server with
-        // nothing drawing on it. icewm survives and brings a taskbar with it.
-        guard let template = MachineTemplate.all.first(where: { $0.id == "desktop" }) else {
-            return XCTFail("brak szablonu pulpitu")
+        // nothing drawing on it.
+        for environment in MachineDesktopEnvironment.allCases {
+            XCTAssertFalse(environment.packages.contains("fluxbox"))
+            XCTAssertNotEqual(environment.startExecutable, "fluxbox")
         }
-        XCTAssertFalse(template.packages.contains("fluxbox"))
-        XCTAssertFalse(MachineCommands.desktopWindowManager(name: "gui").contains("fluxbox"))
+    }
+
+    func testIceWMIsTheLightOneAndNeedsATerminalOpeningForIt() {
+        let ice = MachineDesktopEnvironment.iceWM
+        XCTAssertEqual(ice.startExecutable, "icewm")
+        XCTAssertEqual(ice.probeProcess, "icewm")
+        XCTAssertTrue(ice.packages.contains("xterm"))
+        // A window manager alone is a taskbar over an empty root window.
+        XCTAssertFalse(ice.providesTerminal)
+    }
+
+    func testXfceStartsASessionAndBringsItsOwnTerminal() {
+        let xfce = MachineDesktopEnvironment.xfce
+        // `startxfce4`, not a bare window manager: it brings up the session,
+        // the panel, the desktop and dbus. Verified on a live machine — xfwm4 is
+        // what appears in the process list, which is why that is the probe.
+        XCTAssertEqual(xfce.startExecutable, "startxfce4")
+        XCTAssertEqual(xfce.probeProcess, "xfwm4")
+        XCTAssertTrue(xfce.packages.contains("dbus"))
+        XCTAssertTrue(xfce.providesTerminal)
+    }
+
+    func testTheDefaultEnvironmentIsTheSmallOne() {
+        // 300 MB against 650 MB of packages.
+        XCTAssertEqual(MachineDesktopEnvironment.default, .iceWM)
+    }
+
+    func testTheSessionCommandCarriesTheDisplayAndRunsAsRoot() {
+        XCTAssertEqual(
+            MachineCommands.desktopSession(name: "gui", environment: .xfce),
+            ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "startxfce4"]
+        )
+    }
+
+    func testAnEnvironmentIsRecognisedByItsOwnBinary() {
+        XCTAssertEqual(
+            MachineCommands.whichProbe(name: "gui", binary: "startxfce4"),
+            ["machine", "run", "-n", "gui", "--", "which", "startxfce4"]
+        )
+        for environment in MachineDesktopEnvironment.allCases {
+            XCTAssertFalse(environment.marker.isEmpty)
+        }
     }
 
     // MARK: - Provisioning argv
@@ -98,7 +150,7 @@ final class MachineTemplateTests: XCTestCase {
         // success.
         for args in [
             MachineCommands.desktopDisplayServer(name: "gui"),
-            MachineCommands.desktopWindowManager(name: "gui"),
+            MachineCommands.desktopSession(name: "gui", environment: .iceWM),
             MachineCommands.desktopTerminal(name: "gui"),
             MachineCommands.desktopVNCServer(name: "gui"),
         ] {
@@ -115,10 +167,10 @@ final class MachineTemplateTests: XCTestCase {
         )
     }
 
-    func testTheWindowManagerGetsItsDisplayThroughTheEnvironment() {
+    func testTheSessionGetsItsDisplayThroughTheEnvironmentVariable() {
         // `-e DISPLAY=:1` rather than a shell assignment: `machine run -- sh -c`
-        // swallows stdout, so shell wrapping is avoided throughout.
-        let args = MachineCommands.desktopWindowManager(name: "gui")
+        // swallows stdout and loses exit codes, so shell wrapping is avoided.
+        let args = MachineCommands.desktopSession(name: "gui", environment: .iceWM)
         XCTAssertEqual(
             args,
             ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "icewm"]
@@ -159,6 +211,29 @@ final class MachineTemplateTests: XCTestCase {
             ["machine", "run", "-n", "gui", "--root", "--",
              "x11vnc", "-storepasswd", "abcd1234", MachineCommands.vncPasswordPath]
         )
+    }
+
+    func testAProcessProbeIsADirectCommandNotAShellOne() {
+        // Exit codes do not survive `/bin/sh -c` in a machine: `sh -c 'exit 3'`
+        // reports 0, while a direct `/bin/false` reports 1. Any probe whose answer
+        // is its exit code therefore has to be a plain executable.
+        let args = MachineCommands.processProbe(name: "gui", process: "icewm")
+        XCTAssertEqual(args, ["machine", "run", "-n", "gui", "--", "pgrep", "icewm"])
+        XCTAssertFalse(args.contains("/bin/sh"))
+        XCTAssertFalse(args.contains("-c"))
+    }
+
+    func testNoDesktopCommandGoesThroughAShell() {
+        // Same reason, plus stdout is swallowed through `sh -c`.
+        for args in [
+            MachineCommands.desktopDisplayServer(name: "gui"),
+            MachineCommands.desktopSession(name: "gui", environment: .iceWM),
+            MachineCommands.desktopTerminal(name: "gui"),
+            MachineCommands.desktopVNCServer(name: "gui"),
+            MachineCommands.readinessProbe(name: "gui"),
+        ] {
+            XCTAssertFalse(args.contains("/bin/sh"), "shell w \(args)")
+        }
     }
 
     // MARK: - Password

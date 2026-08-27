@@ -135,29 +135,74 @@ final class MachineStore {
         }
     }
 
-    /// Stores a password, brings the X server, window manager and VNC server up,
-    /// and hands back the password to show once.
+    /// Which graphical environment the machine already carries, if any.
+    func installedEnvironment(_ machine: MachineInfo) async -> MachineDesktopEnvironment? {
+        for environment in MachineDesktopEnvironment.allCases {
+            let probe = MachineCommands.whichProbe(name: machine.name, binary: environment.marker)
+            if (try? await cli.run(probe, timeout: .seconds(60))) != nil { return environment }
+        }
+        return nil
+    }
+
+    /// Waits for a process to appear inside the machine.
     ///
-    /// The three services are started blind rather than probed first: none of them
-    /// survives a machine restart — Alpine's init does not run in a machine, which
-    /// the boot log says out loud — and starting one that is already up merely
-    /// fails, which is why those failures are ignored while the password write is
-    /// not.
+    /// The probe is a direct `pgrep`, never `sh -c`: exit codes do not survive the
+    /// shell form — `machine run -- /bin/sh -c 'exit 3'` reports 0 — so a shell
+    /// probe would always say yes.
+    func waitForProcess(_ process: String, in name: String, attempts: Int = 20) async -> Bool {
+        for _ in 0..<attempts {
+            let probe = MachineCommands.processProbe(name: name, process: process)
+            if (try? await cli.run(probe, timeout: .seconds(30))) != nil { return true }
+            try? await Task.sleep(for: .milliseconds(750))
+        }
+        return false
+    }
+
+    /// Stores a password, brings the session up in order, and hands back the
+    /// password to show once.
+    ///
+    /// Each step waits for the previous one to actually be running. Firing them
+    /// back to back is what left a connected session with a terminal it could not
+    /// type into: the window manager started before the X server was listening,
+    /// died, and nothing was there to give any window focus — while every command
+    /// had reported success, because a detached start reports success immediately.
+    ///
+    /// None of these survive a machine restart (Alpine's init does not run in a
+    /// machine, which its boot log says out loud), so this is safe to call again
+    /// and is how a stopped-and-started machine gets its desktop back.
     @discardableResult
-    func startDesktop(_ machine: MachineInfo) async throws -> String {
+    func startDesktop(
+        _ machine: MachineInfo,
+        environment: MachineDesktopEnvironment
+    ) async throws -> String {
         let password = desktopPasswords[machine.name] ?? MachineDesktop.generatePassword()
-        try await withBusy(machine.name) {
+        let name = machine.name
+        try await withBusy(name) {
             try await cli.run(
-                MachineCommands.desktopStorePassword(name: machine.name, password: password),
+                MachineCommands.desktopStorePassword(name: name, password: password),
                 timeout: .seconds(60)
             )
-            for arguments in [
-                MachineCommands.desktopDisplayServer(name: machine.name),
-                MachineCommands.desktopWindowManager(name: machine.name),
-                MachineCommands.desktopTerminal(name: machine.name),
-                MachineCommands.desktopVNCServer(name: machine.name),
-            ] {
-                _ = try? await cli.run(arguments, timeout: .seconds(60))
+
+            _ = try? await cli.run(MachineCommands.desktopDisplayServer(name: name), timeout: .seconds(60))
+            guard await waitForProcess("Xvfb", in: name) else {
+                throw CLIError.command(exitCode: -1, stderr: String(localized: "Serwer X nie wystartował."))
+            }
+
+            _ = try? await cli.run(
+                MachineCommands.desktopSession(name: name, environment: environment),
+                timeout: .seconds(120)
+            )
+            guard await waitForProcess(environment.probeProcess, in: name) else {
+                throw CLIError.command(exitCode: -1, stderr: String(localized: "Środowisko graficzne nie wystartowało."))
+            }
+
+            if !environment.providesTerminal {
+                _ = try? await cli.run(MachineCommands.desktopTerminal(name: name), timeout: .seconds(60))
+            }
+
+            _ = try? await cli.run(MachineCommands.desktopVNCServer(name: name), timeout: .seconds(60))
+            guard await waitForProcess("x11vnc", in: name) else {
+                throw CLIError.command(exitCode: -1, stderr: String(localized: "Serwer VNC nie wystartował."))
             }
         }
         desktopPasswords[machine.name] = password

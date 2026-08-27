@@ -805,3 +805,19 @@
 "Czekam, aż maszyna przyjmie polecenia…" = "Waiting for the machine to accept commands…";
 "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit." = "The machine is not responding — the template's packages can be installed later from the Desktop tab.";
 "Maszyna nie odpowiada." = "The machine is not responding.";
+
+/* Features/Machines/MachineDesktop.swift */
+"IceWM — lekki pulpit z paskiem zadań" = "IceWM — a light desktop with a taskbar";
+"XFCE — pełny pulpit" = "XFCE — a full desktop";
+"Pasek zadań z menu i okno terminala. Około 300 MB paczek." = "A taskbar with a menu and a terminal window. About 300 MB of packages.";
+"Panel, ikony na pulpicie, menedżer plików i własny terminal. Około 650 MB paczek." = "A panel, desktop icons, a file manager and its own terminal. About 650 MB of packages.";
+"Środowisko graficzne" = "Graphical environment";
+
+/* Features/Machines/MachineStore.swift — pulpit */
+"Serwer X nie wystartował." = "The X server did not start.";
+"Środowisko graficzne nie wystartowało." = "The graphical environment did not start.";
+"Serwer VNC nie wystartował." = "The VNC server did not start.";
+
+/* Features/Machines/MachineTemplate.swift — pulpit */
+"Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu." = "Alpine with a graphical desktop and a VNC server — pick the environment below. Once created, one click connects through macOS Screen Sharing.";
+"Doinstalowywanie pulpitu." = "Installing the desktop.";
