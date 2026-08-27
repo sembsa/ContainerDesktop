@@ -53,13 +53,11 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
         MachineTemplate(
             id: "desktop",
             title: String(localized: "Pulpit z VNC"),
-            summary: String(localized: "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB."),
+            summary: String(localized: "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu."),
             image: "alpine:latest",
             suggestedName: "pulpit",
-            // icewm, not fluxbox: fluxbox segfaults here (exit 139) and leaves the
-            // VNC session black. icewm also brings a taskbar, so the screen looks
-            // like a desktop rather than an empty root window.
-            packages: ["x11vnc", "xvfb", "icewm", "xterm"],
+            // The chosen environment decides what gets installed.
+            packages: [],
             providesDesktop: true
         ),
         custom,

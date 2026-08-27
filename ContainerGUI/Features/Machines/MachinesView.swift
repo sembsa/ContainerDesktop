@@ -145,6 +145,7 @@ struct MachineCreateSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var template: MachineTemplate = MachineTemplate.all[0]
+    @State private var environment: MachineDesktopEnvironment = .default
     @State private var options = MachineCommands.CreateOptions(image: "")
     @State private var isCreating = false
     @State private var failed = false
@@ -236,6 +237,16 @@ struct MachineCreateSheet: View {
                 Text(template.summary)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if template.providesDesktop {
+                    Picker("Środowisko graficzne", selection: $environment) {
+                        ForEach(MachineDesktopEnvironment.allCases) { candidate in
+                            Text(candidate.title).tag(candidate)
+                        }
+                    }
+                    Text(environment.summary)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             } header: {
                 HStack(spacing: 5) {
                     Image(systemName: "square.grid.2x2")
@@ -251,7 +262,7 @@ struct MachineCreateSheet: View {
                 Toggle("Ustaw jako domyślną", isOn: $options.setDefault)
                 Toggle("Nie uruchamiaj po utworzeniu", isOn: $options.noBoot)
                     // A template's packages need the machine running to install.
-                    .disabled(!template.packages.isEmpty)
+                    .disabled(!template.packages.isEmpty || template.providesDesktop)
             } header: {
                 HStack(spacing: 5) {
                     Image(systemName: "desktopcomputer")
@@ -365,7 +376,9 @@ struct MachineCreateSheet: View {
         defer { isCreating = false }
 
         let name = options.name
-        let packages = template.packages
+        // A desktop template installs whatever the chosen environment needs; every
+        // other template carries its own list.
+        let packages = template.providesDesktop ? environment.packages : template.packages
         var succeeded = false
         do {
             for try await line in model.machines.createStream(options) {

@@ -142,31 +142,44 @@ enum MachineCommands {
     /// display owned by the host user and x11vnc as root, x11vnc attaches and then
     /// dies on "X11 MIT Shared Memory Attach failed" while every command still
     /// reports success — the port simply refuses connections afterwards.
-    static func desktopDisplayServer(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "--root", "--",
-         "Xvfb", ":1", "-screen", "0", "1440x900x24"]
+    /// Asks whether a process is running inside the machine.
+    ///
+    /// A direct command, never `sh -c`: exit codes do not survive the shell form
+    /// — `machine run -- /bin/sh -c 'exit 3'` reports 0, while a direct
+    /// `/bin/false` reports 1 — so a probe whose whole answer is its exit code
+    /// would always say yes.
+    static func processProbe(name: String, process: String) -> [String] {
+        ["machine", "run", "-n", name, "--", "pgrep", process]
     }
 
-    /// The display comes through `-e` rather than a shell assignment, for the same
-    /// reason as above.
-    ///
-    /// icewm rather than fluxbox: fluxbox segfaults on Alpine aarch64 inside a
-    /// machine — it reads its config, prints the usual defaults chatter and exits
-    /// 139 — which left a connected VNC session staring at a black screen, an X
-    /// server with nothing drawing on it. icewm survives and paints a taskbar.
-    static func desktopWindowManager(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "icewm"]
+    static func desktopDisplayServer(name: String) -> [String] {
+        ["machine", "run", "-n", name, "-d", "--root", "--",
+         "Xvfb", MachineDesktop.display, "-screen", "0", "1440x900x24"]
+    }
+
+    /// Starts the chosen graphical environment. The display comes through `-e`
+    /// rather than a shell assignment: `sh -c` swallows stdout and loses exit
+    /// codes.
+    static func desktopSession(name: String, environment: MachineDesktopEnvironment) -> [String] {
+        ["machine", "run", "-n", name, "-d", "--root",
+         "-e", "DISPLAY=\(MachineDesktop.display)", "--", environment.startExecutable]
+    }
+
+    /// Asks whether a binary exists inside the machine. Direct, for the same
+    /// exit-code reason as `processProbe`.
+    static func whichProbe(name: String, binary: String) -> [String] {
+        ["machine", "run", "-n", name, "--", "which", binary]
     }
 
     /// A window manager on its own is a taskbar over an empty root window, so the
     /// desktop opens a terminal too — the first thing anyone connecting wants.
     static func desktopTerminal(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "xterm"]
+        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=\(MachineDesktop.display)", "--", "xterm"]
     }
 
     static func desktopVNCServer(name: String) -> [String] {
         ["machine", "run", "-n", name, "-d", "--root", "--",
-         "x11vnc", "-display", ":1", "-forever",
+         "x11vnc", "-display", MachineDesktop.display, "-forever",
          "-rfbauth", vncPasswordPath,
          "-rfbport", String(MachineDesktop.port), "-quiet"]
     }

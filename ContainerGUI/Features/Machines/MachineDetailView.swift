@@ -18,7 +18,9 @@ struct MachineDetailView: View {
     @State private var inspectError: String?
     @State private var shellAsRoot = false
     /// nil while the machine is still being asked whether it has the VNC stack.
-    @State private var hasDesktop: Bool?
+    @State private var didCheckDesktop = false
+    @State private var installedEnvironment: MachineDesktopEnvironment?
+    @State private var chosenEnvironment: MachineDesktopEnvironment = .default
     @State private var desktopPassword: String?
     @State private var desktopOutput: [LogLine] = []
     @State private var isDesktopWorking = false
@@ -64,8 +66,10 @@ struct MachineDetailView: View {
         // changes its address and state, and `inspect` would otherwise stay stale.
         .task(id: machine) { await loadInspect() }
         .task(id: "\(machine.id)|\(tab.rawValue)") {
-            guard tab == .desktop, hasDesktop == nil, machine.isRunning else { return }
-            hasDesktop = await model.machines.hasDesktop(machine)
+            guard tab == .desktop, !didCheckDesktop, machine.isRunning else { return }
+            installedEnvironment = await model.machines.installedEnvironment(machine)
+            if let installedEnvironment { chosenEnvironment = installedEnvironment }
+            didCheckDesktop = true
         }
     }
 
@@ -265,7 +269,7 @@ struct MachineDetailView: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
-                    Text("Doinstalowywanie pulpitu — to około 260 MB.")
+                    Text("Doinstalowywanie pulpitu.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -276,15 +280,14 @@ struct MachineDetailView: View {
         } else {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    switch hasDesktop {
-                    case .none:
+                    if !didCheckDesktop {
                         HStack(spacing: 8) {
                             ProgressView().controlSize(.small)
                             Text("Sprawdzanie…").font(.caption).foregroundStyle(.secondary)
                         }
-                    case .some(false):
+                    } else if installedEnvironment == nil {
                         desktopInstallOffer
-                    case .some(true):
+                    } else {
                         desktopConnect
                     }
                     if let desktopError {
@@ -302,7 +305,13 @@ struct MachineDetailView: View {
     private var desktopInstallOffer: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Ta maszyna nie ma jeszcze pulpitu").font(.subheadline.weight(.semibold))
-            Text("Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem.")
+            Picker("Środowisko graficzne", selection: $chosenEnvironment) {
+                ForEach(MachineDesktopEnvironment.allCases) { environment in
+                    Text(environment.title).tag(environment)
+                }
+            }
+            .pickerStyle(.radioGroup)
+            Text(chosenEnvironment.summary)
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Button("Zainstaluj pulpit", systemImage: "arrow.down.circle") {
@@ -318,6 +327,9 @@ struct MachineDetailView: View {
     private var desktopConnect: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Pulpit gotowy").font(.subheadline.weight(.semibold))
+            if let installedEnvironment {
+                Text(installedEnvironment.title).font(.caption).foregroundStyle(.secondary)
+            }
             Text("Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -356,7 +368,7 @@ struct MachineDetailView: View {
     }
 
     private func installDesktop() async {
-        guard let desktopTemplate = MachineTemplate.all.first(where: { $0.providesDesktop }) else { return }
+        let environment = chosenEnvironment
         isDesktopWorking = true
         desktopError = nil
         desktopOutput = []
@@ -367,13 +379,13 @@ struct MachineDetailView: View {
                 return
             }
             let stream = model.machines.provisionStream(
-                packages: desktopTemplate.packages,
+                packages: environment.packages,
                 on: machine.name
             )
             for try await line in stream {
                 desktopOutput.append(LogLine(text: line))
             }
-            hasDesktop = true
+            installedEnvironment = environment
         } catch {
             desktopError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
@@ -385,7 +397,10 @@ struct MachineDetailView: View {
         else { return }
         desktopError = nil
         do {
-            desktopPassword = try await model.machines.startDesktop(machine)
+            desktopPassword = try await model.machines.startDesktop(
+                machine,
+                environment: installedEnvironment ?? chosenEnvironment
+            )
             NSWorkspace.shared.open(url)
         } catch {
             desktopError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription

@@ -805,3 +805,19 @@
 "Czekam, aż maszyna przyjmie polecenia…" = "正在等待虚拟机接受命令…";
 "Maszyna nie odpowiada — pakiety szablonu doinstalujesz później z zakładki Pulpit." = "虚拟机无响应——模板的软件包可稍后在「桌面」标签页中安装。";
 "Maszyna nie odpowiada." = "虚拟机无响应。";
+
+/* Features/Machines/MachineDesktop.swift */
+"IceWM — lekki pulpit z paskiem zadań" = "IceWM——带任务栏的轻量桌面";
+"XFCE — pełny pulpit" = "XFCE——完整桌面";
+"Pasek zadań z menu i okno terminala. Około 300 MB paczek." = "带菜单的任务栏和一个终端窗口。约 300 MB 软件包。";
+"Panel, ikony na pulpicie, menedżer plików i własny terminal. Około 650 MB paczek." = "面板、桌面图标、文件管理器和自带终端。约 650 MB 软件包。";
+"Środowisko graficzne" = "图形环境";
+
+/* Features/Machines/MachineStore.swift — pulpit */
+"Serwer X nie wystartował." = "X 服务器未启动。";
+"Środowisko graficzne nie wystartowało." = "图形环境未启动。";
+"Serwer VNC nie wystartował." = "VNC 服务器未启动。";
+
+/* Features/Machines/MachineTemplate.swift — pulpit */
+"Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu." = "带图形桌面和 VNC 服务器的 Alpine——请在下方选择环境。创建后可通过 macOS 屏幕共享一键连接。";
+"Doinstalowywanie pulpitu." = "正在安装桌面。";
