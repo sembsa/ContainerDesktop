@@ -1,0 +1,104 @@
+{
+ "apiVersion": "v1",
+ "kind": "List",
+ "items": [
+  {
+   "apiVersion": "v1",
+   "kind": "Service",
+   "metadata": {
+    "creationTimestamp": "2026-08-27T05:45:05Z",
+    "labels": {
+     "component": "apiserver",
+     "provider": "kubernetes"
+    },
+    "name": "kubernetes",
+    "namespace": "default",
+    "resourceVersion": "203",
+    "uid": "e7c3c1e7-19dd-4af6-a857-f703a22e681b"
+   },
+   "spec": {
+    "clusterIP": "10.96.0.1",
+    "clusterIPs": [
+     "10.96.0.1"
+    ],
+    "internalTrafficPolicy": "Cluster",
+    "ipFamilies": [
+     "IPv4"
+    ],
+    "ipFamilyPolicy": "SingleStack",
+    "ports": [
+     {
+      "name": "https",
+      "port": 443,
+      "protocol": "TCP",
+      "targetPort": 6443
+     }
+    ],
+    "sessionAffinity": "None",
+    "type": "ClusterIP"
+   },
+   "status": {
+    "loadBalancer": {}
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "kind": "Service",
+   "metadata": {
+    "annotations": {
+     "prometheus.io/port": "9153",
+     "prometheus.io/scrape": "true"
+    },
+    "creationTimestamp": "2026-08-27T05:45:06Z",
+    "labels": {
+     "k8s-app": "kube-dns",
+     "kubernetes.io/cluster-service": "true",
+     "kubernetes.io/name": "CoreDNS"
+    },
+    "name": "kube-dns",
+    "namespace": "kube-system",
+    "resourceVersion": "234",
+    "uid": "0b69d9d0-8cda-41f4-b606-ad8f87294311"
+   },
+   "spec": {
+    "clusterIP": "10.96.0.10",
+    "clusterIPs": [
+     "10.96.0.10"
+    ],
+    "internalTrafficPolicy": "Cluster",
+    "ipFamilies": [
+     "IPv4"
+    ],
+    "ipFamilyPolicy": "SingleStack",
+    "ports": [
+     {
+      "name": "dns",
+      "port": 53,
+      "protocol": "UDP",
+      "targetPort": 53
+     },
+     {
+      "name": "dns-tcp",
+      "port": 53,
+      "protocol": "TCP",
+      "targetPort": 53
+     },
+     {
+      "name": "metrics",
+      "port": 9153,
+      "protocol": "TCP",
+      "targetPort": 9153
+     }
+    ],
+    "selector": {
+     "k8s-app": "kube-dns"
+    },
+    "sessionAffinity": "None",
+    "type": "ClusterIP"
+   },
+   "status": {
+    "loadBalancer": {}
+   }
+  }
+ ]
+}
