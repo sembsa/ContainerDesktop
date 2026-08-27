@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 /// What a machine actually is, once you select it: what it was built from, a
@@ -16,15 +17,22 @@ struct MachineDetailView: View {
     @State private var isLoadingInspect = false
     @State private var inspectError: String?
     @State private var shellAsRoot = false
+    /// nil while the machine is still being asked whether it has the VNC stack.
+    @State private var hasDesktop: Bool?
+    @State private var desktopPassword: String?
+    @State private var desktopOutput: [LogLine] = []
+    @State private var isDesktopWorking = false
+    @State private var desktopError: String?
 
     enum Tab: String, CaseIterable, Identifiable {
-        case overview, terminal, logs, configuration
+        case overview, terminal, desktop, logs, configuration
         var id: String { rawValue }
 
         var title: String {
             switch self {
             case .overview: String(localized: "Przegląd")
             case .terminal: String(localized: "Terminal")
+            case .desktop: String(localized: "Pulpit")
             case .logs: String(localized: "Logi")
             case .configuration: String(localized: "Konfiguracja")
             }
@@ -47,6 +55,7 @@ struct MachineDetailView: View {
             switch tab {
             case .overview: overview
             case .terminal: terminal
+            case .desktop: desktop
             case .logs: MachineLogsView(machineName: machine.name)
             case .configuration: MachineConfigView(machine: machine, inspect: inspect)
             }
@@ -54,6 +63,10 @@ struct MachineDetailView: View {
         // Keyed on the whole row, not just its id: booting or stopping the machine
         // changes its address and state, and `inspect` would otherwise stay stale.
         .task(id: machine) { await loadInspect() }
+        .task(id: "\(machine.id)|\(tab.rawValue)") {
+            guard tab == .desktop, hasDesktop == nil, machine.isRunning else { return }
+            hasDesktop = await model.machines.hasDesktop(machine)
+        }
     }
 
     // MARK: - Header
@@ -230,6 +243,148 @@ struct MachineDetailView: View {
                 // Changing the user has to restart the session — the flag is part
                 // of the command line, not something the running shell can adopt.
                 .id(shellAsRoot)
+        }
+    }
+
+    // MARK: - Desktop
+
+    /// A machine with an X server, a window manager and a VNC server can be opened
+    /// in Screen Sharing. This works because a machine has its own routable
+    /// address and a port listening inside it is reachable from the host with
+    /// nothing published.
+    @ViewBuilder
+    private var desktop: some View {
+        if !machine.isRunning {
+            EmptyStateView(
+                symbol: "display",
+                title: String(localized: "Maszyna jest zatrzymana"),
+                message: String(localized: "Pulpit wymaga działającej maszyny. Uruchom ją przyciskiem u góry."),
+                tint: .indigo
+            )
+        } else if isDesktopWorking {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    ProgressView().controlSize(.small)
+                    Text("Doinstalowywanie pulpitu — to około 260 MB.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                StreamLogBox(lines: desktopOutput)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            .padding(12)
+        } else {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    switch hasDesktop {
+                    case .none:
+                        HStack(spacing: 8) {
+                            ProgressView().controlSize(.small)
+                            Text("Sprawdzanie…").font(.caption).foregroundStyle(.secondary)
+                        }
+                    case .some(false):
+                        desktopInstallOffer
+                    case .some(true):
+                        desktopConnect
+                    }
+                    if let desktopError {
+                        Text(desktopError).font(.caption).foregroundStyle(.red)
+                    }
+                    if !desktopOutput.isEmpty {
+                        StreamLogBox(lines: desktopOutput).frame(minHeight: 120)
+                    }
+                }
+                .padding(12)
+            }
+        }
+    }
+
+    private var desktopInstallOffer: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Ta maszyna nie ma jeszcze pulpitu").font(.subheadline.weight(.semibold))
+            Text("Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Button("Zainstaluj pulpit", systemImage: "arrow.down.circle") {
+                Task { await installDesktop() }
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+        }
+        .padding(12)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+    }
+
+    private var desktopConnect: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Pulpit gotowy").font(.subheadline.weight(.semibold))
+            Text("Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            HStack(spacing: 8) {
+                Button("Połącz przez VNC", systemImage: "display") {
+                    Task { await connectDesktop() }
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.small)
+                .disabled(machine.ipAddress == nil)
+                if machine.ipAddress == nil {
+                    Text("Maszyna nie ma jeszcze adresu IP.")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
+            }
+            if let desktopPassword {
+                HStack(spacing: 8) {
+                    Text("Hasło:").font(.caption).foregroundStyle(.secondary)
+                    Text(desktopPassword)
+                        .font(.system(.body, design: .monospaced).weight(.semibold))
+                        .textSelection(.enabled)
+                    Button("Kopiuj", systemImage: "doc.on.doc") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(desktopPassword, forType: .string)
+                    }
+                    .buttonStyle(.borderless)
+                    .controlSize(.small)
+                }
+                .padding(10)
+                .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 8))
+            }
+        }
+        .padding(12)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+    }
+
+    private func installDesktop() async {
+        guard let desktopTemplate = MachineTemplate.all.first(where: { $0.providesDesktop }) else { return }
+        isDesktopWorking = true
+        desktopError = nil
+        desktopOutput = []
+        defer { isDesktopWorking = false }
+        do {
+            let stream = model.machines.provisionStream(
+                packages: desktopTemplate.packages,
+                on: machine.name
+            )
+            for try await line in stream {
+                desktopOutput.append(LogLine(text: line))
+            }
+            hasDesktop = true
+        } catch {
+            desktopError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+        }
+    }
+
+    private func connectDesktop() async {
+        guard let address = machine.ipAddress,
+              let url = MachineDesktop.screenSharingURL(host: address)
+        else { return }
+        desktopError = nil
+        do {
+            desktopPassword = try await model.machines.startDesktop(machine)
+            NSWorkspace.shared.open(url)
+        } catch {
+            desktopError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
         }
     }
 

@@ -150,6 +150,8 @@ targets:
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
       - path: ContainerGUI/Features/Machines/MachineCommands.swift
+      - path: ContainerGUI/Features/Machines/MachineTemplate.swift
+      - path: ContainerGUI/Features/Machines/MachineDesktop.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift

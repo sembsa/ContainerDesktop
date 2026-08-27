@@ -762,3 +762,41 @@
 /* Features/Machines/MachinesView.swift — 0.6.0 */
 "Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie." = "创建虚拟机失败。请修正数值后重试。";
 "Wróć do formularza" = "返回表单";
+
+/* App/SidebarView.swift — 0.6.0 */
+"Środowiska" = "环境";
+
+/* Features/Machines/MachineTemplate.swift */
+"Alpine (minimalna)" = "Alpine（最小）";
+"Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk." = "最小的实用虚拟机——几兆字节、一个 Shell 和 apk 包管理器。";
+"Debian" = "Debian";
+"Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma." = "更大的基础镜像，带 apt，适用于 Alpine 没有的软件包。";
+"Dev .NET" = "Dev .NET";
+"Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet." = "带 dotnet10-sdk 包的 Alpine——创建后即可在虚拟机终端中使用 dotnet 命令。";
+"Pulpit z VNC" = "带 VNC 的桌面";
+"Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB." = "带 X 服务器、窗口管理器和 VNC 服务器的 Alpine。创建后可通过 macOS 屏幕共享一键连接。附加软件包约 260 MB。";
+"Własna" = "自定义";
+"Wpisz obraz bazowy sam." = "自行输入基础镜像。";
+"Podaj liczbę całkowitą większą od zera." = "请输入大于零的整数。";
+"Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB)." = "请输入大小，例如 4G、512M 或 2048（不带单位表示 MB）。";
+"Podaj pełną ścieżkę, zaczynającą się od /." = "请输入以 / 开头的完整路径。";
+"Nie ma pliku pod tą ścieżką." = "该路径下没有文件。";
+
+/* Features/Machines/MachinesView.swift — szablony */
+"Maszyna o tej nazwie już istnieje." = "已存在同名虚拟机。";
+"Szablon" = "模板";
+"Doinstalowywanie pakietów szablonu…" = "正在安装模板的软件包…";
+
+/* Features/Machines/MachineDetailView.swift — pulpit */
+"Pulpit" = "桌面";
+"Maszyna jest zatrzymana" = "虚拟机已停止";
+"Pulpit wymaga działającej maszyny. Uruchom ją przyciskiem u góry." = "桌面需要正在运行的虚拟机。请用上方的按钮启动它。";
+"Doinstalowywanie pulpitu — to około 260 MB." = "正在安装桌面——约 260 MB。";
+"Ta maszyna nie ma jeszcze pulpitu" = "该虚拟机尚无桌面";
+"Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem." = "将安装 X 服务器、窗口管理器和 VNC 服务器——约 260 MB 的 Alpine 软件包。之后即可一键连接。";
+"Zainstaluj pulpit" = "安装桌面";
+"Pulpit gotowy" = "桌面已就绪";
+"Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe." = "连接会在虚拟机地址上打开 macOS 屏幕共享。密码仅在本次运行期间有效——若丢失，再次连接会设置新密码。";
+"Połącz przez VNC" = "通过 VNC 连接";
+"Maszyna nie ma jeszcze adresu IP." = "虚拟机尚无 IP 地址。";
+"Hasło:" = "密码：";

@@ -116,6 +116,45 @@ enum MachineCommands {
         ["machine", "run", "-n", name, "-d", "--", "/bin/true"]
     }
 
+    // MARK: - Provisioning and desktop
+
+    /// Inside the machine, deliberately not under the home directory: the host
+    /// home is mounted rw by default, so `~/.vnc/passwd` would land on the user's
+    /// real disk.
+    static let vncPasswordPath = "/etc/x11vnc.pass"
+
+    /// `apk add` as root. Nothing is wrapped in a shell anywhere here: `machine
+    /// run -- sh -c "…"` executes but swallows stdout, so provisioning output
+    /// would vanish.
+    static func install(packages: [String], on name: String) -> [String] {
+        guard !packages.isEmpty else { return [] }
+        return ["machine", "run", "-n", name, "--root", "--",
+                "apk", "add", "--no-progress"] + packages
+    }
+
+    static func desktopDisplayServer(name: String) -> [String] {
+        ["machine", "run", "-n", name, "-d", "--",
+         "Xvfb", ":1", "-screen", "0", "1440x900x24"]
+    }
+
+    /// The display comes through `-e` rather than a shell assignment, for the same
+    /// reason as above.
+    static func desktopWindowManager(name: String) -> [String] {
+        ["machine", "run", "-n", name, "-d", "-e", "DISPLAY=:1", "--", "fluxbox"]
+    }
+
+    static func desktopVNCServer(name: String) -> [String] {
+        ["machine", "run", "-n", name, "-d", "--root", "--",
+         "x11vnc", "-display", ":1", "-forever",
+         "-rfbauth", vncPasswordPath,
+         "-rfbport", String(MachineDesktop.port), "-quiet"]
+    }
+
+    static func desktopStorePassword(name: String, password: String) -> [String] {
+        ["machine", "run", "-n", name, "--root", "--",
+         "x11vnc", "-storepasswd", password, vncPasswordPath]
+    }
+
     // MARK: - Memory
 
     /// Renders a byte count back into the size `--memory` and `memory=` accept.
