@@ -822,10 +822,12 @@
 
 /* Features/Machines/MachineTemplate.swift — Ubuntu */
 "Ubuntu 24.04" = "Ubuntu 24.04";
-"Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje." = "带 apt 的完整 Ubuntu。基础镜像由应用自行构建——官方镜像不含 init，缺少它虚拟机无法启动。";
 "Alpine z pulpitem VNC" = "带 VNC 桌面的 Alpine";
 "Ubuntu z pulpitem VNC" = "带 VNC 桌面的 Ubuntu";
-"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama." = "带图形桌面和 VNC 服务器的 Ubuntu。比 Alpine 更重，但拥有 apt 和完整的用户空间。基础镜像由应用自行构建。";
 "Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie." = "自行输入基础镜像。镜像必须包含 /sbin/init——否则虚拟机无法启动。";
-"Przygotowywanie obrazu bazowego…" = "正在准备基础镜像…";
 "Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu)." = "未能识别虚拟机的包管理器——支持 apk（Alpine）和 apt（Debian、Ubuntu）。";
+
+/* Features/Machines/MachineTemplate.swift — Ubuntu, koszt pierwszego buildu */
+"Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu." = "带 apt 的完整 Ubuntu。官方镜像不含 init，缺少它虚拟机无法启动，因此应用会构建一次自有镜像（29 MB，需要联网）。之后创建 Ubuntu 虚拟机即刻完成。";
+"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)." = "带图形桌面和 VNC 服务器的 Ubuntu。比 Alpine 更重，但拥有 apt 和完整用户空间。应用会构建一次基础镜像（29 MB，需要联网）。";
+"Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam." = "正在准备基础镜像——仅需一次，且需要联网。镜像构建器会自行启动。";
