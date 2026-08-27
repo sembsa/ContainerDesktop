@@ -129,36 +129,53 @@ struct MachinesView: View {
     }
 }
 
-/// `container machine create` — the CLI takes a dozen flags here and the form
-/// used to offer two of them.
+/// `container machine create`, with the template doing the typing.
+///
+/// The form used to open with two empty text fields; a base image is not
+/// something anyone should have to remember, and the CLI was the first thing to
+/// say a CPU count was wrong. Now a template fills the image in, proposes a name
+/// that is not taken yet, and the fields complain while you type.
 ///
 /// Creation is streamed rather than awaited: it fetches and unpacks an image
-/// before booting the VM, and reports `[1/3] Fetching image` style progress that
-/// is worth showing instead of hiding behind a spinner with a timeout.
+/// before booting the VM, and a template's own packages are installed after that
+/// — the desktop one pulls about 260 MB, which nobody should watch behind a
+/// spinner.
 struct MachineCreateSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
 
+    @State private var template: MachineTemplate = MachineTemplate.all[0]
     @State private var options = MachineCommands.CreateOptions(image: "")
     @State private var isCreating = false
     @State private var failed = false
     @State private var output: [LogLine] = []
+    @State private var didPrefill = false
 
-    /// Once creation starts the form gives way to the progress log. Appending the
-    /// log below three sections of form meant scrolling down to watch it.
     private var isShowingProgress: Bool { isCreating || failed }
+
+    // MARK: - Validation
+
+    private var cpusProblem: String? { MachineFieldValidation.cpus(options.cpus) }
+    private var memoryProblem: String? { MachineFieldValidation.memory(options.memory) }
+    private var kernelProblem: String? { MachineFieldValidation.kernelPath(options.kernelPath) }
+
+    private var nameProblem: String? {
+        guard !options.name.isEmpty else { return nil }
+        guard !model.machines.items.contains(where: { $0.name == options.name }) else {
+            return String(localized: "Maszyna o tej nazwie już istnieje.")
+        }
+        return nil
+    }
+
+    private var canCreate: Bool {
+        !options.image.isEmpty && !isCreating
+            && cpusProblem == nil && memoryProblem == nil
+            && kernelProblem == nil && nameProblem == nil
+    }
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack(spacing: 8) {
-                Image(systemName: "desktopcomputer")
-                    .foregroundStyle(Color.indigo.gradient)
-                    .font(.title3)
-                Text("Nowa maszyna")
-                    .font(.headline)
-                Spacer()
-            }
-            .padding(12)
+            header
             Divider()
 
             if isShowingProgress {
@@ -170,7 +187,24 @@ struct MachineCreateSheet: View {
             Divider()
             footer
         }
-        .frame(width: 640, height: 560)
+        .frame(width: 640, height: 580)
+        .task {
+            guard !didPrefill else { return }
+            didPrefill = true
+            apply(template)
+        }
+    }
+
+    private var header: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "desktopcomputer")
+                .foregroundStyle(Color.indigo.gradient)
+                .font(.title3)
+            Text("Nowa maszyna")
+                .font(.headline)
+            Spacer()
+        }
+        .padding(12)
     }
 
     // MARK: - Progress
@@ -191,56 +225,88 @@ struct MachineCreateSheet: View {
     // MARK: - Form
 
     private var form: some View {
-            Form {
-                Section {
-                    TextField("Obraz bazowy", text: $options.image, prompt: Text(verbatim: "alpine:3.22"))
-                    TextField("Nazwa", text: $options.name)
-                    Toggle("Ustaw jako domyślną", isOn: $options.setDefault)
-                    Toggle("Nie uruchamiaj po utworzeniu", isOn: $options.noBoot)
-                } header: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "desktopcomputer")
-                            .foregroundStyle(Color.indigo.gradient)
-                        Text("Maszyna wirtualna")
+        Form {
+            Section {
+                Picker("Szablon", selection: $template) {
+                    ForEach(MachineTemplate.all) { candidate in
+                        Text(candidate.title).tag(candidate)
                     }
                 }
-
-                Section {
-                    TextField("Rdzenie", text: $options.cpus, prompt: Text(verbatim: "4"))
-                    TextField("Pamięć", text: $options.memory, prompt: Text(verbatim: "8G"))
-                    Picker("Katalog domowy", selection: $options.homeMount) {
-                        ForEach(MachineCommands.HomeMount.allCases) { mount in
-                            Text(mount.title).tag(mount)
-                        }
-                    }
-                    Text("Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                } header: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "slider.horizontal.3")
-                            .foregroundStyle(Color.teal.gradient)
-                        Text("Zasoby")
-                    }
+                .onChange(of: template) { _, new in apply(new) }
+                Text(template.summary)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "square.grid.2x2")
+                        .foregroundStyle(Color.indigo.gradient)
+                    Text("Szablon")
                 }
-
-                Section {
-                    TextField("Platforma", text: $options.platform, prompt: Text(verbatim: "linux/arm64"))
-                    Toggle("Wirtualizacja zagnieżdżona", isOn: $options.nestedVirtualization)
-                    Text("Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    TextField("Własne jądro", text: $options.kernelPath, prompt: Text(verbatim: "/ścieżka/do/vmlinux"))
-                } header: {
-                    HStack(spacing: 5) {
-                        Image(systemName: "cpu")
-                            .foregroundStyle(Color.orange.gradient)
-                        Text("Zaawansowane")
-                    }
-                }
-
             }
-            .formStyle(.grouped)
+
+            Section {
+                TextField("Obraz bazowy", text: $options.image, prompt: Text(verbatim: "alpine:3.22"))
+                TextField("Nazwa", text: $options.name)
+                problem(nameProblem)
+                Toggle("Ustaw jako domyślną", isOn: $options.setDefault)
+                Toggle("Nie uruchamiaj po utworzeniu", isOn: $options.noBoot)
+                    // A template's packages need the machine running to install.
+                    .disabled(!template.packages.isEmpty)
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "desktopcomputer")
+                        .foregroundStyle(Color.indigo.gradient)
+                    Text("Maszyna wirtualna")
+                }
+            }
+
+            Section {
+                TextField("Rdzenie", text: $options.cpus, prompt: Text(verbatim: "4"))
+                problem(cpusProblem)
+                TextField("Pamięć", text: $options.memory, prompt: Text(verbatim: "8G"))
+                problem(memoryProblem)
+                Picker("Katalog domowy", selection: $options.homeMount) {
+                    ForEach(MachineCommands.HomeMount.allCases) { mount in
+                        Text(mount.title).tag(mount)
+                    }
+                }
+                Text("Puste pola zostawiają decyzję CLI — domyślnie to połowa pamięci systemu.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "slider.horizontal.3")
+                        .foregroundStyle(Color.teal.gradient)
+                    Text("Zasoby")
+                }
+            }
+
+            Section {
+                TextField("Platforma", text: $options.platform, prompt: Text(verbatim: "linux/arm64"))
+                Toggle("Wirtualizacja zagnieżdżona", isOn: $options.nestedVirtualization)
+                Text("Wymaga Apple Silicon M3 lub nowszego, macOS 15+ oraz jądra z CONFIG_KVM=y.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                TextField("Własne jądro", text: $options.kernelPath, prompt: Text(verbatim: "/ścieżka/do/vmlinux"))
+                problem(kernelProblem)
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "cpu")
+                        .foregroundStyle(Color.orange.gradient)
+                    Text("Zaawansowane")
+                }
+            }
+        }
+        .formStyle(.grouped)
+    }
+
+    @ViewBuilder
+    private func problem(_ message: String?) -> some View {
+        if let message {
+            Label(message, systemImage: "exclamationmark.triangle.fill")
+                .font(.caption)
+                .foregroundStyle(.orange)
+        }
     }
 
     // MARK: - Footer
@@ -268,10 +334,28 @@ struct MachineCreateSheet: View {
                 }
                 .keyboardShortcut(.defaultAction)
                 .buttonStyle(.glassProminent)
-                .disabled(options.image.isEmpty || isCreating)
+                .disabled(!canCreate)
             }
         }
         .padding(12)
+    }
+
+    // MARK: - Actions
+
+    /// Fills the form from a template, proposing a name that is not taken.
+    private func apply(_ template: MachineTemplate) {
+        options.image = template.image
+        options.name = template.suggestedName.isEmpty ? "" : freeName(from: template.suggestedName)
+        if !template.packages.isEmpty { options.noBoot = false }
+    }
+
+    private func freeName(from base: String) -> String {
+        let taken = Set(model.machines.items.map(\.name))
+        guard taken.contains(base) else { return base }
+        for suffix in 2...99 where !taken.contains("\(base)-\(suffix)") {
+            return "\(base)-\(suffix)"
+        }
+        return base
     }
 
     private func create() async {
@@ -280,6 +364,8 @@ struct MachineCreateSheet: View {
         output = []
         defer { isCreating = false }
 
+        let name = options.name
+        let packages = template.packages
         var succeeded = false
         do {
             for try await line in model.machines.createStream(options) {
@@ -290,10 +376,24 @@ struct MachineCreateSheet: View {
             output.append(LogLine(text: String(format: String(localized: "[błąd: %@]"), error.localizedDescription)))
             failed = true
         }
+
+        // The template's own packages go on after the machine is up. A failure
+        // here leaves a usable machine, so it is reported rather than treated as
+        // a failed creation.
+        if succeeded, !packages.isEmpty, !name.isEmpty {
+            output.append(LogLine(text: String(localized: "Doinstalowywanie pakietów szablonu…")))
+            do {
+                for try await line in model.machines.provisionStream(packages: packages, on: name) {
+                    output.append(LogLine(text: line))
+                }
+            } catch {
+                output.append(LogLine(text: String(format: String(localized: "[błąd: %@]"), error.localizedDescription)))
+                failed = true
+                succeeded = false
+            }
+        }
+
         await model.machines.refresh()
-        // The machine is in the table now, so the sheet has nothing left to say.
-        // Leaving it open also left "Utwórz" armed, and a second press ran
-        // `machine create` again with a name that already existed.
         if succeeded { dismiss() }
     }
 }

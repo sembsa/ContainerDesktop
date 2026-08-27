@@ -762,3 +762,41 @@
 /* Features/Machines/MachinesView.swift — 0.6.0 */
 "Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie." = "Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie.";
 "Wróć do formularza" = "Wróć do formularza";
+
+/* App/SidebarView.swift — 0.6.0 */
+"Środowiska" = "Środowiska";
+
+/* Features/Machines/MachineTemplate.swift */
+"Alpine (minimalna)" = "Alpine (minimalna)";
+"Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk." = "Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk.";
+"Debian" = "Debian";
+"Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma." = "Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma.";
+"Dev .NET" = "Dev .NET";
+"Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet." = "Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet.";
+"Pulpit z VNC" = "Pulpit z VNC";
+"Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB." = "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB.";
+"Własna" = "Własna";
+"Wpisz obraz bazowy sam." = "Wpisz obraz bazowy sam.";
+"Podaj liczbę całkowitą większą od zera." = "Podaj liczbę całkowitą większą od zera.";
+"Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB)." = "Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB).";
+"Podaj pełną ścieżkę, zaczynającą się od /." = "Podaj pełną ścieżkę, zaczynającą się od /.";
+"Nie ma pliku pod tą ścieżką." = "Nie ma pliku pod tą ścieżką.";
+
+/* Features/Machines/MachinesView.swift — szablony */
+"Maszyna o tej nazwie już istnieje." = "Maszyna o tej nazwie już istnieje.";
+"Szablon" = "Szablon";
+"Doinstalowywanie pakietów szablonu…" = "Doinstalowywanie pakietów szablonu…";
+
+/* Features/Machines/MachineDetailView.swift — pulpit */
+"Pulpit" = "Pulpit";
+"Maszyna jest zatrzymana" = "Maszyna jest zatrzymana";
+"Pulpit wymaga działającej maszyny. Uruchom ją przyciskiem u góry." = "Pulpit wymaga działającej maszyny. Uruchom ją przyciskiem u góry.";
+"Doinstalowywanie pulpitu — to około 260 MB." = "Doinstalowywanie pulpitu — to około 260 MB.";
+"Ta maszyna nie ma jeszcze pulpitu" = "Ta maszyna nie ma jeszcze pulpitu";
+"Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem." = "Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem.";
+"Zainstaluj pulpit" = "Zainstaluj pulpit";
+"Pulpit gotowy" = "Pulpit gotowy";
+"Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe." = "Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe.";
+"Połącz przez VNC" = "Połącz przez VNC";
+"Maszyna nie ma jeszcze adresu IP." = "Maszyna nie ma jeszcze adresu IP.";
+"Hasło:" = "Hasło:";

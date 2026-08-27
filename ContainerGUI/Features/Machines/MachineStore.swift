@@ -81,6 +81,67 @@ final class MachineStore {
         return output
     }
 
+    // MARK: - Provisioning
+
+    /// Streams `apk add` inside the machine, so a 260 MB desktop install reports
+    /// progress instead of hanging behind a spinner.
+    nonisolated func provisionStream(packages: [String], on name: String) -> AsyncThrowingStream<String, Error> {
+        let arguments = MachineCommands.install(packages: packages, on: name)
+        guard !arguments.isEmpty else {
+            return AsyncThrowingStream { $0.finish() }
+        }
+        return ContainerCLI.shared.streamChecked(arguments)
+    }
+
+    // MARK: - Desktop
+
+    /// Passwords live here and nowhere else — in memory, for this run of the app.
+    /// Writing a VNC password to UserDefaults would leave it on disk in the clear;
+    /// if it is lost, connecting again simply mints a new one.
+    private(set) var desktopPasswords: [String: String] = [:]
+
+    /// Whether the machine already carries the VNC stack.
+    func hasDesktop(_ machine: MachineInfo) async -> Bool {
+        do {
+            _ = try await cli.run(
+                ["machine", "run", "-n", machine.name, "--", "which", "x11vnc"],
+                timeout: .seconds(60)
+            )
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// Stores a password, brings the X server, window manager and VNC server up,
+    /// and hands back the password to show once.
+    ///
+    /// The three services are started blind rather than probed first: none of them
+    /// survives a machine restart — Alpine's init does not run in a machine, which
+    /// the boot log says out loud — and starting one that is already up merely
+    /// fails, which is why those failures are ignored while the password write is
+    /// not.
+    @discardableResult
+    func startDesktop(_ machine: MachineInfo) async throws -> String {
+        let password = desktopPasswords[machine.name] ?? MachineDesktop.generatePassword()
+        try await withBusy(machine.name) {
+            try await cli.run(
+                MachineCommands.desktopStorePassword(name: machine.name, password: password),
+                timeout: .seconds(60)
+            )
+            for arguments in [
+                MachineCommands.desktopDisplayServer(name: machine.name),
+                MachineCommands.desktopWindowManager(name: machine.name),
+                MachineCommands.desktopVNCServer(name: machine.name),
+            ] {
+                _ = try? await cli.run(arguments, timeout: .seconds(60))
+            }
+        }
+        desktopPasswords[machine.name] = password
+        await refresh()
+        return password
+    }
+
     // MARK: - Inspect
 
     /// `machine inspect` prints JSON already and rejects `--format`, hence

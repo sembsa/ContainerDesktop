@@ -762,3 +762,41 @@
 /* Features/Machines/MachinesView.swift — 0.6.0 */
 "Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie." = "Creating the machine failed. Correct the values and try again.";
 "Wróć do formularza" = "Back to the form";
+
+/* App/SidebarView.swift — 0.6.0 */
+"Środowiska" = "Environments";
+
+/* Features/Machines/MachineTemplate.swift */
+"Alpine (minimalna)" = "Alpine (minimal)";
+"Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk." = "The smallest machine worth having — a few megabytes, a shell and the apk package manager.";
+"Debian" = "Debian";
+"Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma." = "A larger base with apt, for packages Alpine does not carry.";
+"Dev .NET" = "Dev .NET";
+"Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet." = "Alpine with the dotnet10-sdk package — once created, the machine's terminal runs dotnet.";
+"Pulpit z VNC" = "Desktop with VNC";
+"Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB." = "Alpine with an X server, a window manager and a VNC server. Once created, one click connects through macOS Screen Sharing. The extra packages are about 260 MB.";
+"Własna" = "Custom";
+"Wpisz obraz bazowy sam." = "Type the base image yourself.";
+"Podaj liczbę całkowitą większą od zera." = "Enter a whole number greater than zero.";
+"Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB)." = "Enter a size, for example 4G, 512M or 2048 (no unit means MB).";
+"Podaj pełną ścieżkę, zaczynającą się od /." = "Enter a full path, starting with /.";
+"Nie ma pliku pod tą ścieżką." = "There is no file at that path.";
+
+/* Features/Machines/MachinesView.swift — szablony */
+"Maszyna o tej nazwie już istnieje." = "A machine with that name already exists.";
+"Szablon" = "Template";
+"Doinstalowywanie pakietów szablonu…" = "Installing the template's packages…";
+
+/* Features/Machines/MachineDetailView.swift — pulpit */
+"Pulpit" = "Desktop";
+"Maszyna jest zatrzymana" = "The machine is stopped";
+"Pulpit wymaga działającej maszyny. Uruchom ją przyciskiem u góry." = "The desktop needs a running machine. Start it with the button above.";
+"Doinstalowywanie pulpitu — to około 260 MB." = "Installing the desktop — about 260 MB.";
+"Ta maszyna nie ma jeszcze pulpitu" = "This machine has no desktop yet";
+"Doinstaluję serwer X, menedżer okien i serwer VNC — około 260 MB paczek Alpine. Potem podłączysz się jednym kliknięciem." = "An X server, a window manager and a VNC server will be installed — about 260 MB of Alpine packages. One click connects after that.";
+"Zainstaluj pulpit" = "Install the desktop";
+"Pulpit gotowy" = "Desktop ready";
+"Połączenie otwiera systemowe Udostępnianie ekranu pod adresem maszyny. Hasło jest generowane na czas działania aplikacji — jeśli je zgubisz, kolejne połączenie ustawi nowe." = "Connecting opens macOS Screen Sharing at the machine's address. The password is generated for this run of the app — if it is lost, connecting again sets a new one.";
+"Połącz przez VNC" = "Connect over VNC";
+"Maszyna nie ma jeszcze adresu IP." = "The machine has no address yet.";
+"Hasło:" = "Password:";
