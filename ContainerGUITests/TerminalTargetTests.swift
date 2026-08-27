@@ -82,6 +82,28 @@ final class TerminalTargetTests: XCTestCase {
 
     // MARK: - Composition with the Ghostty command line
 
+    func testGhosttyCommandLineSurvivesAPodTargetWithASpacedPath() {
+        // The real kubeconfig lives under "Application Support", and Ghostty takes
+        // the whole child process as one string. If the quoting broke, the path
+        // would split at the space and kubectl would be handed nonsense.
+        let spaced = ClusterKubeconfig(
+            cluster: "gui-k8s",
+            kubeconfigPath: "/Users/me/Library/Application Support/ContainerDesktop/kubeconfigs/gui-k8s.yaml"
+        )
+        let command = TerminalCommandLine.string(
+            executable: "/usr/local/bin/kubectl",
+            arguments: TerminalTarget.pod(
+                name: "web", namespace: "default", container: nil, kubeconfig: spaced
+            ).arguments
+        )
+        XCTAssertEqual(
+            command,
+            "/bin/sh -c \"clear; exec /usr/local/bin/kubectl exec -i -t web -n default "
+                + "--kubeconfig \\\"/Users/me/Library/Application Support/ContainerDesktop/kubeconfigs/gui-k8s.yaml\\\" "
+                + "--context gui-k8s -- sh\""
+        )
+    }
+
     func testGhosttyCommandLineWrapsAMachineTarget() {
         // Ghostty takes one string, so the machine arguments have to survive the
         // same quoting path the container ones already do.
