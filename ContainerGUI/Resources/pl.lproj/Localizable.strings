@@ -705,3 +705,56 @@
 "Zwiń pole" = "Zwiń pole";
 "%lld znaków" = "%lld znaków";
 "wczytuję schemat chartu…" = "wczytuję schemat chartu…";
+
+/* App/AppModel.swift — 0.6.0 */
+"Obciążenia" = "Obciążenia";
+
+/* CLI/CLIError.swift — 0.6.0 */
+"Nie znaleziono narzędzia kubectl. Zainstaluj je poleceniem „brew install kubectl” lub wskaż ścieżkę w Ustawieniach." = "Nie znaleziono narzędzia kubectl. Zainstaluj je poleceniem „brew install kubectl” lub wskaż ścieżkę w Ustawieniach.";
+
+/* Features/Workloads/WorkloadStore.swift */
+"Deploymenty" = "Deploymenty";
+"Serwisy" = "Serwisy";
+"ConfigMapy" = "ConfigMapy";
+"Sekrety" = "Sekrety";
+"Namespace'y" = "Namespace'y";
+
+/* Features/Workloads/WorkloadsView.swift */
+"Nie znaleziono narzędzia kubectl" = "Nie znaleziono narzędzia kubectl";
+"Obiekty klastra są czytane przez kubectl. Zainstaluj je poleceniem „brew install kubectl” albo wskaż ścieżkę w Ustawieniach." = "Obiekty klastra są czytane przez kubectl. Zainstaluj je poleceniem „brew install kubectl” albo wskaż ścieżkę w Ustawieniach.";
+"Brak klastrów" = "Brak klastrów";
+"Najpierw utwórz klaster w sekcji Kubernetes. Obciążenia pokazują obiekty żyjące w wybranym klastrze." = "Najpierw utwórz klaster w sekcji Kubernetes. Obciążenia pokazują obiekty żyjące w wybranym klastrze.";
+"Przejdź do Kubernetes" = "Przejdź do Kubernetes";
+"Rodzaj" = "Rodzaj";
+"Namespace" = "Namespace";
+"wszystkie" = "wszystkie";
+"Nie udało się odczytać obiektów" = "Nie udało się odczytać obiektów";
+"Ready" = "Ready";
+"NotReady" = "NotReady";
+"Typ" = "Typ";
+"ClusterIP" = "ClusterIP";
+"Kubelet" = "Kubelet";
+"Runtime" = "Runtime";
+"CPU" = "CPU";
+
+/* Features/Workloads/WorkloadDetailViews.swift */
+"Nie udało się pobrać opisu" = "Nie udało się pobrać opisu";
+"Wczytywanie opisu…" = "Wczytywanie opisu…";
+"Kontener" = "Kontener";
+"Kontener nie wypisał nic na stdout/stderr." = "Kontener nie wypisał nic na stdout/stderr.";
+"Brak wybranego klastra." = "Brak wybranego klastra.";
+"Describe" = "Describe";
+"Pod zostanie usunięty. Jeśli należy do deploymentu, kontroler odtworzy go pod nową nazwą — to nie jest restart w miejscu." = "Pod zostanie usunięty. Jeśli należy do deploymentu, kontroler odtworzy go pod nową nazwą — to nie jest restart w miejscu.";
+"Restarty" = "Restarty";
+"IP poda" = "IP poda";
+"Węzeł" = "Węzeł";
+"rollout restart — wymienia pody po kolei, bez przestoju." = "rollout restart — wymienia pody po kolei, bez przestoju.";
+"Dostępne" = "Dostępne";
+"Zaktualizowane" = "Zaktualizowane";
+"Skalowanie" = "Skalowanie";
+"Repliki: %lld" = "Repliki: %lld";
+"Zastosuj" = "Zastosuj";
+"Zero replik zatrzymuje wdrożenie, ale go nie usuwa." = "Zero replik zatrzymuje wdrożenie, ale go nie usuwa.";
+"Ukryj" = "Ukryj";
+"Pokaż" = "Pokaż";
+"wartość binarna" = "wartość binarna";

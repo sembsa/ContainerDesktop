@@ -705,3 +705,56 @@
 "Zwiń pole" = "Collapse the field";
 "%lld znaków" = "%lld characters";
 "wczytuję schemat chartu…" = "loading the chart's schema…";
+
+/* App/AppModel.swift — 0.6.0 */
+"Obciążenia" = "Workloads";
+
+/* CLI/CLIError.swift — 0.6.0 */
+"Nie znaleziono narzędzia kubectl. Zainstaluj je poleceniem „brew install kubectl” lub wskaż ścieżkę w Ustawieniach." = "kubectl was not found. Install it with “brew install kubectl” or point at its path in Settings.";
+
+/* Features/Workloads/WorkloadStore.swift */
+"Deploymenty" = "Deployments";
+"Serwisy" = "Services";
+"ConfigMapy" = "ConfigMaps";
+"Sekrety" = "Secrets";
+"Namespace'y" = "Namespaces";
+
+/* Features/Workloads/WorkloadsView.swift */
+"Nie znaleziono narzędzia kubectl" = "kubectl was not found";
+"Obiekty klastra są czytane przez kubectl. Zainstaluj je poleceniem „brew install kubectl” albo wskaż ścieżkę w Ustawieniach." = "Cluster objects are read through kubectl. Install it with “brew install kubectl”, or point at its path in Settings.";
+"Brak klastrów" = "No clusters";
+"Najpierw utwórz klaster w sekcji Kubernetes. Obciążenia pokazują obiekty żyjące w wybranym klastrze." = "Create a cluster in the Kubernetes section first. Workloads shows the objects living in the selected cluster.";
+"Przejdź do Kubernetes" = "Go to Kubernetes";
+"Rodzaj" = "Kind";
+"Namespace" = "Namespace";
+"wszystkie" = "all";
+"Nie udało się odczytać obiektów" = "Could not read the objects";
+"Ready" = "Ready";
+"NotReady" = "NotReady";
+"Typ" = "Type";
+"ClusterIP" = "ClusterIP";
+"Kubelet" = "Kubelet";
+"Runtime" = "Runtime";
+"CPU" = "CPU";
+
+/* Features/Workloads/WorkloadDetailViews.swift */
+"Nie udało się pobrać opisu" = "Could not fetch the description";
+"Wczytywanie opisu…" = "Loading the description…";
+"Kontener" = "Container";
+"Kontener nie wypisał nic na stdout/stderr." = "The container printed nothing to stdout/stderr.";
+"Brak wybranego klastra." = "No cluster selected.";
+"Describe" = "Describe";
+"Pod zostanie usunięty. Jeśli należy do deploymentu, kontroler odtworzy go pod nową nazwą — to nie jest restart w miejscu." = "The pod will be deleted. If it belongs to a deployment the controller recreates it under a new name — this is not an in-place restart.";
+"Restarty" = "Restarts";
+"IP poda" = "Pod IP";
+"Węzeł" = "Node";
+"rollout restart — wymienia pody po kolei, bez przestoju." = "rollout restart — replaces the pods one at a time, with no downtime.";
+"Dostępne" = "Available";
+"Zaktualizowane" = "Updated";
+"Skalowanie" = "Scaling";
+"Repliki: %lld" = "Replicas: %lld";
+"Zastosuj" = "Apply";
+"Zero replik zatrzymuje wdrożenie, ale go nie usuwa." = "Zero replicas stops the deployment without deleting it.";
+"Ukryj" = "Hide";
+"Pokaż" = "Show";
+"wartość binarna" = "binary value";

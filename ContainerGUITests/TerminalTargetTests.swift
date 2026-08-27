@@ -40,6 +40,46 @@ final class TerminalTargetTests: XCTestCase {
         XCTAssertFalse(args.contains("--"))
     }
 
+    // MARK: - Pods
+
+    private var kubeconfig: ClusterKubeconfig {
+        ClusterKubeconfig(cluster: "gui-k8s", kubeconfigPath: "/tmp/gui-k8s.yaml")
+    }
+
+    func testPodShellGoesThroughKubectlRatherThanContainer() {
+        // The other two targets run the `container` binary; a pod exec cannot.
+        XCTAssertEqual(TerminalTarget.container(id: "web").binary, .container)
+        XCTAssertEqual(TerminalTarget.machine(name: "builder", asRoot: false).binary, .container)
+        XCTAssertEqual(
+            TerminalTarget.pod(name: "web", namespace: "default", container: nil, kubeconfig: kubeconfig).binary,
+            .kubectl
+        )
+    }
+
+    func testPodShellIsBuiltByTheKubectlCommandBuilder() {
+        let target = TerminalTarget.pod(
+            name: "web", namespace: "default", container: "app", kubeconfig: kubeconfig
+        )
+        XCTAssertEqual(
+            target.arguments,
+            KubectlCommands.exec(
+                pod: "web", namespace: "default", container: "app", command: ["sh"], on: kubeconfig
+            )
+        )
+    }
+
+    func testPodShellKeepsTheKubeconfigInFrontOfTheSeparator() {
+        // Past `--` these flags would be arguments to the pod's shell.
+        let args = TerminalTarget.pod(
+            name: "web", namespace: "default", container: nil, kubeconfig: kubeconfig
+        ).arguments
+        guard let separator = args.firstIndex(of: "--") else {
+            return XCTFail("brak separatora --")
+        }
+        XCTAssertLessThan(args.firstIndex(of: "--kubeconfig") ?? .max, separator)
+        XCTAssertEqual(Array(args[(separator + 1)...]), ["sh"])
+    }
+
     // MARK: - Composition with the Ghostty command line
 
     func testGhosttyCommandLineWrapsAMachineTarget() {
