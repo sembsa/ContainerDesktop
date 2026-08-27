@@ -822,10 +822,12 @@
 
 /* Features/Machines/MachineTemplate.swift — Ubuntu */
 "Ubuntu 24.04" = "Ubuntu 24.04";
-"Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje." = "Full Ubuntu with apt. The app builds the base image itself — the official one carries no init, without which a machine will not boot.";
 "Alpine z pulpitem VNC" = "Alpine with a VNC desktop";
 "Ubuntu z pulpitem VNC" = "Ubuntu with a VNC desktop";
-"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama." = "Ubuntu with a graphical desktop and a VNC server. Heavier than Alpine, but with apt and a full userland. The app builds the base image itself.";
 "Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie." = "Type the base image yourself. It must contain /sbin/init — without it a machine will not boot.";
-"Przygotowywanie obrazu bazowego…" = "Preparing the base image…";
 "Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu)." = "The machine's package manager was not recognised — apk (Alpine) and apt (Debian, Ubuntu) are supported.";
+
+/* Features/Machines/MachineTemplate.swift — Ubuntu, koszt pierwszego buildu */
+"Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu." = "Full Ubuntu with apt. The official image carries no init, without which a machine will not boot, so the app builds its own once (29 MB, needs the network). Later Ubuntu machines are created straight away.";
+"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)." = "Ubuntu with a graphical desktop and a VNC server. Heavier than Alpine, but with apt and a full userland. The app builds the base image once (29 MB, needs the network).";
+"Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam." = "Preparing the base image — once only, and it needs the network. The image builder starts by itself.";

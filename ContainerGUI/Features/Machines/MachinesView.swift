@@ -389,7 +389,7 @@ struct MachineCreateSheet: View {
             // not boot from an image without /sbin/init, and the official Ubuntu
             // image has none.
             if buildTemplate.needsBaseImageBuild {
-                output.append(LogLine(text: String(localized: "Przygotowywanie obrazu bazowego…")))
+                output.append(LogLine(text: String(localized: "Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam.")))
                 for try await line in model.machines.buildBaseImageStream(for: buildTemplate) {
                     output.append(LogLine(text: line))
                 }

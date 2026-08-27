@@ -91,7 +91,7 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
         MachineTemplate(
             id: "ubuntu",
             title: String(localized: "Ubuntu 24.04"),
-            summary: String(localized: "Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje."),
+            summary: String(localized: "Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu."),
             image: ubuntuImage,
             suggestedName: "ubuntu",
             packages: [],
@@ -124,7 +124,7 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
         MachineTemplate(
             id: "ubuntu-desktop",
             title: String(localized: "Ubuntu z pulpitem VNC"),
-            summary: String(localized: "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama."),
+            summary: String(localized: "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)."),
             image: ubuntuImage,
             suggestedName: "ubuntu-pulpit",
             packages: [],
