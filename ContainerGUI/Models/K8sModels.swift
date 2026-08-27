@@ -87,15 +87,24 @@ enum K8sListParser {
               let offsets = columnOffsets(in: lines[headerIndex])
         else { return [] }
 
+        // The cluster name is printed once per group, and CLI 1.3.0 stopped
+        // printing it at all — so it is carried down rather than read per row.
+        var lastCluster = ""
+
         return lines[(headerIndex + 1)...].compactMap { line in
             let trimmed = line.trimmingCharacters(in: .whitespaces)
             guard !trimmed.isEmpty else { return nil }
             let fields = slice(line, at: offsets)
-            // CLUSTER and NODE are the only fields the plugin always fills in;
-            // anything without them is a stray log line, not a row.
-            guard !fields[0].isEmpty, !fields[1].isEmpty else { return nil }
+            // NODE is the one column that must be filled for a line to be a row.
+            // CLUSTER is not: requiring it made 1.3.0 discard every row, which
+            // emptied the Kubernetes and Helm sections on a working cluster.
+            guard !fields[1].isEmpty else { return nil }
+            if !fields[0].isEmpty { lastCluster = fields[0] }
+            // With nothing to carry down, the node names the cluster — that is
+            // how the plugin names the node of a single-node cluster.
+            let cluster = lastCluster.isEmpty ? fields[1] : lastCluster
             return K8sNode(
-                cluster: fields[0],
+                cluster: cluster,
                 name: fields[1],
                 role: fields[2],
                 state: fields[3],

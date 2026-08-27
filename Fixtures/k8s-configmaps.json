@@ -1,0 +1,40 @@
+{
+ "apiVersion": "v1",
+ "kind": "List",
+ "items": [
+  {
+   "apiVersion": "v1",
+   "data": {
+    "ca.crt": "-----BEGIN CERTIFICATE-----\n<zredagowane>\n-----END CERTIFICATE-----\n"
+   },
+   "kind": "ConfigMap",
+   "metadata": {
+    "annotations": {
+     "kubernetes.io/description": "Contains a CA bundle that can be used to verify the kube-apiserver when using internal endpoints such as the internal service IP or kubernetes.default.svc. No other usage is guaranteed across distributions of Kubernetes clusters."
+    },
+    "creationTimestamp": "2026-08-27T05:45:13Z",
+    "name": "kube-root-ca.crt",
+    "namespace": "default",
+    "resourceVersion": "313",
+    "uid": "b66e5598-f4c7-453d-91f0-af8b28293123"
+   }
+  },
+  {
+   "apiVersion": "v1",
+   "data": {
+    "ca.crt": "-----BEGIN CERTIFICATE-----\n<zredagowane>\n-----END CERTIFICATE-----\n"
+   },
+   "kind": "ConfigMap",
+   "metadata": {
+    "annotations": {
+     "kubernetes.io/description": "Contains a CA bundle that can be used to verify the kube-apiserver when using internal endpoints such as the internal service IP or kubernetes.default.svc. No other usage is guaranteed across distributions of Kubernetes clusters."
+    },
+    "creationTimestamp": "2026-08-27T05:45:13Z",
+    "name": "kube-root-ca.crt",
+    "namespace": "kube-node-lease",
+    "resourceVersion": "314",
+    "uid": "2efd9090-382d-4156-b777-d23db97a468b"
+   }
+  }
+ ]
+}
