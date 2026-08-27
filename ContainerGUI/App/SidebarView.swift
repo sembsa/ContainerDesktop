@@ -4,7 +4,7 @@ struct SidebarView: View {
     @Environment(AppModel.self) private var model
 
     private let primary: [AppModel.Section] = [.containers, .images, .volumes, .networks]
-    private let orchestration: [AppModel.Section] = [.kubernetes, .helm]
+    private let orchestration: [AppModel.Section] = [.kubernetes, .workloads, .helm]
     private let secondary: [AppModel.Section] = [.registries, .machines, .system]
 
     var body: some View {

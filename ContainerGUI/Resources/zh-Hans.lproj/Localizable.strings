@@ -705,3 +705,56 @@
 "Zwiń pole" = "收起字段";
 "%lld znaków" = "%lld 个字符";
 "wczytuję schemat chartu…" = "正在载入 chart 架构…";
+
+/* App/AppModel.swift — 0.6.0 */
+"Obciążenia" = "工作负载";
+
+/* CLI/CLIError.swift — 0.6.0 */
+"Nie znaleziono narzędzia kubectl. Zainstaluj je poleceniem „brew install kubectl” lub wskaż ścieżkę w Ustawieniach." = "未找到 kubectl。请使用「brew install kubectl」安装，或在设置中指定其路径。";
+
+/* Features/Workloads/WorkloadStore.swift */
+"Deploymenty" = "部署";
+"Serwisy" = "服务";
+"ConfigMapy" = "配置映射";
+"Sekrety" = "密钥";
+"Namespace'y" = "命名空间";
+
+/* Features/Workloads/WorkloadsView.swift */
+"Nie znaleziono narzędzia kubectl" = "未找到 kubectl";
+"Obiekty klastra są czytane przez kubectl. Zainstaluj je poleceniem „brew install kubectl” albo wskaż ścieżkę w Ustawieniach." = "集群对象通过 kubectl 读取。请使用「brew install kubectl」安装，或在设置中指定其路径。";
+"Brak klastrów" = "没有集群";
+"Najpierw utwórz klaster w sekcji Kubernetes. Obciążenia pokazują obiekty żyjące w wybranym klastrze." = "请先在 Kubernetes 部分创建集群。工作负载显示所选集群中的对象。";
+"Przejdź do Kubernetes" = "前往 Kubernetes";
+"Rodzaj" = "类型";
+"Namespace" = "命名空间";
+"wszystkie" = "全部";
+"Nie udało się odczytać obiektów" = "无法读取对象";
+"Ready" = "就绪";
+"NotReady" = "未就绪";
+"Typ" = "类型";
+"ClusterIP" = "ClusterIP";
+"Kubelet" = "Kubelet";
+"Runtime" = "运行时";
+"CPU" = "CPU";
+
+/* Features/Workloads/WorkloadDetailViews.swift */
+"Nie udało się pobrać opisu" = "无法获取描述";
+"Wczytywanie opisu…" = "正在加载描述…";
+"Kontener" = "容器";
+"Kontener nie wypisał nic na stdout/stderr." = "该容器未向 stdout/stderr 输出任何内容。";
+"Brak wybranego klastra." = "未选择集群。";
+"Describe" = "Describe";
+"Pod zostanie usunięty. Jeśli należy do deploymentu, kontroler odtworzy go pod nową nazwą — to nie jest restart w miejscu." = "该 Pod 将被删除。如果它属于某个 Deployment，控制器会以新名称重建它——这不是原地重启。";
+"Restarty" = "重启次数";
+"IP poda" = "Pod IP";
+"Węzeł" = "节点";
+"rollout restart — wymienia pody po kolei, bez przestoju." = "rollout restart——逐个替换 Pod，无停机时间。";
+"Dostępne" = "可用";
+"Zaktualizowane" = "已更新";
+"Skalowanie" = "伸缩";
+"Repliki: %lld" = "副本数：%lld";
+"Zastosuj" = "应用";
+"Zero replik zatrzymuje wdrożenie, ale go nie usuwa." = "副本数为零会停止该部署，但不会删除它。";
+"Ukryj" = "隐藏";
+"Pokaż" = "显示";
+"wartość binarna" = "二进制值";

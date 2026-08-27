@@ -4,7 +4,7 @@ import Observation
 @MainActor @Observable
 final class AppModel {
     enum Section: String, CaseIterable, Identifiable {
-        case containers, images, volumes, networks, kubernetes, helm, registries, machines, system
+        case containers, images, volumes, networks, kubernetes, workloads, helm, registries, machines, system
 
         var id: String { rawValue }
 
@@ -15,6 +15,7 @@ final class AppModel {
             case .volumes: String(localized: "Wolumeny")
             case .networks: String(localized: "Sieci")
             case .kubernetes: String(localized: "Kubernetes")
+            case .workloads: String(localized: "Obciążenia")
             case .helm: String(localized: "Helm")
             case .registries: String(localized: "Rejestry")
             case .machines: String(localized: "Maszyny")
@@ -29,6 +30,7 @@ final class AppModel {
             case .volumes: "externaldrive"
             case .networks: "network"
             case .kubernetes: "square.stack.3d.up.fill"
+            case .workloads: "circle.grid.3x3"
             case .helm: "shippingbox.fill"
             case .registries: "key"
             case .machines: "desktopcomputer"
@@ -43,6 +45,7 @@ final class AppModel {
             case .volumes: .orange
             case .networks: .teal
             case .kubernetes: .cyan
+            case .workloads: .green
             case .helm: .mint
             case .registries: .pink
             case .machines: .indigo
@@ -63,6 +66,7 @@ final class AppModel {
     let registries = RegistryStore()
     let machines = MachineStore()
     let kubernetes = K8sStore()
+    let workloads = WorkloadStore()
     let helm = HelmStore()
     let compose = ComposeStore()
 
@@ -108,6 +112,10 @@ final class AppModel {
         case .registries: await registries.refresh()
         case .machines: await machines.refresh()
         case .kubernetes: await kubernetes.refresh()
+        // Objects are read on demand: one kubectl process per kind, and a
+        // cluster holds enough of them that a three-second tick across seven
+        // kinds would keep a laptop busy for nothing.
+        case .workloads: break
         case .helm: await helm.refreshReleases()
         case .system:
             await system.refreshDiskUsage()
@@ -142,6 +150,7 @@ final class AppModel {
         machines.error = nil
         kubernetes.clusters = []
         kubernetes.error = nil
+        workloads.clearAll()
         helm.clearTarget()
         system.diskUsage = nil
         system.builderRunning = false

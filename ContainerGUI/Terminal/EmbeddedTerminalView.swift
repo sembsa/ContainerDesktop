@@ -98,8 +98,17 @@ struct TerminalSessionView: View {
 
     private var arguments: [String] { target.arguments }
 
+    /// Resolved per target: a pod shell runs kubectl, everything else runs
+    /// `container`.
+    private var executable: String? {
+        switch target.binary {
+        case .container: BinaryResolver.resolve()
+        case .kubectl: KubectlBinaryResolver.resolve()
+        }
+    }
+
     var body: some View {
-        if let binary = BinaryResolver.resolve() {
+        if let binary = executable {
             VStack(spacing: 0) {
                 terminal(binary: binary)
                 if didExit {
@@ -108,7 +117,12 @@ struct TerminalSessionView: View {
                 }
             }
         } else {
-            EmptyStateView(symbol: "terminal", title: String(localized: "Nie znaleziono narzędzia container"))
+            EmptyStateView(
+                symbol: "terminal",
+                title: target.binary == .kubectl
+                    ? String(localized: "Nie znaleziono narzędzia kubectl")
+                    : String(localized: "Nie znaleziono narzędzia container")
+            )
         }
     }
 
