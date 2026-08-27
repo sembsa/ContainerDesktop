@@ -758,3 +758,7 @@
 "Ukryj" = "隐藏";
 "Pokaż" = "显示";
 "wartość binarna" = "二进制值";
+
+/* Features/Machines/MachinesView.swift — 0.6.0 */
+"Tworzenie maszyny nie udało się. Popraw dane i spróbuj ponownie." = "创建虚拟机失败。请修正数值后重试。";
+"Wróć do formularza" = "返回表单";
