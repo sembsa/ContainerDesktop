@@ -56,7 +56,10 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
             summary: String(localized: "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB."),
             image: "alpine:latest",
             suggestedName: "pulpit",
-            packages: ["x11vnc", "xvfb", "fluxbox", "xterm"],
+            // icewm, not fluxbox: fluxbox segfaults here (exit 139) and leaves the
+            // VNC session black. icewm also brings a taskbar, so the screen looks
+            // like a desktop rather than an empty root window.
+            packages: ["x11vnc", "xvfb", "icewm", "xterm"],
             providesDesktop: true
         ),
         custom,

@@ -149,8 +149,19 @@ enum MachineCommands {
 
     /// The display comes through `-e` rather than a shell assignment, for the same
     /// reason as above.
+    ///
+    /// icewm rather than fluxbox: fluxbox segfaults on Alpine aarch64 inside a
+    /// machine — it reads its config, prints the usual defaults chatter and exits
+    /// 139 — which left a connected VNC session staring at a black screen, an X
+    /// server with nothing drawing on it. icewm survives and paints a taskbar.
     static func desktopWindowManager(name: String) -> [String] {
-        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "fluxbox"]
+        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "icewm"]
+    }
+
+    /// A window manager on its own is a taskbar over an empty root window, so the
+    /// desktop opens a terminal too — the first thing anyone connecting wants.
+    static func desktopTerminal(name: String) -> [String] {
+        ["machine", "run", "-n", name, "-d", "--root", "-e", "DISPLAY=:1", "--", "xterm"]
     }
 
     static func desktopVNCServer(name: String) -> [String] {

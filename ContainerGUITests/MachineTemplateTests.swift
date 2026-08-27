@@ -44,9 +44,21 @@ final class MachineTemplateTests: XCTestCase {
             return XCTFail("brak szablonu pulpitu")
         }
         XCTAssertTrue(template.providesDesktop)
-        for package in ["x11vnc", "xvfb", "fluxbox", "xterm"] {
+        for package in ["x11vnc", "xvfb", "icewm", "xterm"] {
             XCTAssertTrue(template.packages.contains(package), "brak \(package)")
         }
+    }
+
+    func testTheDesktopDoesNotUseFluxbox() {
+        // fluxbox segfaults on Alpine aarch64 inside a machine: it reads its
+        // config, prints the usual "Setting default value" lines and exits 139,
+        // which left the VNC session showing a black screen — an X server with
+        // nothing drawing on it. icewm survives and brings a taskbar with it.
+        guard let template = MachineTemplate.all.first(where: { $0.id == "desktop" }) else {
+            return XCTFail("brak szablonu pulpitu")
+        }
+        XCTAssertFalse(template.packages.contains("fluxbox"))
+        XCTAssertFalse(MachineCommands.desktopWindowManager(name: "gui").contains("fluxbox"))
     }
 
     // MARK: - Provisioning argv
@@ -87,6 +99,7 @@ final class MachineTemplateTests: XCTestCase {
         for args in [
             MachineCommands.desktopDisplayServer(name: "gui"),
             MachineCommands.desktopWindowManager(name: "gui"),
+            MachineCommands.desktopTerminal(name: "gui"),
             MachineCommands.desktopVNCServer(name: "gui"),
         ] {
             XCTAssertTrue(args.contains("--root"), "brak --root w \(args)")
@@ -108,7 +121,16 @@ final class MachineTemplateTests: XCTestCase {
         let args = MachineCommands.desktopWindowManager(name: "gui")
         XCTAssertEqual(
             args,
-            ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "fluxbox"]
+            ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "icewm"]
+        )
+    }
+
+    func testTheDesktopOpensATerminalSoTheScreenIsNotBare() {
+        // A window manager alone is a taskbar over an empty root window. The
+        // first thing anyone connecting wants is a prompt.
+        XCTAssertEqual(
+            MachineCommands.desktopTerminal(name: "gui"),
+            ["machine", "run", "-n", "gui", "-d", "--root", "-e", "DISPLAY=:1", "--", "xterm"]
         )
     }
 
