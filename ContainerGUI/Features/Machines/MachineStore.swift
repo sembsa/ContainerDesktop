@@ -116,11 +116,17 @@ final class MachineStore {
     /// if it is lost, connecting again simply mints a new one.
     private(set) var desktopPasswords: [String: String] = [:]
 
-    /// Whether the machine already carries the VNC stack.
+    /// Whether the machine already carries the desktop stack.
+    ///
+    /// The probe is the window manager rather than the VNC server, and that is
+    /// deliberate: a machine provisioned before fluxbox was found to segfault has
+    /// x11vnc but no working window manager, and connecting to it shows a black
+    /// screen. Asking about icewm makes those machines offer the install again,
+    /// which repairs them.
     func hasDesktop(_ machine: MachineInfo) async -> Bool {
         do {
             _ = try await cli.run(
-                ["machine", "run", "-n", machine.name, "--", "which", "x11vnc"],
+                ["machine", "run", "-n", machine.name, "--", "which", "icewm"],
                 timeout: .seconds(60)
             )
             return true
@@ -148,6 +154,7 @@ final class MachineStore {
             for arguments in [
                 MachineCommands.desktopDisplayServer(name: machine.name),
                 MachineCommands.desktopWindowManager(name: machine.name),
+                MachineCommands.desktopTerminal(name: machine.name),
                 MachineCommands.desktopVNCServer(name: machine.name),
             ] {
                 _ = try? await cli.run(arguments, timeout: .seconds(60))
