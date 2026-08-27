@@ -62,39 +62,45 @@ struct WorkloadsView: View {
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
         ToolbarItemGroup {
-            Picker("Klaster", selection: clusterBinding) {
-                ForEach(clusters) { cluster in
-                    Text(cluster.name).tag(cluster.name)
-                }
-            }
-            .pickerStyle(.menu)
-            .fixedSize()
-
-            Picker("Rodzaj", selection: kindBinding) {
-                ForEach(WorkloadStore.Kind.allCases) { kind in
-                    Label(kind.title, systemImage: kind.symbol).tag(kind)
-                }
-            }
-            .pickerStyle(.menu)
-            .fixedSize()
-
-            if !store.kind.isClusterScoped {
-                Picker("Namespace", selection: namespaceBinding) {
-                    Text("wszystkie").tag(String?.none)
-                    ForEach(store.namespaces) { namespace in
-                        Text(namespace.metadata.name).tag(String?.some(namespace.metadata.name))
+            // Nothing to pick from until there is a cluster, and an empty picker
+            // next to a "no clusters" screen reads as a broken control.
+            if store.isKubectlInstalled, !clusters.isEmpty {
+                Picker("Klaster", selection: clusterBinding) {
+                    ForEach(clusters) { cluster in
+                        Text(cluster.name).tag(cluster.name)
                     }
                 }
                 .pickerStyle(.menu)
                 .fixedSize()
-            }
 
-            if store.isLoading { ProgressView().controlSize(.small) }
+                // Text, not Label: a menu picker in the toolbar collapses a Label to
+                // its icon alone, which left the control showing a cube and nothing else.
+                Picker("Rodzaj", selection: kindBinding) {
+                    ForEach(WorkloadStore.Kind.allCases) { kind in
+                        Text(kind.title).tag(kind)
+                    }
+                }
+                .pickerStyle(.menu)
+                .fixedSize()
 
-            Button {
-                Task { await store.refresh() }
-            } label: {
-                Label("Odśwież", systemImage: "arrow.clockwise")
+                if !store.kind.isClusterScoped {
+                    Picker("Namespace", selection: namespaceBinding) {
+                        Text("wszystkie").tag(String?.none)
+                        ForEach(store.namespaces) { namespace in
+                            Text(namespace.metadata.name).tag(String?.some(namespace.metadata.name))
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .fixedSize()
+                }
+
+                if store.isLoading { ProgressView().controlSize(.small) }
+
+                Button {
+                    Task { await store.refresh() }
+                } label: {
+                    Label("Odśwież", systemImage: "arrow.clockwise")
+                }
             }
         }
     }
