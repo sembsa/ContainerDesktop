@@ -87,6 +87,12 @@ targets:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleDisplayName: Container Desktop
+        # Finder reads CFBundleDisplayName, but the app menu reads CFBundleName —
+        # without it that menu fell back to the target name and read "ContainerGUI"
+        # while every other surface already said Container Desktop. PRODUCT_NAME,
+        # and so the .app filename, deliberately stays: Sparkle replaces the
+        # installed bundle where it stands and scripts/package.sh hardcodes the path.
+        CFBundleName: Container Desktop
         LSApplicationCategoryType: public.app-category.developer-tools
         LSMinimumSystemVersion: "26.0"
         NSHumanReadableCopyright: ""
