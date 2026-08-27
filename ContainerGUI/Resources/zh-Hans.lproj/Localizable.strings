@@ -770,13 +770,11 @@
 "Alpine (minimalna)" = "Alpine（最小）";
 "Najmniejsza sensowna maszyna — kilka megabajtów, shell i menedżer paczek apk." = "最小的实用虚拟机——几兆字节、一个 Shell 和 apk 包管理器。";
 "Debian" = "Debian";
-"Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma." = "更大的基础镜像，带 apt，适用于 Alpine 没有的软件包。";
 "Dev .NET" = "Dev .NET";
 "Alpine z pakietem dotnet10-sdk — po utworzeniu w terminalu maszyny działa polecenie dotnet." = "带 dotnet10-sdk 包的 Alpine——创建后即可在虚拟机终端中使用 dotnet 命令。";
 "Pulpit z VNC" = "带 VNC 的桌面";
 "Alpine z serwerem X, menedżerem okien i serwerem VNC. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu. Doinstalowanie zajmuje około 260 MB." = "带 X 服务器、窗口管理器和 VNC 服务器的 Alpine。创建后可通过 macOS 屏幕共享一键连接。附加软件包约 260 MB。";
 "Własna" = "自定义";
-"Wpisz obraz bazowy sam." = "自行输入基础镜像。";
 "Podaj liczbę całkowitą większą od zera." = "请输入大于零的整数。";
 "Podaj rozmiar, np. 4G, 512M albo 2048 (bez jednostki = MB)." = "请输入大小，例如 4G、512M 或 2048（不带单位表示 MB）。";
 "Podaj pełną ścieżkę, zaczynającą się od /." = "请输入以 / 开头的完整路径。";
@@ -821,3 +819,13 @@
 /* Features/Machines/MachineTemplate.swift — pulpit */
 "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu." = "带图形桌面和 VNC 服务器的 Alpine——请在下方选择环境。创建后可通过 macOS 屏幕共享一键连接。";
 "Doinstalowywanie pulpitu." = "正在安装桌面。";
+
+/* Features/Machines/MachineTemplate.swift — Ubuntu */
+"Ubuntu 24.04" = "Ubuntu 24.04";
+"Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje." = "带 apt 的完整 Ubuntu。基础镜像由应用自行构建——官方镜像不含 init，缺少它虚拟机无法启动。";
+"Alpine z pulpitem VNC" = "带 VNC 桌面的 Alpine";
+"Ubuntu z pulpitem VNC" = "带 VNC 桌面的 Ubuntu";
+"Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama." = "带图形桌面和 VNC 服务器的 Ubuntu。比 Alpine 更重，但拥有 apt 和完整的用户空间。基础镜像由应用自行构建。";
+"Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie." = "自行输入基础镜像。镜像必须包含 /sbin/init——否则虚拟机无法启动。";
+"Przygotowywanie obrazu bazowego…" = "正在准备基础镜像…";
+"Nie rozpoznano menedżera paczek w maszynie — obsługiwane są apk (Alpine) i apt (Debian, Ubuntu)." = "未能识别虚拟机的包管理器——支持 apk（Alpine）和 apt（Debian、Ubuntu）。";

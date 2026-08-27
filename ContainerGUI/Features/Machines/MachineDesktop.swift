@@ -63,11 +63,17 @@ enum MachineDesktopEnvironment: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    var packages: [String] {
+    /// Package names differ between distributions: `dbus-launch` lives in
+    /// `dbus-x11` on Debian and Ubuntu, while Alpine simply calls it `dbus`.
+    /// Verified on both — `startxfce4` brought the session up either way.
+    func packages(for manager: MachinePackageManager) -> [String] {
         switch self {
-        case .iceWM: ["xvfb", "x11vnc", "icewm", "xterm"]
-        // dbus is not optional for XFCE: the session manager talks to it.
-        case .xfce: ["xvfb", "x11vnc", "xfce4", "xfce4-terminal", "dbus"]
+        case .iceWM:
+            return ["xvfb", "x11vnc", "icewm", "xterm"]
+        case .xfce:
+            // dbus is not optional for XFCE: the session manager talks to it.
+            let dbus = manager == .apt ? "dbus-x11" : "dbus"
+            return ["xvfb", "x11vnc", "xfce4", "xfce4-terminal", dbus]
         }
     }
 

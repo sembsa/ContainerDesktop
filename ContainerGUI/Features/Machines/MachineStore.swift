@@ -83,14 +83,83 @@ final class MachineStore {
 
     // MARK: - Provisioning
 
-    /// Streams `apk add` inside the machine, so a 260 MB desktop install reports
-    /// progress instead of hanging behind a spinner.
-    nonisolated func provisionStream(packages: [String], on name: String) -> AsyncThrowingStream<String, Error> {
-        let arguments = MachineCommands.install(packages: packages, on: name)
-        guard !arguments.isEmpty else {
+    /// Streams the package install inside the machine, so a few hundred megabytes
+    /// report progress instead of hanging behind a spinner.
+    ///
+    /// One stream over however many commands the manager needs: apt takes two —
+    /// `update` then `install` — and they cannot be joined with `&&`, because a
+    /// shell in a machine swallows stdout and loses exit codes.
+    nonisolated func provisionStream(
+        packages: [String],
+        on name: String,
+        using manager: MachinePackageManager
+    ) -> AsyncThrowingStream<String, Error> {
+        let commands = manager.installCommands(packages: packages, on: name)
+        guard !commands.isEmpty else { return AsyncThrowingStream { $0.finish() } }
+        return AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    for command in commands {
+                        for try await line in ContainerCLI.shared.streamChecked(command) {
+                            continuation.yield(line)
+                        }
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
+    }
+
+    /// Builds a template's base image when its distribution has no init of its
+    /// own, writing the Dockerfile to a temporary context.
+    ///
+    /// Skipped when the tag is already present: the build is cheap to repeat but
+    /// not free, and nothing about it changes between machines.
+    nonisolated func buildBaseImageStream(for template: MachineTemplate) -> AsyncThrowingStream<String, Error> {
+        guard let dockerfile = template.baseImageDockerfile else {
             return AsyncThrowingStream { $0.finish() }
         }
-        return ContainerCLI.shared.streamChecked(arguments)
+        return AsyncThrowingStream { continuation in
+            let task = Task {
+                do {
+                    if await Self.imageExists(tag: template.image) {
+                        continuation.finish()
+                        return
+                    }
+                    let directory = FileManager.default.temporaryDirectory
+                        .appending(path: "container-desktop-base-\(template.id)")
+                    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+                    try Data(dockerfile.utf8).write(to: directory.appending(path: "Dockerfile"))
+                    let arguments = MachineCommands.buildBaseImage(
+                        tag: template.image,
+                        contextDirectory: directory.path
+                    )
+                    for try await line in ContainerCLI.shared.stream(arguments) {
+                        continuation.yield(line)
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
+            }
+            continuation.onTermination = { _ in task.cancel() }
+        }
+    }
+
+    private static func imageExists(tag: String) async -> Bool {
+        (try? await ContainerCLI.shared.run(["image", "inspect", tag], timeout: .seconds(30))) != nil
+    }
+
+    /// Which package manager the machine carries, for provisioning an existing one.
+    func detectPackageManager(_ machine: MachineInfo) async -> MachinePackageManager? {
+        for (manager, binary) in [(MachinePackageManager.apk, "apk"), (.apt, "apt-get")] {
+            let probe = MachineCommands.whichProbe(name: machine.name, binary: binary)
+            if (try? await cli.run(probe, timeout: .seconds(60))) != nil { return manager }
+        }
+        return nil
     }
 
     /// Waits until the machine will actually run a command.

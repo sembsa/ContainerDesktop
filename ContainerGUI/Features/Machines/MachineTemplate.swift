@@ -1,5 +1,34 @@
 import Foundation
 
+/// Which package manager a machine's distribution uses.
+///
+/// This matters because provisioning is a list of direct commands: `machine run
+/// -- sh -c "…"` executes but swallows stdout and loses exit codes, so
+/// `apt-get update && apt-get install` cannot be one shell line.
+enum MachinePackageManager: String, Sendable, Hashable {
+    case apk
+    case apt
+
+    /// The commands to run, in order, to install packages inside the machine.
+    func installCommands(packages: [String], on name: String) -> [[String]] {
+        guard !packages.isEmpty else { return [] }
+        switch self {
+        case .apk:
+            return [["machine", "run", "-n", name, "--root", "--",
+                     "apk", "add", "--no-progress"] + packages]
+        case .apt:
+            return [
+                ["machine", "run", "-n", name, "--root", "--", "apt-get", "update"],
+                // DEBIAN_FRONTEND is not optional: without it the install can stop
+                // on a configuration prompt nobody is there to answer.
+                ["machine", "run", "-n", name, "--root",
+                 "-e", "DEBIAN_FRONTEND=noninteractive", "--",
+                 "apt-get", "install", "-y", "--no-install-recommends"] + packages,
+            ]
+        }
+    }
+}
+
 /// A ready-made machine, so that creating one needs no typing.
 ///
 /// The form used to open with two empty text fields and no idea what belongs in
@@ -7,20 +36,45 @@ import Foundation
 /// template fills the image and proposes a name, and whatever the template needs
 /// on top of the base image is installed after the machine boots.
 ///
-/// Everything here was checked against a live 1.3.0 machine rather than assumed:
-/// `apk add` works inside a machine and persists, `dotnet10-sdk` is in Alpine's
-/// repositories, and so are the X server, window manager and VNC server the
-/// desktop template installs.
+/// Everything here was checked against a live 1.3.0 machine rather than assumed —
+/// including the fact that decides which distributions can appear at all: **a
+/// machine will not boot from an image without `/sbin/init`.** Alpine's is a
+/// busybox symlink and works. `ubuntu:24.04` and `debian:bookworm-slim` carry no
+/// init whatsoever — no systemd, no busybox — and `machine create` fails on them
+/// with "container must be running". Ubuntu therefore arrives as a base image the
+/// app builds itself: Ubuntu plus `busybox-static`, linked as `/sbin/init`. That
+/// image boots and reports Ubuntu 24.04.4 LTS.
 struct MachineTemplate: Identifiable, Sendable, Hashable {
     let id: String
     let title: String
     let summary: String
+    /// The image a machine is created from. For templates that build their own
+    /// base, this is the tag the build produces.
     let image: String
     let suggestedName: String
-    /// Installed with `apk add` once the machine is up.
+    /// Installed after the machine boots.
     let packages: [String]
-    /// Whether the machine can then be reached with Screen Sharing.
+    /// Whether this is a graphical machine; the chosen environment decides what
+    /// gets installed.
     let providesDesktop: Bool
+    let packageManager: MachinePackageManager
+    /// Set when the base image has to be built before a machine can be made.
+    let baseImageDockerfile: String?
+
+    var needsBaseImageBuild: Bool { baseImageDockerfile != nil }
+
+    /// Ubuntu with an init, which the official image lacks. busybox rather than
+    /// systemd: it is the same mechanism Alpine boots with here, and a fraction
+    /// of the size.
+    private static let ubuntuDockerfile = """
+        FROM ubuntu:24.04
+        RUN apt-get update \\
+         && apt-get install -y --no-install-recommends busybox-static \\
+         && ln -sf /bin/busybox /sbin/init \\
+         && rm -rf /var/lib/apt/lists/*
+        """
+
+    private static let ubuntuImage = "containerdesktop/ubuntu-machine:24.04"
 
     static let all: [MachineTemplate] = [
         MachineTemplate(
@@ -30,16 +84,20 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
             image: "alpine:latest",
             suggestedName: "alpine",
             packages: [],
-            providesDesktop: false
+            providesDesktop: false,
+            packageManager: .apk,
+            baseImageDockerfile: nil
         ),
         MachineTemplate(
-            id: "debian",
-            title: String(localized: "Debian"),
-            summary: String(localized: "Większa baza z apt, kiedy potrzebujesz paczek, których Alpine nie ma."),
-            image: "debian:bookworm-slim",
-            suggestedName: "debian",
+            id: "ubuntu",
+            title: String(localized: "Ubuntu 24.04"),
+            summary: String(localized: "Pełne Ubuntu z apt. Obraz bazowy aplikacja zbuduje sama — oficjalny nie zawiera inita, bez którego maszyna nie wstaje."),
+            image: ubuntuImage,
+            suggestedName: "ubuntu",
             packages: [],
-            providesDesktop: false
+            providesDesktop: false,
+            packageManager: .apt,
+            baseImageDockerfile: ubuntuDockerfile
         ),
         MachineTemplate(
             id: "dotnet",
@@ -48,17 +106,31 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
             image: "alpine:latest",
             suggestedName: "dotnet-dev",
             packages: ["dotnet10-sdk"],
-            providesDesktop: false
+            providesDesktop: false,
+            packageManager: .apk,
+            baseImageDockerfile: nil
         ),
         MachineTemplate(
             id: "desktop",
-            title: String(localized: "Pulpit z VNC"),
+            title: String(localized: "Alpine z pulpitem VNC"),
             summary: String(localized: "Alpine z pulpitem graficznym i serwerem VNC — środowisko wybierasz niżej. Po utworzeniu podłączysz się jednym kliknięciem przez systemowe Udostępnianie ekranu."),
             image: "alpine:latest",
             suggestedName: "pulpit",
-            // The chosen environment decides what gets installed.
             packages: [],
-            providesDesktop: true
+            providesDesktop: true,
+            packageManager: .apk,
+            baseImageDockerfile: nil
+        ),
+        MachineTemplate(
+            id: "ubuntu-desktop",
+            title: String(localized: "Ubuntu z pulpitem VNC"),
+            summary: String(localized: "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje sama."),
+            image: ubuntuImage,
+            suggestedName: "ubuntu-pulpit",
+            packages: [],
+            providesDesktop: true,
+            packageManager: .apt,
+            baseImageDockerfile: ubuntuDockerfile
         ),
         custom,
     ]
@@ -66,11 +138,13 @@ struct MachineTemplate: Identifiable, Sendable, Hashable {
     static let custom = MachineTemplate(
         id: "custom",
         title: String(localized: "Własna"),
-        summary: String(localized: "Wpisz obraz bazowy sam."),
+        summary: String(localized: "Wpisz obraz bazowy sam. Obraz musi zawierać /sbin/init — bez niego maszyna nie wstanie."),
         image: "",
         suggestedName: "",
         packages: [],
-        providesDesktop: false
+        providesDesktop: false,
+        packageManager: .apk,
+        baseImageDockerfile: nil
     )
 }
 
