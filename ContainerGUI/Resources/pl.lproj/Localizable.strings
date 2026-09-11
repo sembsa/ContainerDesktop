@@ -875,3 +875,11 @@
 /* Pasek menu: podgląd obciążenia */
 "bez adresu" = "bez adresu";
 "%1$d działa · %2$d zatrzymanych" = "%1$d działa · %2$d zatrzymanych";
+
+/* 0.7.2 — menu w pasku menu */
+"Menu w pasku pokazuje, co się dzieje" = "Menu w pasku pokazuje, co się dzieje";
+"Zamiast listy nazw — wykres zbiorczego obciążenia CPU z ostatnich dwóch minut, a przy każdym kontenerze własny mini-wykres obok adresu, portów, pamięci i bieżącego procentu." = "Zamiast listy nazw — wykres zbiorczego obciążenia CPU z ostatnich dwóch minut, a przy każdym kontenerze własny mini-wykres obok adresu, portów, pamięci i bieżącego procentu.";
+"Obciążenie widoczne bez otwierania menu" = "Obciążenie widoczne bez otwierania menu";
+"Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego." = "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego.";
+"Kolory projektów i ikony" = "Kolory projektów i ikony";
+"Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość." = "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość.";
