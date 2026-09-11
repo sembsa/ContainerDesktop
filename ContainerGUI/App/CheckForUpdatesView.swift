@@ -29,16 +29,24 @@ struct CheckForUpdatesView: View {
         self.viewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
+    @ViewBuilder
     var body: some View {
-        Button {
-            updater.checkForUpdates()
-        } label: {
-            if let systemImage {
+        if let systemImage {
+            // Same row treatment as everything else in the popover, hover
+            // highlight included.
+            Button {
+                updater.checkForUpdates()
+            } label: {
                 Label("Sprawdź aktualizacje…", systemImage: systemImage)
-            } else {
-                Text("Sprawdź aktualizacje…")
+                    .menuBarRow()
             }
+            .buttonStyle(.plain)
+            .disabled(!viewModel.canCheckForUpdates)
+        } else {
+            Button("Sprawdź aktualizacje…") {
+                updater.checkForUpdates()
+            }
+            .disabled(!viewModel.canCheckForUpdates)
         }
-        .disabled(!viewModel.canCheckForUpdates)
     }
 }
