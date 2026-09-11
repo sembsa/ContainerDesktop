@@ -71,6 +71,28 @@ actor ContainerCLI {
         try await execute(arguments, timeout: timeout)
     }
 
+    // MARK: - Binary-safe command
+
+    /// Runs a command with stdin and/or stdout wired straight to a file.
+    ///
+    /// Used for copying files with `tar`, where the payload is arbitrary bytes.
+    /// Does not throw on a non-zero exit; the caller decides what that means.
+    func runRedirecting(
+        _ arguments: [String],
+        inputPath: String? = nil,
+        outputPath: String? = nil,
+        timeout: Duration? = .seconds(600)
+    ) async throws -> CommandResult {
+        guard let binary = BinaryResolver.resolve() else { throw CLIError.notInstalled }
+        return try await ProcessRunner.run(
+            executable: binary,
+            arguments: arguments,
+            inputPath: inputPath,
+            outputPath: outputPath,
+            timeout: timeout
+        )
+    }
+
     // MARK: - Streaming command
 
     /// Returns a line stream for long-lived commands (`logs -f`, `stats`).

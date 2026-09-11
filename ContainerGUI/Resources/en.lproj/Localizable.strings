@@ -846,3 +846,8 @@
 "Katalog danych" = "Data directory";
 "Katalog instalacji" = "Install directory";
 "%1$d z %2$d działa" = "%1$d of %2$d running";
+
+/* Kopiowanie plików przez tar, gdy cp kontenera jest zepsute */
+"Nie udało się otworzyć pliku do zapisu: %@" = "Could not open the file for writing: %@";
+"Nie udało się otworzyć pliku do odczytu: %@" = "Could not open the file for reading: %@";
+"Nie udało się odczytać %@ z kontenera." = "Could not read %@ from the container.";
