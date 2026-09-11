@@ -152,15 +152,11 @@ struct MenuBarContent: View {
                     }
                 }
             } label: {
-                // Same padding and label style as `MenuBarActionRow`: the
-                // borderless menu style adds an inset of its own, which left the
-                // icon column a few points out of line with its neighbours.
+                // `.menuBarRow()` rather than the borderless menu style, which
+                // adds an inset of its own and left this row's icon column out
+                // of line with its neighbours — and gave it no hover highlight.
                 Label("Przejdź do", systemImage: "square.grid.2x2")
-                    .labelStyle(MenuBarLabelStyle())
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 7)
-                    .padding(.vertical, 5)
-                    .contentShape(Rectangle())
+                    .menuBarRow()
             }
             .menuStyle(.button)
             .buttonStyle(.plain)
@@ -174,18 +170,12 @@ struct MenuBarContent: View {
     private var footer: some View {
         VStack(alignment: .leading, spacing: 1) {
             CheckForUpdatesView(updater: updater, systemImage: "arrow.down.circle")
-                .buttonStyle(.plain)
-                .labelStyle(MenuBarLabelStyle())
-                .padding(.horizontal, 7)
-                .padding(.vertical, 5)
 
             SettingsLink {
                 Label("Ustawienia…", systemImage: "gearshape")
-                    .labelStyle(MenuBarLabelStyle())
+                    .menuBarRow()
             }
             .buttonStyle(.plain)
-            .padding(.horizontal, 7)
-            .padding(.vertical, 5)
 
             MenuBarActionRow("Zakończ", systemImage: "power") {
                 NSApplication.shared.terminate(nil)
