@@ -143,6 +143,7 @@ targets:
       - path: ContainerGUI/Common/JSONValue.swift
       - path: ContainerGUI/Common/Sparkline.swift
       - path: ContainerGUI/Common/ProjectAccent.swift
+      - path: ContainerGUI/App/MenuBarIcon.swift
       - path: ContainerGUI/Common/Formatters.swift
       - path: ContainerGUI/CLI/RunCommandBuilder.swift
       - path: ContainerGUI/CLI/CLIError.swift
