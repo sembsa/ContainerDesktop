@@ -28,23 +28,6 @@ struct ContainerGUIApp: App {
         updaterController.updater.checkForUpdatesInBackground()
     }
 
-    /// MenuBarExtra ignores SwiftUI `.font` on its label, so size the status
-    /// item glyph explicitly via an NSImage symbol configuration. The image is
-    /// capped to the menu bar grid (~17 pt tall) — anything taller gets clipped
-    /// and glitches when the status item highlights on click.
-    private static func menuBarIcon(_ name: String) -> NSImage {
-        let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .semibold)
-        let image = NSImage(systemSymbolName: name, accessibilityDescription: "Container Desktop")?
-            .withSymbolConfiguration(config) ?? NSImage()
-        let maxHeight: CGFloat = 17
-        if image.size.height > maxHeight, image.size.height > 0 {
-            let ratio = maxHeight / image.size.height
-            image.size = NSSize(width: image.size.width * ratio, height: maxHeight)
-        }
-        image.isTemplate = true
-        return image
-    }
-
     var body: some Scene {
         Window("Container Desktop", id: "main") {
             RootView()
@@ -87,7 +70,13 @@ struct ContainerGUIApp: App {
                 default: return "shippingbox"
                 }
             }()
-            Image(nsImage: Self.menuBarIcon(iconName))
+            // The strip only appears while the service is up and something has
+            // actually been measured, so a stopped or idle Mac keeps the plain
+            // glyph it has always had.
+            let activity = model.system.serviceState.isRunning
+                ? model.containers.usageHistory.total.normalised()
+                : []
+            Image(nsImage: MenuBarIcon.image(symbolName: iconName, activity: activity))
         }
         .menuBarExtraStyle(.window)
 
