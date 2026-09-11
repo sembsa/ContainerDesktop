@@ -55,7 +55,7 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 
 - **The plugin has no `--format json`.** `K8sListParser` (in `Models/K8sModels.swift`) slices the fixed-width `k8s list` table on header-column offsets — splitting on whitespace loses `6144 MB` and mangles rows with blank trailing columns. Covered by `K8sListParserTests`.
 - **Cluster nodes are ordinary containers** labelled `com.apple.container.plugin=k8s` and `com.apple.container.resource.role`. `ContainerStore.refresh()` filters them out so nobody deletes a control plane from the Containers list.
-- **Version skew is the common failure.** A `.pkg` upgrade leaves a new CLI talking to the old background apiserver, and `k8s` fails until `container system stop && start`. `K8sStore.diagnose` compares `container --version` with `apiserver.version` from `container system status` and offers a restart instead of surfacing the raw XPC error.
+- **Version skew** is detected app-wide now, not here — see *Copying files, and two ways the CLI lies* below. `K8sStore.diagnose` still consults it, because a skewed service is a common reason for `k8s list` to fail.
 - **Never touch `~/.kube/config`.** This is the rule that matters. `helm` acts on whatever the current context points at, `k8s create` rewrites that file *and* switches the current context, and the people using this app have real clusters in there. Every cluster therefore gets its own kubeconfig under Application Support via `KubeconfigManager` (`container k8s write-config` — note it *appends*, so the old file is deleted first), and `HelmCLI.ClusterTarget` makes the kubeconfig argument mandatory rather than optional. Pass **both** `--kubeconfig` and `--kube-context`: the file `write-config` writes has no `current-context`, so `--kubeconfig` alone fails with "cluster unreachable … localhost:8080".
 - `HelmBinaryResolver` probes `/opt/homebrew/bin` first (Homebrew on Apple silicon). Helm timeouts are minutes, not seconds — `install --wait` pulls images inside the cluster.
 - `ChartValues` builds the values editor from the chart's own `values.yaml` and emits **only edited keys** as overrides; a full copy would pin every default and block chart upgrades from moving them. Yams resolves YAML anchors while composing, so aliased blocks arrive as real editable fields. Schema validation is delegated to helm itself (`--dry-run=server` reports `at '/replicaCount': got string, want number`) rather than reimplemented against `values.schema.json`.
@@ -68,6 +68,57 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 - **Ghostty (libghostty)** — Metal rendering. `GhosttyTerminalView` hands `container exec -it <id> sh` to libghostty's `.exec` backend as a ghostty `command` config line; libghostty owns the PTY, resizing and the exit report. Opt-in because **libghostty's embedding API is explicitly not stabilized** ("used primarily by the macOS app, may change significantly between releases") and Ghostty publishes only `ghostty-vt` officially — the full library comes from a third-party build, so the package is pinned with `exactVersion`, never `from:`.
 
 Two things that will bite when touching this: libghostty runs the command through `login -flp <user> /bin/bash --noprofile --norc -c exec -l <cmd>`, so (a) the command must stay a plain executable + arguments — a bare `clear; …` gets torn apart, hence the `/bin/sh -c "clear; exec …"` wrapper in `TerminalCommandLine`, and (b) without that `clear` the host's "Last login: … on ttysNNN" shows up above the container's prompt. The XCFramework is a **static** library, so nothing extra needs signing.
+
+## Copying files, and two ways the CLI lies
+
+Two separate failures, both discovered from one bug report ("path not found"
+for a file that plainly existed). Neither announces itself honestly, so both
+are worth recognising on sight.
+
+**Version skew — the CLI and the service on different builds.** A `.pkg`
+upgrade replaces every binary on disk but leaves the old apiserver running.
+The symptoms never mention versions: `clean` fails with a raw XPC error and
+the k8s plugin comes back empty. To confirm it, compare the inode the running
+process executes (`lsof -p <pid> -a -d txt`) with the file on disk — after an
+upgrade they differ. `SystemStatus.versionSkew` owns the single definition:
+it decodes `system status --format json` and compares `client`/`server`,
+preferring commits to version numbers since one release builds every component
+from one commit. `VersionSkewBanner` offers the restart in every section.
+Note 1.4.1 **renamed `apiserver.version` to `server.version`** — parsing the
+old name silently detects nothing, which is exactly how this went unnoticed.
+
+**A stale guest agent — and this one is per-container.** Every container bakes
+in its own copy of `vminitd` as an `initfs.ext4` when it is *created*, and
+upgrading the `container` package never refreshes it. So after an upgrade
+every pre-existing container runs an agent older than the CLI, and on 1.4.1
+that agent answers `copyOut` with `notFound: "copy: path not found"` for every
+path, `/etc/hostname` included. A container created *after* the upgrade copies
+fine; one created before does not, whatever its image. The guest names it in
+`~/Library/Application Support/com.apple.container/containers/<id>/vminitd.log`,
+and `initfs.ext4`'s mtime tells you which containers are affected. Restarting
+the service does **not** fix it — only recreating the container would.
+`ContainerFileTransfer` routes around it with `exec … tar` in both directions,
+streaming the archive straight to and from a file (`ProcessRunner`'s
+`inputPath`/`outputPath`) because a tar stream through `String` corrupts any
+byte that is not valid UTF-8.
+
+**`container cp` exits 0 without copying** in the upload direction under both
+failures, so a zero exit status is never proof. `ContainerCopyCheck` looks for
+the file afterwards. `container exec` *does* propagate exit codes faithfully,
+including through `sh -c` — the exit-code-swallowing quirk is specific to
+`machine run`. An image with no `test` binary reports "unverifiable" rather
+than a false failure.
+
+`container clean` (1.4.1) trims a *running* container's writable layers — a
+filesystem TRIM that releases unused disk blocks. It reclaims space; it does
+not delete data.
+
+## Release notes in the app
+
+`WhatsNew` holds one entry per version; the sheet shows once the first time a
+version runs and is reopenable from the app menu. **Add an entry when you bump
+`MARKETING_VERSION`** — a release with no entry silently shows nothing, which
+`WhatsNewTests` guards against.
 
 ## Localization (important)
 
@@ -95,5 +146,5 @@ Two things that will bite when touching this: libghostty runs the command throug
 ## Git conventions
 
 - **Never push directly to `main`** (it's restricted). Always: branch → push → `gh pr create` → `gh pr merge <pr> --rebase --delete-branch`.
-- End commit messages with: `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`.
+- End commit messages with: `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`.
 - Bilingual user-facing surfaces (README, issue replies) cover EN/PL; Chinese where relevant (issue reporters).
