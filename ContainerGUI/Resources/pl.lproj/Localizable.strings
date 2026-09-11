@@ -846,3 +846,8 @@
 "Katalog danych" = "Katalog danych";
 "Katalog instalacji" = "Katalog instalacji";
 "%1$d z %2$d działa" = "%1$d z %2$d działa";
+
+/* Kopiowanie plików przez tar, gdy cp kontenera jest zepsute */
+"Nie udało się otworzyć pliku do zapisu: %@" = "Nie udało się otworzyć pliku do zapisu: %@";
+"Nie udało się otworzyć pliku do odczytu: %@" = "Nie udało się otworzyć pliku do odczytu: %@";
+"Nie udało się odczytać %@ z kontenera." = "Nie udało się odczytać %@ z kontenera.";

@@ -846,3 +846,8 @@
 "Katalog danych" = "数据目录";
 "Katalog instalacji" = "安装目录";
 "%1$d z %2$d działa" = "%1$d / %2$d 运行中";
+
+/* Kopiowanie plików przez tar, gdy cp kontenera jest zepsute */
+"Nie udało się otworzyć pliku do zapisu: %@" = "无法打开文件进行写入：%@";
+"Nie udało się otworzyć pliku do odczytu: %@" = "无法打开文件进行读取：%@";
+"Nie udało się odczytać %@ z kontenera." = "无法从容器读取 %@。";

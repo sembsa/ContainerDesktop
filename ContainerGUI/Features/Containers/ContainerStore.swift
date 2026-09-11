@@ -270,14 +270,29 @@ final class ContainerStore {
     }
 
     func copyToContainer(_ container: ContainerInfo, localPath: String, destination: String) async throws {
-        try await cli.run(["cp", localPath, "\(container.id):\(destination)"])
-        // A zero exit status is not proof that anything was written: against a
-        // version-skewed apiserver this exact command succeeds and copies
+        // `cp` first — it is the CLI's own path, and it handles cases the tar
+        // fallback does not.
+        let ran = (try? await cli.run(["cp", localPath, "\(container.id):\(destination)"])) != nil
+
+        // A zero exit status is not proof that anything was written. A container
+        // created before the installed CLI runs an older guest agent, and on
+        // 1.4.1 that agent accepts the upload, reports success, and writes
         // nothing. Look for the file rather than take the CLI's word for it.
-        let outcome = await ContainerCopyCheck.verify(
+        if ran, await ContainerCopyCheck.verify(
             containerID: container.id, localPath: localPath, destination: destination
+        ) != .missing {
+            return
+        }
+
+        try await ContainerFileTransfer.upload(
+            containerID: container.id,
+            localURL: URL(fileURLWithPath: localPath),
+            destination: destination
         )
-        if outcome == .missing {
+
+        if await ContainerCopyCheck.verify(
+            containerID: container.id, localPath: localPath, destination: destination
+        ) == .missing {
             throw ContainerCopyCheck.silentFailure(destination: destination)
         }
     }
@@ -294,7 +309,17 @@ final class ContainerStore {
     }
 
     func copyFromContainer(_ container: ContainerInfo, source: String, localPath: String) async throws {
-        try await cli.run(["cp", "\(container.id):\(source)", localPath])
+        if (try? await cli.run(["cp", "\(container.id):\(source)", localPath])) != nil { return }
+
+        // `cp` reports "path not found" for files that plainly exist whenever the
+        // container's guest agent is older than the installed CLI — which is
+        // every container created before the last upgrade. `tar` over `exec`
+        // still works, so the user gets their file instead of an explanation.
+        try await ContainerFileTransfer.download(
+            containerID: container.id,
+            source: source,
+            to: URL(fileURLWithPath: localPath)
+        )
     }
 
     /// Lists a directory inside a running container via `exec ls`.

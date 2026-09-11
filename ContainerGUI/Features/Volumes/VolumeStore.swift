@@ -60,14 +60,23 @@ final class VolumeStore {
     func copyToVolume(_ volume: VolumeInfo, localPath: String, destination: String) async throws {
         try await withHelper(volume) { helper in
             let target = self.mountedPath(destination)
-            try await self.cli.run(["cp", localPath, "\(helper):\(target)"])
+            let ran = (try? await self.cli.run(["cp", localPath, "\(helper):\(target)"])) != nil
             // Same silent-failure exposure as a plain container upload: `cp` can
             // exit 0 having written nothing, and here the helper is torn down
             // immediately afterwards, so nobody would ever notice.
-            let outcome = await ContainerCopyCheck.verify(
+            if ran, await ContainerCopyCheck.verify(
                 containerID: helper, localPath: localPath, destination: target
+            ) != .missing {
+                return
+            }
+            try await ContainerFileTransfer.upload(
+                containerID: helper,
+                localURL: URL(fileURLWithPath: localPath),
+                destination: target
             )
-            if outcome == .missing {
+            if await ContainerCopyCheck.verify(
+                containerID: helper, localPath: localPath, destination: target
+            ) == .missing {
                 throw ContainerCopyCheck.silentFailure(destination: destination)
             }
         }
@@ -75,7 +84,11 @@ final class VolumeStore {
 
     func copyFromVolume(_ volume: VolumeInfo, source: String, localPath: String) async throws {
         try await withHelper(volume) { helper in
-            try await self.cli.run(["cp", "\(helper):\(self.mountedPath(source))", localPath])
+            let target = self.mountedPath(source)
+            if (try? await self.cli.run(["cp", "\(helper):\(target)", localPath])) != nil { return }
+            try await ContainerFileTransfer.download(
+                containerID: helper, source: target, to: URL(fileURLWithPath: localPath)
+            )
         }
     }
 

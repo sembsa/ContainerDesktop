@@ -54,22 +54,56 @@ enum ProcessRunner {
         }
     }
 
+    /// Runs a child process.
+    ///
+    /// `inputPath` and `outputPath` bypass the string pipes entirely, wiring the
+    /// child's stdin/stdout straight to a file on disk. That is what makes a
+    /// binary-safe copy possible: a `tar` stream routed through `String` would
+    /// be mangled the moment it contained bytes that are not valid UTF-8. Paths
+    /// are taken rather than open handles so nothing non-Sendable crosses a
+    /// concurrency boundary.
     static func run(
         executable: String,
         arguments: [String],
         input: String? = nil,
+        inputPath: String? = nil,
+        outputPath: String? = nil,
         timeout: Duration?
     ) async throws -> CommandResult {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: executable)
         process.arguments = arguments
-        let outPipe = Pipe()
         let errPipe = Pipe()
-        process.standardOutput = outPipe
         process.standardError = errPipe
 
+        let outPipe: Pipe?
+        if let outputPath {
+            FileManager.default.createFile(atPath: outputPath, contents: nil)
+            guard let handle = FileHandle(forWritingAtPath: outputPath) else {
+                throw CLIError.command(
+                    exitCode: -1,
+                    stderr: String(format: String(localized: "Nie udało się otworzyć pliku do zapisu: %@"), outputPath)
+                )
+            }
+            process.standardOutput = handle
+            outPipe = nil
+        } else {
+            let pipe = Pipe()
+            process.standardOutput = pipe
+            outPipe = pipe
+        }
+
         let inPipe: Pipe?
-        if input != nil {
+        if let inputPath {
+            guard let handle = FileHandle(forReadingAtPath: inputPath) else {
+                throw CLIError.command(
+                    exitCode: -1,
+                    stderr: String(format: String(localized: "Nie udało się otworzyć pliku do odczytu: %@"), inputPath)
+                )
+            }
+            process.standardInput = handle
+            inPipe = nil
+        } else if input != nil {
             inPipe = Pipe()
             process.standardInput = inPipe
         } else {
@@ -118,12 +152,14 @@ enum ProcessRunner {
             }
         }
 
-        // Start draining both pipes BEFORE awaiting termination, so a child that
-        // emits more than a pipe buffer's worth of output can't block on write
-        // (which would otherwise deadlock against us waiting for it to exit).
-        async let outString = readAll(outPipe.fileHandleForReading)
+        // Start draining BEFORE awaiting termination, so a child that emits more
+        // than a pipe buffer's worth of output can't block on write (which would
+        // otherwise deadlock against us waiting for it to exit). stderr always
+        // has a pipe; stdout only when it was not redirected to a file.
         async let errString = readAll(errPipe.fileHandleForReading)
-        let (out, err) = await (outString, errString)
+        var out = ""
+        if let outPipe { out = await readAll(outPipe.fileHandleForReading) }
+        let err = await errString
 
         // EOF on both pipes implies the process has closed its descriptors; await
         // the actual termination signal to read a definitive exit status.
