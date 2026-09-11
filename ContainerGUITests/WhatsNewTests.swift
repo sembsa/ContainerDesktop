@@ -36,11 +36,23 @@ final class WhatsNewTests: XCTestCase {
 
     // MARK: - The shipped notes
 
-    func testTheShippedNotesMatchTheAppVersion() {
-        // A release whose notes were never written would silently show nothing;
-        // this fails loudly instead.
-        let current = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-        XCTAssertNotNil(WhatsNew.all.first { $0.version == "0.7.0" }, "brak wpisu dla 0.7.0 (wersja bundla: \(current ?? "?"))")
+    /// Keep in step with `MARKETING_VERSION` in `project.yml`.
+    ///
+    /// `Bundle.main` here is the `xctest` runner, not the app, so the shipping
+    /// version cannot be read at runtime — stating it makes bumping the version
+    /// without writing notes fail loudly, which is the point.
+    private let shippingVersion = "0.7.1"
+
+    func testTheNewestNotesAreForTheVersionBeingShipped() {
+        XCTAssertEqual(WhatsNew.all.first?.version, shippingVersion)
+    }
+
+    func testNotesAreNewestFirstAndEachVersionAppearsOnce() {
+        // `entry(lastSeen:current:)` takes the first match, so a duplicate or a
+        // stray ordering would quietly show the wrong notes.
+        let versions = WhatsNew.all.map(\.version)
+        XCTAssertEqual(Set(versions).count, versions.count, "zduplikowana wersja: \(versions)")
+        XCTAssertEqual(versions.first, shippingVersion)
     }
 
     func testEveryShippedItemIsFilledIn() {

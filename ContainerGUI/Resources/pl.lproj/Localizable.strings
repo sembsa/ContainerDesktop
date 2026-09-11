@@ -864,3 +864,10 @@
 "Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych." = "Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych.";
 "Sekcja Środowisko" = "Sekcja Środowisko";
 "System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji." = "System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji.";
+
+/* Pobieranie plików: kolizja nazw w miejscu docelowym */
+"W miejscu docelowym istnieje już katalog o nazwie %@. Usuń go lub wybierz inne miejsce — aplikacja nie kasuje katalogów." = "W miejscu docelowym istnieje już katalog o nazwie %@. Usuń go lub wybierz inne miejsce — aplikacja nie kasuje katalogów.";
+
+/* 0.7.1 — poprawka krytyczna pobierania */
+"Poprawka krytyczna: pobieranie plików" = "Poprawka krytyczna: pobieranie plików";
+"W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe." = "W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe.";

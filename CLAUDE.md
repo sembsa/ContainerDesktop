@@ -109,6 +109,18 @@ including through `sh -c` — the exit-code-swallowing quirk is specific to
 `machine run`. An image with no `test` binary reports "unverifiable" rather
 than a false failure.
 
+**The download destination is a directory, not a file path.** `FileBrowser`
+hands `copyFromContainer`/`copyFromVolume` the folder the user picked in the
+save panel, because `container cp` copies *into* a directory. A replacement
+that treats it as a target path and clears it first deletes everything the user
+had in that folder — this shipped in 0.7.0 and destroyed a Desktop that was
+synced to iCloud (no Trash: `removeItem` is permanent). `ContainerFileTransfer.place`
+now resolves the target inside the directory, refuses to touch a directory in
+the way, and moves any file it replaces aside until the new one is in place.
+`ContainerFileTransferPlacementTests` runs against a real filesystem and fails
+against the old behaviour — verify any change there the same way, because the
+pure path-splitting tests pass either way.
+
 `container clean` (1.4.1) trims a *running* container's writable layers — a
 filesystem TRIM that releases unused disk blocks. It reclaims space; it does
 not delete data.

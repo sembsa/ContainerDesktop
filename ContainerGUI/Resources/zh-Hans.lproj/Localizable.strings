@@ -864,3 +864,10 @@
 "Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych." = "新增 container clean 命令，可从容器菜单调用。它会释放运行中容器未使用的磁盘块——不会删除数据。";
 "Sekcja Środowisko" = "环境区块";
 "System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji." = "系统页面现在会显示 container 1.4.1 所报告的内容：双方版本、主机系统、核心数、容器与镜像数量，以及数据和安装目录。";
+
+/* Pobieranie plików: kolizja nazw w miejscu docelowym */
+"W miejscu docelowym istnieje już katalog o nazwie %@. Usuń go lub wybierz inne miejsce — aplikacja nie kasuje katalogów." = "目标位置已存在名为 %@ 的目录。请删除它或选择其他位置——应用不会删除目录。";
+
+/* 0.7.1 — poprawka krytyczna pobierania */
+"Poprawka krytyczna: pobieranie plików" = "重要修复：文件下载";
+"W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe." = "在 0.7.0 中，从容器下载文件会清空你所选目标文件夹的内容。如果你选择了桌面，桌面上的文件就会被删除。已修复：应用现在会把文件写入你选择的文件夹内，并且绝不删除目录。如果你曾用 0.7.0 下载文件，请检查 iCloud 和备份。";

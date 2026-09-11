@@ -63,13 +63,68 @@ enum ContainerFileTransfer {
             )
         }
 
-        if FileManager.default.fileExists(atPath: localURL.path) {
-            try FileManager.default.removeItem(at: localURL)
-        }
-        try FileManager.default.createDirectory(
-            at: localURL.deletingLastPathComponent(), withIntermediateDirectories: true
+        try place(produced, named: name, at: localURL, backupDirectory: workspace)
+    }
+
+    /// Where the downloaded entry should land.
+    ///
+    /// Callers pass a **directory to copy into** — that is what the file
+    /// browser's save panel yields, and what `container cp` accepts — but a full
+    /// target path is valid too. Telling the two apart is not a detail: treating
+    /// a directory as a target path and clearing it first destroys everything
+    /// inside it, which is exactly what this code once did to somebody's
+    /// Desktop.
+    static func targetURL(for name: String, requestedDestination: URL, destinationIsDirectory: Bool) -> URL {
+        destinationIsDirectory ? requestedDestination.appendingPathComponent(name) : requestedDestination
+    }
+
+    /// Moves a freshly extracted entry to its destination.
+    ///
+    /// Never removes a directory. An existing directory at the target is a name
+    /// clash to report, not something to clear out. An existing *file* is
+    /// replaced, matching `container cp` — but it is moved aside first and only
+    /// discarded once the new file is in place, so a failed move cannot leave
+    /// the user with neither.
+    static func place(_ produced: URL, named name: String, at requestedDestination: URL, backupDirectory: URL) throws {
+        let manager = FileManager.default
+
+        var requestedIsDirectory: ObjCBool = false
+        let requestedExists = manager.fileExists(
+            atPath: requestedDestination.path, isDirectory: &requestedIsDirectory
         )
-        try FileManager.default.moveItem(at: produced, to: localURL)
+        let target = targetURL(
+            for: name,
+            requestedDestination: requestedDestination,
+            destinationIsDirectory: requestedExists && requestedIsDirectory.boolValue
+        )
+
+        var targetIsDirectory: ObjCBool = false
+        let targetExists = manager.fileExists(atPath: target.path, isDirectory: &targetIsDirectory)
+
+        if targetExists, targetIsDirectory.boolValue {
+            throw CLIError.command(
+                exitCode: 1,
+                stderr: String(
+                    format: String(localized: "W miejscu docelowym istnieje już katalog o nazwie %@. Usuń go lub wybierz inne miejsce — aplikacja nie kasuje katalogów."),
+                    name
+                )
+            )
+        }
+
+        var backup: URL?
+        if targetExists {
+            let aside = backupDirectory.appendingPathComponent("replaced-" + name)
+            try manager.moveItem(at: target, to: aside)
+            backup = aside
+        }
+
+        do {
+            try manager.moveItem(at: produced, to: target)
+        } catch {
+            // Put the original back rather than leaving the user with nothing.
+            if let backup { try? manager.moveItem(at: backup, to: target) }
+            throw error
+        }
     }
 
     // MARK: - Upload
