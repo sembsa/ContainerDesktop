@@ -831,3 +831,18 @@
 "Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu." = "带 apt 的完整 Ubuntu。官方镜像不含 init，缺少它虚拟机无法启动，因此应用会构建一次自有镜像（29 MB，需要联网）。之后创建 Ubuntu 虚拟机即刻完成。";
 "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)." = "带图形桌面和 VNC 服务器的 Ubuntu。比 Alpine 更重，但拥有 apt 和完整用户空间。应用会构建一次基础镜像（29 MB，需要联网）。";
 "Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam." = "正在准备基础镜像——仅需一次，且需要联网。镜像构建器会自行启动。";
+
+/* 1.4.1: wykrywanie rozjazdu wersji, weryfikacja kopiowania, sekcja Środowisko */
+"Usługa container wymaga restartu po aktualizacji" = "更新后需要重启 container 服务";
+"Wiersz poleceń jest w wersji %@, a usługa działająca w tle nadal w %@. Kopiowanie plików, czyszczenie kontenerów i wtyczka k8s będą zawodzić, dopóki usługa nie zostanie zrestartowana." = "命令行工具为 %@ 版本，而后台服务仍为 %@。在重启服务之前，复制文件、清理容器和 k8s 插件都会持续失败。";
+"Polecenie kopiowania zakończyło się powodzeniem, ale plik nie pojawił się w kontenerze pod ścieżką %@. Najczęstsza przyczyna: po aktualizacji pakietu container usługa w tle nadal działa w starszej wersji — uruchom ją ponownie." = "复制命令报告成功，但文件并未出现在容器的 %@ 路径下。常见原因：更新 container 软件包后，后台服务仍在运行旧版本——请重启它。";
+"Zwolnij miejsce na dysku" = "回收磁盘空间";
+"Środowisko" = "环境";
+"Wiersz poleceń (%@) i usługa w tle (%@) to różne wersje. Zrestartuj usługę — inaczej kopiowanie plików, „Zwolnij miejsce” i wtyczka k8s będą zawodzić." = "命令行工具（%@）与后台服务（%@）版本不一致。请重启服务——否则复制文件、“回收磁盘空间”和 k8s 插件都会失败。";
+"Wiersz poleceń" = "命令行工具";
+"Usługa w tle" = "后台服务";
+"System operacyjny" = "操作系统";
+"Rdzenie procesora" = "CPU 核心数";
+"Katalog danych" = "数据目录";
+"Katalog instalacji" = "安装目录";
+"%1$d z %2$d działa" = "%1$d / %2$d 运行中";

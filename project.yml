@@ -147,6 +147,7 @@ targets:
       - path: ContainerGUI/CLI/ProcessRunner.swift
       - path: ContainerGUI/CLI/ProcessLineReader.swift
       - path: ContainerGUI/CLI/BinaryResolver.swift
+      - path: ContainerGUI/CLI/ContainerCopyCheck.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
       - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
       - path: ContainerGUI/Features/Machines/MachineCommands.swift

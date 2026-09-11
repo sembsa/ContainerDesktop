@@ -53,10 +53,14 @@ struct DetailContainer: View {
             if model.system.serviceState == .stopped {
                 ServiceBanner()
                     .transition(.move(edge: .top).combined(with: .opacity))
+            } else if let skew = model.system.versionSkew {
+                VersionSkewBanner(skew: skew)
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
             sectionContent
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.system.serviceState)
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.system.versionSkew)
         .task(id: model.selection) {
             await model.refreshCurrent()
         }

@@ -65,22 +65,26 @@ final class K8sStore {
         }
     }
 
-    /// Compares `container --version` with the apiserver version reported by
-    /// `container system status`. Returns nil when they agree.
-    private func versionMismatch() async -> (cli: String, service: String)? {
-        guard let cliVersion = try? await cli.run(["--version"], timeout: .seconds(15)),
-              let status = try? await cli.run(["system", "status"], timeout: .seconds(15))
+    /// Whether the CLI and the background service are running different builds.
+    ///
+    /// This used to grep the human-readable status table for `apiserver.version`,
+    /// a field 1.4.1 renamed to `server.version` — which silently killed the
+    /// detection exactly when it mattered most. It now decodes the JSON payload
+    /// and reuses `SystemStatus.versionSkew`, so there is one definition of skew
+    /// for the whole app.
+    ///
+    /// It asks the CLI directly rather than reading `SystemStore`, because
+    /// `diagnose` runs on a failed `k8s list` — which can happen long before the
+    /// System page has ever been opened.
+    private func versionMismatch() async -> SystemStatus.VersionSkew? {
+        guard let result = try? await cli.runRaw(
+                ["system", "status", "--format", "json"], timeout: .seconds(15)
+              ),
+              let data = result.stdout.data(using: .utf8),
+              let status = try? JSONDecoder().decode(SystemStatus.self, from: data)
         else { return nil }
 
-        guard let cli = ContainerVersion.number(in: cliVersion),
-              let serviceLine = status
-                  .split(separator: "\n")
-                  .first(where: { $0.contains("apiserver.version") }),
-              let service = ContainerVersion.number(in: String(serviceLine)),
-              cli != service
-        else { return nil }
-
-        return (cli, service)
+        return status.versionSkew
     }
 
     // MARK: - Actions

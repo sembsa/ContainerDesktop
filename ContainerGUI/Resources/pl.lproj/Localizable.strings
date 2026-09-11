@@ -831,3 +831,18 @@
 "Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu." = "Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu.";
 "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)." = "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć).";
 "Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam." = "Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam.";
+
+/* 1.4.1: wykrywanie rozjazdu wersji, weryfikacja kopiowania, sekcja Środowisko */
+"Usługa container wymaga restartu po aktualizacji" = "Usługa container wymaga restartu po aktualizacji";
+"Wiersz poleceń jest w wersji %@, a usługa działająca w tle nadal w %@. Kopiowanie plików, czyszczenie kontenerów i wtyczka k8s będą zawodzić, dopóki usługa nie zostanie zrestartowana." = "Wiersz poleceń jest w wersji %@, a usługa działająca w tle nadal w %@. Kopiowanie plików, czyszczenie kontenerów i wtyczka k8s będą zawodzić, dopóki usługa nie zostanie zrestartowana.";
+"Polecenie kopiowania zakończyło się powodzeniem, ale plik nie pojawił się w kontenerze pod ścieżką %@. Najczęstsza przyczyna: po aktualizacji pakietu container usługa w tle nadal działa w starszej wersji — uruchom ją ponownie." = "Polecenie kopiowania zakończyło się powodzeniem, ale plik nie pojawił się w kontenerze pod ścieżką %@. Najczęstsza przyczyna: po aktualizacji pakietu container usługa w tle nadal działa w starszej wersji — uruchom ją ponownie.";
+"Zwolnij miejsce na dysku" = "Zwolnij miejsce na dysku";
+"Środowisko" = "Środowisko";
+"Wiersz poleceń (%@) i usługa w tle (%@) to różne wersje. Zrestartuj usługę — inaczej kopiowanie plików, „Zwolnij miejsce” i wtyczka k8s będą zawodzić." = "Wiersz poleceń (%@) i usługa w tle (%@) to różne wersje. Zrestartuj usługę — inaczej kopiowanie plików, „Zwolnij miejsce” i wtyczka k8s będą zawodzić.";
+"Wiersz poleceń" = "Wiersz poleceń";
+"Usługa w tle" = "Usługa w tle";
+"System operacyjny" = "System operacyjny";
+"Rdzenie procesora" = "Rdzenie procesora";
+"Katalog danych" = "Katalog danych";
+"Katalog instalacji" = "Katalog instalacji";
+"%1$d z %2$d działa" = "%1$d z %2$d działa";

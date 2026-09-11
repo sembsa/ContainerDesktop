@@ -555,6 +555,9 @@ struct ContainerCardMenu: View {
             Button("Zatrzymaj", systemImage: "stop.fill") { act { try await store.stop(container) } }
             Button("Uruchom ponownie", systemImage: "arrow.clockwise") { act { try await store.restart(container) } }
             Button("Zabij", systemImage: "bolt.fill") { act { try await store.kill(container) } }
+            Button("Zwolnij miejsce na dysku", systemImage: "internaldrive") {
+                act { try await store.clean(container) }
+            }
         } else {
             Button("Uruchom", systemImage: "play.fill") { act { try await store.start(container) } }
         }

@@ -15,6 +15,7 @@ struct SystemView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 serviceCard
+                environmentSection
                 builderCard
                 diskSection
                 dnsSection
@@ -112,6 +113,86 @@ struct SystemView: View {
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: store.serviceState)
+    }
+
+    /// What `container system status` reports since 1.4.1.
+    ///
+    /// The release restructured this output and grew it considerably — the host,
+    /// both sides' versions, the install and data roots, and how many containers
+    /// and images exist. None of it was visible anywhere in the app before, and
+    /// the two version rows are the ones that matter: when they disagree, almost
+    /// everything else misbehaves in ways that never mention versions.
+    @ViewBuilder
+    private var environmentSection: some View {
+        if let status = store.status {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 4) {
+                    Image(systemName: "info.circle.fill").foregroundStyle(.teal.gradient)
+                    Text("Środowisko").font(.headline)
+                }
+
+                if let skew = store.versionSkew {
+                    HStack(spacing: 10) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Text(
+                            String(
+                                format: String(localized: "Wiersz poleceń (%@) i usługa w tle (%@) to różne wersje. Zrestartuj usługę — inaczej kopiowanie plików, „Zwolnij miejsce” i wtyczka k8s będą zawodzić."),
+                                skew.cli, skew.service
+                            )
+                        )
+                        .font(.callout)
+                        .fixedSize(horizontal: false, vertical: true)
+                        Spacer()
+                        Button("Uruchom ponownie usługę") {
+                            Task { await model.restartService() }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .disabled(store.serviceState.isTransitioning)
+                    }
+                    .padding(12)
+                    .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                }
+
+                Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
+                    infoRow(String(localized: "Wiersz poleceń"), status.clientVersionNumber)
+                    infoRow(String(localized: "Usługa w tle"), status.serverVersionNumber)
+                    infoRow(String(localized: "System operacyjny"), status.host?.operatingSystem)
+                    infoRow(String(localized: "Architektura"), status.host?.architecture)
+                    infoRow(String(localized: "Rdzenie procesora"), status.host?.cpus.map(String.init))
+                    infoRow(String(localized: "Kontenery"), containerCountText(status.resources))
+                    infoRow(String(localized: "Obrazy"), status.resources?.images.map(String.init))
+                    infoRow(String(localized: "Katalog danych"), status.paths?.appRoot)
+                    infoRow(String(localized: "Katalog instalacji"), status.paths?.installRoot)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        }
+    }
+
+    /// Running out of total, because "2" alone says nothing useful.
+    private func containerCountText(_ resources: SystemStatus.Resources?) -> String? {
+        guard let total = resources?.containersTotal else { return nil }
+        guard let running = resources?.containersRunning else { return String(total) }
+        return String(format: String(localized: "%1$d z %2$d działa"), running, total)
+    }
+
+    @ViewBuilder
+    private func infoRow(_ label: String, _ value: String?) -> some View {
+        if let value, !value.isEmpty {
+            GridRow {
+                Text(label)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .gridColumnAlignment(.leading)
+                Text(value)
+                    .font(.caption.monospaced())
+                    .textSelection(.enabled)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
     }
 
     private var builderCard: some View {

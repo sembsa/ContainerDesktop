@@ -12,10 +12,104 @@ enum ServiceState: Sendable, Equatable {
     var isTransitioning: Bool { self == .starting || self == .stopping }
 }
 
-/// `container system status --format json` → {"status":"running"|"unregistered"|"not running", ...}
-struct SystemStatus: Decodable, Sendable {
+/// Reduces a version banner to the bare number inside it.
+///
+/// The CLI reports versions two different ways: `client.version` is `1.4.1`,
+/// while `server.version` is a whole `container-apiserver version 1.4.1
+/// (build: release, commit: 9a8917c)` banner. Anything shown to a user, or
+/// compared against another version, has to go through here first.
+enum ContainerVersion {
+    /// Pulls the first `1.2.2`-shaped token out of a version banner.
+    static func number(in text: String) -> String? {
+        for token in text.split(whereSeparator: { $0 == " " || $0 == "\t" }) {
+            let candidate = token.trimmingCharacters(in: CharacterSet(charactersIn: "()v,"))
+            let parts = candidate.split(separator: ".")
+            if parts.count >= 2, parts.allSatisfy({ !$0.isEmpty && $0.allSatisfy(\.isNumber) }) {
+                return candidate
+            }
+        }
+        return nil
+    }
+}
+
+/// `container system status --format json`.
+///
+/// 1.4.1 restructured this payload — a documented breaking change. What used to
+/// be a flat `apiserver.version` line is now `server.version`, and the output
+/// gained `client`, `host`, `paths` and `resources` sections. Every section is
+/// optional so that an older CLI, which carries only `status`, still decodes.
+struct SystemStatus: Decodable, Sendable, Hashable {
     let status: String
+    let client: Component?
+    let server: Component?
+    let host: Host?
+    let paths: Paths?
+    let resources: Resources?
+
+    struct Component: Decodable, Sendable, Hashable {
+        let appName: String?
+        let build: String?
+        let commit: String?
+        let version: String?
+    }
+
+    struct Host: Decodable, Sendable, Hashable {
+        let architecture: String?
+        let cpus: Int?
+        let operatingSystem: String?
+    }
+
+    struct Paths: Decodable, Sendable, Hashable {
+        let appRoot: String?
+        let installRoot: String?
+        let logRoot: String?
+    }
+
+    struct Resources: Decodable, Sendable, Hashable {
+        let containersRunning: Int?
+        let containersTotal: Int?
+        let images: Int?
+    }
+
     var serviceState: ServiceState { status.lowercased() == "running" ? .running : .stopped }
+
+    var clientVersionNumber: String? { client?.version.flatMap(ContainerVersion.number(in:)) }
+    var serverVersionNumber: String? { server?.version.flatMap(ContainerVersion.number(in:)) }
+
+    /// The CLI and the background service running different builds.
+    ///
+    /// A `.pkg` upgrade replaces every binary on disk but leaves the old
+    /// apiserver running, so the new CLI talks to a service that predates it.
+    /// The result is not a clean error: `cp` reports "path not found" for files
+    /// that exist, `clean` fails with an XPC error, and the k8s plugin goes
+    /// blank. Restarting the service is the fix.
+    struct VersionSkew: Sendable, Hashable {
+        let cli: String
+        let service: String
+    }
+
+    var versionSkew: VersionSkew? {
+        // A stopped service has nothing to disagree with, and the fix there is
+        // "start", not "restart".
+        guard serviceState == .running else { return nil }
+
+        let cli = clientVersionNumber
+        let service = serverVersionNumber
+
+        // Commits are the stronger signal: one release builds every component
+        // from a single commit, so two commits mean two different builds even
+        // when the version numbers happen to match.
+        if let clientCommit = client?.commit, let serverCommit = server?.commit,
+           !clientCommit.isEmpty, !serverCommit.isEmpty, clientCommit != serverCommit {
+            return VersionSkew(
+                cli: cli ?? String(clientCommit.prefix(7)),
+                service: service ?? String(serverCommit.prefix(7))
+            )
+        }
+
+        guard let cli, let service, cli != service else { return nil }
+        return VersionSkew(cli: cli, service: service)
+    }
 }
 
 /// Disk usage as reported by `container system df --format json`.
