@@ -864,3 +864,10 @@
 "Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych." = "The new container clean command, available from the container menu. It releases unused disk blocks of a running container — it does not delete data.";
 "Sekcja Środowisko" = "The Environment section";
 "System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji." = "System now shows what container 1.4.1 reports: both sides’ versions, the host system, the core count, how many containers and images exist, and the data and install directories.";
+
+/* Pobieranie plików: kolizja nazw w miejscu docelowym */
+"W miejscu docelowym istnieje już katalog o nazwie %@. Usuń go lub wybierz inne miejsce — aplikacja nie kasuje katalogów." = "A directory named %@ already exists at the destination. Remove it or choose another location — the app does not delete directories.";
+
+/* 0.7.1 — poprawka krytyczna pobierania */
+"Poprawka krytyczna: pobieranie plików" = "Critical fix: file downloads";
+"W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe." = "In 0.7.0, downloading a file from a container erased the contents of the destination folder you picked. If you picked the Desktop, your Desktop files were deleted. Fixed: the app now writes the file inside the folder you choose and never deletes directories. If you used 0.7.0 to download files, check iCloud and your backups.";

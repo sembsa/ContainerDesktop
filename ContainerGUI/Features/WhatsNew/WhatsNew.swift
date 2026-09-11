@@ -37,6 +37,16 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.7.1",
+            items: [
+                Item(
+                    symbol: "exclamationmark.shield",
+                    title: String(localized: "Poprawka krytyczna: pobieranie plików"),
+                    detail: String(localized: "W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.7.0",
             items: [
                 Item(
