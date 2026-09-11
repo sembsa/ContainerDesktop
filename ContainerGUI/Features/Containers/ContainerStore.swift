@@ -29,6 +29,9 @@ final class ContainerStore {
     /// Latest per-container resource usage, keyed by container id. Feeds the
     /// live meters on the card list; empty in table mode.
     private(set) var liveStats: [String: LiveUsage] = [:]
+    /// Rolling CPU history behind the menu bar's sparklines. Fed by the same
+    /// three-second tick that fills `liveStats`, so it costs no extra process.
+    private(set) var usageHistory = UsageHistories()
 
     /// One container's usage, with CPU already turned into a percentage.
     ///
@@ -110,6 +113,10 @@ final class ContainerStore {
         let alive = Set(samples.map(\.id))
         previousSamples = previousSamples.filter { alive.contains($0.key) }
         liveStats = updated
+        // Only containers with a computed percentage take part: the first sample
+        // after a container appears has no delta to measure against, and
+        // recording a zero for it would draw a dip that never happened.
+        usageHistory.record(updated.compactMapValues(\.cpuPercent))
     }
 
     /// Hands the current state to the desktop widget.
