@@ -58,6 +58,9 @@ struct ContainerGUIApp: App {
         .commands {
             CommandGroup(after: .appInfo) {
                 CheckForUpdatesView(updater: updaterController.updater)
+                Button("Co nowego…") {
+                    NotificationCenter.default.post(name: WhatsNew.reopenNotification, object: nil)
+                }
             }
             CommandGroup(replacing: .help) {
                 Button("Pomoc Container Desktop") {

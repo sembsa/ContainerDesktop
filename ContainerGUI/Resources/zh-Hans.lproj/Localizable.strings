@@ -851,3 +851,16 @@
 "Nie udało się otworzyć pliku do zapisu: %@" = "无法打开文件进行写入：%@";
 "Nie udało się otworzyć pliku do odczytu: %@" = "无法打开文件进行读取：%@";
 "Nie udało się odczytać %@ z kontenera." = "无法从容器读取 %@。";
+
+/* Okno „Co nowego” po aktualizacji */
+"Co nowego w wersji %@" = "%@ 版本新功能";
+"Container Desktop został zaktualizowany." = "Container Desktop 已更新。";
+"Zaczynajmy" = "开始使用";
+"Co nowego…" = "新功能…";
+"Kopiowanie plików znów działa" = "文件复制恢复正常";
+"container 1.4.1 nie potrafi kopiować plików do i z kontenerów utworzonych przed aktualizacją — zgłasza „path not found” dla plików, które istnieją, a wysyłkę kończy sukcesem, nie zapisując nic. Aplikacja wykrywa to i przenosi pliki inną drogą, więc po prostu działa." = "container 1.4.1 无法在升级前创建的容器中复制文件——对存在的文件报告“path not found”，上传时报告成功却什么都没写入。应用会检测到这一点并改用其他方式传输文件，因此一切照常工作。";
+"Ostrzeżenie o niezgodnej wersji usługi" = "服务版本不匹配时发出警告";
+"Po aktualizacji pakietu container usługa w tle nadal działa w starej wersji, a błędy, które to powoduje, nigdy nie wspominają o wersjach. Aplikacja rozpoznaje ten stan i proponuje restart jednym kliknięciem." = "更新 container 软件包后，后台服务仍运行旧版本，而由此产生的错误从不提及版本。应用能识别这种状态并提供一键重启。";
+"Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych." = "新增 container clean 命令，可从容器菜单调用。它会释放运行中容器未使用的磁盘块——不会删除数据。";
+"Sekcja Środowisko" = "环境区块";
+"System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji." = "系统页面现在会显示 container 1.4.1 所报告的内容：双方版本、主机系统、核心数、容器与镜像数量，以及数据和安装目录。";

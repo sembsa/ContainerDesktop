@@ -1,8 +1,19 @@
+import Combine
 import SwiftUI
 
 struct RootView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.scenePhase) private var scenePhase
+
+    /// The version whose release notes have already been dismissed. Updates
+    /// install silently through Sparkle, so without this nobody ever finds out
+    /// what changed.
+    @AppStorage("lastSeenVersion") private var lastSeenVersion = ""
+    @State private var whatsNew: WhatsNew.Entry?
+
+    static var appVersion: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+    }
 
     var body: some View {
         @Bindable var model = model
@@ -22,6 +33,25 @@ struct RootView: View {
         .task {
             await model.bootstrap()
             model.startPolling()
+            // Not over the onboarding screen: someone who has not installed the
+            // CLI yet has nothing to be told is new.
+            if model.binaryFound {
+                whatsNew = WhatsNew.entry(
+                    lastSeen: lastSeenVersion.isEmpty ? nil : lastSeenVersion,
+                    current: Self.appVersion
+                )
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: WhatsNew.reopenNotification)) { _ in
+            whatsNew = WhatsNew.all.first { $0.version == Self.appVersion } ?? WhatsNew.all.last
+        }
+        .sheet(item: $whatsNew) { entry in
+            // Marked as seen on dismissal rather than on display, so a crash in
+            // between does not swallow the notes.
+            WhatsNewView(entry: entry) {
+                lastSeenVersion = entry.version
+                whatsNew = nil
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             switch phase {
