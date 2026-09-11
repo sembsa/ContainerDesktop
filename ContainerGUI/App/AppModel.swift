@@ -135,6 +135,16 @@ final class AppModel {
         if !system.serviceState.isRunning { clearStores() }
     }
 
+    /// Restarts the background service — the fix for the post-upgrade state where
+    /// the CLI on disk is newer than the apiserver still running in memory.
+    func restartService() async {
+        await system.stop()
+        if !system.serviceState.isRunning { clearStores() }
+        await system.start()
+        if let error = system.lastActionError { present(error) }
+        await refreshCurrent()
+    }
+
     private func clearStores() {
         containers.items = []
         containers.error = nil

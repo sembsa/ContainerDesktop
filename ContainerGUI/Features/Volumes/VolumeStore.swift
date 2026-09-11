@@ -59,7 +59,17 @@ final class VolumeStore {
 
     func copyToVolume(_ volume: VolumeInfo, localPath: String, destination: String) async throws {
         try await withHelper(volume) { helper in
-            try await self.cli.run(["cp", localPath, "\(helper):\(self.mountedPath(destination))"])
+            let target = self.mountedPath(destination)
+            try await self.cli.run(["cp", localPath, "\(helper):\(target)"])
+            // Same silent-failure exposure as a plain container upload: `cp` can
+            // exit 0 having written nothing, and here the helper is torn down
+            // immediately afterwards, so nobody would ever notice.
+            let outcome = await ContainerCopyCheck.verify(
+                containerID: helper, localPath: localPath, destination: target
+            )
+            if outcome == .missing {
+                throw ContainerCopyCheck.silentFailure(destination: destination)
+            }
         }
     }
 

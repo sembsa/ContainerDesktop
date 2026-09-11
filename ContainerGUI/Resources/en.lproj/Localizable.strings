@@ -831,3 +831,18 @@
 "Pełne Ubuntu z apt. Oficjalny obraz nie zawiera inita, bez którego maszyna nie wstaje, więc aplikacja raz zbuduje własny (29 MB, potrzebna sieć). Kolejne maszyny Ubuntu powstają już od razu." = "Full Ubuntu with apt. The official image carries no init, without which a machine will not boot, so the app builds its own once (29 MB, needs the network). Later Ubuntu machines are created straight away.";
 "Ubuntu z pulpitem graficznym i serwerem VNC. Cięższe od Alpine, ale z apt i pełnym userlandem. Obraz bazowy aplikacja zbuduje raz (29 MB, potrzebna sieć)." = "Ubuntu with a graphical desktop and a VNC server. Heavier than Alpine, but with apt and a full userland. The app builds the base image once (29 MB, needs the network).";
 "Przygotowywanie obrazu bazowego — jednorazowo, wymaga sieci. Builder obrazów uruchomi się sam." = "Preparing the base image — once only, and it needs the network. The image builder starts by itself.";
+
+/* 1.4.1: wykrywanie rozjazdu wersji, weryfikacja kopiowania, sekcja Środowisko */
+"Usługa container wymaga restartu po aktualizacji" = "The container service needs a restart after the update";
+"Wiersz poleceń jest w wersji %@, a usługa działająca w tle nadal w %@. Kopiowanie plików, czyszczenie kontenerów i wtyczka k8s będą zawodzić, dopóki usługa nie zostanie zrestartowana." = "The command-line tool is version %@, while the background service is still %@. Copying files, cleaning containers and the k8s plugin will keep failing until the service is restarted.";
+"Polecenie kopiowania zakończyło się powodzeniem, ale plik nie pojawił się w kontenerze pod ścieżką %@. Najczęstsza przyczyna: po aktualizacji pakietu container usługa w tle nadal działa w starszej wersji — uruchom ją ponownie." = "The copy command reported success, but the file did not appear in the container at %@. The usual cause: after a container package update the background service is still running the older version — restart it.";
+"Zwolnij miejsce na dysku" = "Reclaim disk space";
+"Środowisko" = "Environment";
+"Wiersz poleceń (%@) i usługa w tle (%@) to różne wersje. Zrestartuj usługę — inaczej kopiowanie plików, „Zwolnij miejsce” i wtyczka k8s będą zawodzić." = "The command-line tool (%@) and the background service (%@) are different versions. Restart the service — otherwise copying files, “Reclaim disk space” and the k8s plugin will fail.";
+"Wiersz poleceń" = "Command-line tool";
+"Usługa w tle" = "Background service";
+"System operacyjny" = "Operating system";
+"Rdzenie procesora" = "CPU cores";
+"Katalog danych" = "Data directory";
+"Katalog instalacji" = "Install directory";
+"%1$d z %2$d działa" = "%1$d of %2$d running";

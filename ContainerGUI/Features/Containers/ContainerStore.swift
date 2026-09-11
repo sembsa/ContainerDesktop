@@ -271,6 +271,26 @@ final class ContainerStore {
 
     func copyToContainer(_ container: ContainerInfo, localPath: String, destination: String) async throws {
         try await cli.run(["cp", localPath, "\(container.id):\(destination)"])
+        // A zero exit status is not proof that anything was written: against a
+        // version-skewed apiserver this exact command succeeds and copies
+        // nothing. Look for the file rather than take the CLI's word for it.
+        let outcome = await ContainerCopyCheck.verify(
+            containerID: container.id, localPath: localPath, destination: destination
+        )
+        if outcome == .missing {
+            throw ContainerCopyCheck.silentFailure(destination: destination)
+        }
+    }
+
+    /// `container clean` — new in 1.4.1.
+    ///
+    /// Trims the writable layers of a *running* container (its root filesystem
+    /// unless read-only, plus every writable block mount), releasing the disk
+    /// blocks they no longer use so the sparse image on the host shrinks back.
+    /// It reclaims space; it does not reset or delete the container's data.
+    func clean(_ container: ContainerInfo) async throws {
+        try await cli.run(["clean", container.id], timeout: .seconds(300))
+        await refresh()
     }
 
     func copyFromContainer(_ container: ContainerInfo, source: String, localPath: String) async throws {

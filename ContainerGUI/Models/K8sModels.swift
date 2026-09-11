@@ -50,23 +50,6 @@ struct K8sCluster: Identifiable, Hashable, Sendable {
     }
 }
 
-/// Reads version numbers out of the CLI's banners, so the app can tell a
-/// freshly upgraded `container` from the older background service still running
-/// behind it — the state a `.pkg` upgrade leaves until the service restarts.
-enum ContainerVersion {
-    /// Pulls the first `1.2.2`-shaped token out of a version banner.
-    static func number(in text: String) -> String? {
-        for token in text.split(whereSeparator: { $0 == " " || $0 == "\t" }) {
-            let candidate = token.trimmingCharacters(in: CharacterSet(charactersIn: "()v,"))
-            let parts = candidate.split(separator: ".")
-            if parts.count >= 2, parts.allSatisfy({ !$0.isEmpty && $0.allSatisfy(\.isNumber) }) {
-                return candidate
-            }
-        }
-        return nil
-    }
-}
-
 /// Parses the fixed-width table printed by `container k8s list`.
 ///
 /// Splitting on whitespace does not work: MEMORY renders as `6144 MB`, and a

@@ -445,6 +445,9 @@ struct ContainersView: View {
             Button("Zatrzymaj") { Task { await perform { try await store.stop(container) } } }
             Button("Uruchom ponownie") { Task { await perform { try await store.restart(container) } } }
             Button("Zabij") { Task { await perform { try await store.kill(container) } } }
+            Button("Zwolnij miejsce na dysku") {
+                Task { await perform { try await store.clean(container) } }
+            }
         } else {
             Button("Uruchom") { Task { await perform { try await store.start(container) } } }
         }

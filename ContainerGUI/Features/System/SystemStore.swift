@@ -5,6 +5,10 @@ import Observation
 @MainActor @Observable
 final class SystemStore {
     var serviceState: ServiceState = .unknown
+    /// The full `system status` payload, kept so the System page can show what
+    /// the CLI now reports (host, paths, counts) and so version skew is visible
+    /// everywhere rather than only when the k8s plugin fails.
+    var status: SystemStatus?
     var diskUsage: DiskUsage?
     var properties: JSONValue?
     var dnsDomains: [String] = []
@@ -18,6 +22,9 @@ final class SystemStore {
     private let cli = ContainerCLI.shared
     private var epoch: UInt64 = 0
 
+    /// Set when the CLI and the background service are running different builds.
+    var versionSkew: SystemStatus.VersionSkew? { status?.versionSkew }
+
     func refreshState() async {
         guard !serviceState.isTransitioning else { return }
         let captured = epoch
@@ -30,11 +37,14 @@ final class SystemStore {
         do {
             let result = try await cli.runRaw(["system", "status", "--format", "json"], timeout: .seconds(15))
             if let data = result.stdout.data(using: .utf8),
-               let status = try? JSONDecoder().decode(SystemStatus.self, from: data) {
-                return status.serviceState
+               let decoded = try? JSONDecoder().decode(SystemStatus.self, from: data) {
+                status = decoded
+                return decoded.serviceState
             }
+            status = nil
             return result.exitCode == 0 ? .running : .stopped
         } catch {
+            status = nil
             return .stopped
         }
     }
@@ -71,6 +81,13 @@ final class SystemStore {
         if verified == .running, lastActionError == nil {
             lastActionError = .command(exitCode: 0, stderr: String(localized: "Usługa nadal działa po próbie zatrzymania. Spróbuj ponownie lub wykonaj 'container system stop' w Terminalu."))
         }
+    }
+
+    /// Stop, then start. This is the documented fix for a `.pkg` upgrade that
+    /// replaced every binary on disk but left the old apiserver running.
+    func restart() async {
+        await stop()
+        await start()
     }
 
     func refreshDiskUsage() async {

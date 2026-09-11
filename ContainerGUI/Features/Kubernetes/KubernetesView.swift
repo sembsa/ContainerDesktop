@@ -238,8 +238,7 @@ struct KubernetesView: View {
     }
 
     private func restartService() async {
-        await model.stopService()
-        await model.startService()
+        await model.restartService()
         await store.refresh()
     }
 
