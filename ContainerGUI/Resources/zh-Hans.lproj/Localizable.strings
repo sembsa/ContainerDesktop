@@ -875,3 +875,11 @@
 /* Pasek menu: podgląd obciążenia */
 "bez adresu" = "无地址";
 "%1$d działa · %2$d zatrzymanych" = "%1$d 运行中 · %2$d 已停止";
+
+/* 0.7.2 — menu w pasku menu */
+"Menu w pasku pokazuje, co się dzieje" = "菜单栏显示当前动态";
+"Zamiast listy nazw — wykres zbiorczego obciążenia CPU z ostatnich dwóch minut, a przy każdym kontenerze własny mini-wykres obok adresu, portów, pamięci i bieżącego procentu." = "不再只是名称列表——顶部是过去两分钟的 CPU 总负载曲线，每个容器旁边还有自己的迷你曲线，与地址、端口、内存和当前百分比并列。";
+"Obciążenie widoczne bez otwierania menu" = "无需打开菜单即可看到负载";
+"Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego." = "菜单栏图标旁新增了六条活动柱。空闲时是一排圆点，有负载时柱子升高——无需点击即可看出正在发生什么。";
+"Kolory projektów i ikony" = "项目配色与图标";
+"Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość." = "同一 compose 项目的容器共用一种颜色，菜单项也新增了图标和整行悬停高亮。";

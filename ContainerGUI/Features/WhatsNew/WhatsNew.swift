@@ -37,6 +37,26 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.7.2",
+            items: [
+                Item(
+                    symbol: "chart.line.uptrend.xyaxis",
+                    title: String(localized: "Menu w pasku pokazuje, co się dzieje"),
+                    detail: String(localized: "Zamiast listy nazw — wykres zbiorczego obciążenia CPU z ostatnich dwóch minut, a przy każdym kontenerze własny mini-wykres obok adresu, portów, pamięci i bieżącego procentu.")
+                ),
+                Item(
+                    symbol: "menubar.rectangle",
+                    title: String(localized: "Obciążenie widoczne bez otwierania menu"),
+                    detail: String(localized: "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego.")
+                ),
+                Item(
+                    symbol: "paintpalette",
+                    title: String(localized: "Kolory projektów i ikony"),
+                    detail: String(localized: "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.7.1",
             items: [
                 Item(
