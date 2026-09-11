@@ -851,3 +851,16 @@
 "Nie udało się otworzyć pliku do zapisu: %@" = "Nie udało się otworzyć pliku do zapisu: %@";
 "Nie udało się otworzyć pliku do odczytu: %@" = "Nie udało się otworzyć pliku do odczytu: %@";
 "Nie udało się odczytać %@ z kontenera." = "Nie udało się odczytać %@ z kontenera.";
+
+/* Okno „Co nowego” po aktualizacji */
+"Co nowego w wersji %@" = "Co nowego w wersji %@";
+"Container Desktop został zaktualizowany." = "Container Desktop został zaktualizowany.";
+"Zaczynajmy" = "Zaczynajmy";
+"Co nowego…" = "Co nowego…";
+"Kopiowanie plików znów działa" = "Kopiowanie plików znów działa";
+"container 1.4.1 nie potrafi kopiować plików do i z kontenerów utworzonych przed aktualizacją — zgłasza „path not found” dla plików, które istnieją, a wysyłkę kończy sukcesem, nie zapisując nic. Aplikacja wykrywa to i przenosi pliki inną drogą, więc po prostu działa." = "container 1.4.1 nie potrafi kopiować plików do i z kontenerów utworzonych przed aktualizacją — zgłasza „path not found” dla plików, które istnieją, a wysyłkę kończy sukcesem, nie zapisując nic. Aplikacja wykrywa to i przenosi pliki inną drogą, więc po prostu działa.";
+"Ostrzeżenie o niezgodnej wersji usługi" = "Ostrzeżenie o niezgodnej wersji usługi";
+"Po aktualizacji pakietu container usługa w tle nadal działa w starej wersji, a błędy, które to powoduje, nigdy nie wspominają o wersjach. Aplikacja rozpoznaje ten stan i proponuje restart jednym kliknięciem." = "Po aktualizacji pakietu container usługa w tle nadal działa w starej wersji, a błędy, które to powoduje, nigdy nie wspominają o wersjach. Aplikacja rozpoznaje ten stan i proponuje restart jednym kliknięciem.";
+"Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych." = "Nowe polecenie container clean, dostępne z menu kontenera. Zwalnia nieużywane bloki dysku działającego kontenera — nie usuwa danych.";
+"Sekcja Środowisko" = "Sekcja Środowisko";
+"System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji." = "System pokazuje teraz to, co raportuje container 1.4.1: wersje obu stron, system, liczbę rdzeni, kontenerów i obrazów oraz katalogi danych i instalacji.";
