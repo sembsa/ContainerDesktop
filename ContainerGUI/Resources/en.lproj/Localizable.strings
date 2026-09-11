@@ -871,3 +871,7 @@
 /* 0.7.1 — poprawka krytyczna pobierania */
 "Poprawka krytyczna: pobieranie plików" = "Critical fix: file downloads";
 "W wersji 0.7.0 pobieranie pliku z kontenera kasowało zawartość wybranego katalogu docelowego. Jeśli wskazałeś Biurko, znikały pliki z Biurka. Naprawione: aplikacja zapisuje plik wewnątrz wskazanego katalogu i nigdy nie usuwa katalogów. Jeśli używałeś 0.7.0 do pobierania plików, sprawdź iCloud i kopie zapasowe." = "In 0.7.0, downloading a file from a container erased the contents of the destination folder you picked. If you picked the Desktop, your Desktop files were deleted. Fixed: the app now writes the file inside the folder you choose and never deletes directories. If you used 0.7.0 to download files, check iCloud and your backups.";
+
+/* Pasek menu: podgląd obciążenia */
+"bez adresu" = "no address";
+"%1$d działa · %2$d zatrzymanych" = "%1$d running · %2$d stopped";

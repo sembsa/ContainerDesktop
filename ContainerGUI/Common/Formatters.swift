@@ -22,6 +22,19 @@ enum Format {
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 
+    /// A CPU reading for a tight space.
+    ///
+    /// Whole percents once there is anything to see, one decimal below 10% —
+    /// otherwise every idle container reads a flat "0%" and the sparkline next
+    /// to it appears to be lying.
+    static func cpu(_ percent: Double?) -> String {
+        guard let percent, percent.isFinite, percent >= 0 else { return "—" }
+        if percent < 10 {
+            return percent.formatted(.number.precision(.fractionLength(1))) + "%"
+        }
+        return percent.formatted(.number.precision(.fractionLength(0))) + "%"
+    }
+
     static func percent(_ fraction: Double?) -> String {
         guard let fraction else { return "—" }
         return fraction.formatted(.percent.precision(.fractionLength(0...1)))

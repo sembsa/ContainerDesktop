@@ -19,15 +19,25 @@ final class CheckForUpdatesViewModel: ObservableObject {
 struct CheckForUpdatesView: View {
     @ObservedObject private var viewModel: CheckForUpdatesViewModel
     private let updater: SPUUpdater
+    /// The app menu wants plain text, as macOS menus do; the menu-bar popover
+    /// wants an icon like every other row in it.
+    private let systemImage: String?
 
-    init(updater: SPUUpdater) {
+    init(updater: SPUUpdater, systemImage: String? = nil) {
         self.updater = updater
+        self.systemImage = systemImage
         self.viewModel = CheckForUpdatesViewModel(updater: updater)
     }
 
     var body: some View {
-        Button("Sprawdź aktualizacje…") {
+        Button {
             updater.checkForUpdates()
+        } label: {
+            if let systemImage {
+                Label("Sprawdź aktualizacje…", systemImage: systemImage)
+            } else {
+                Text("Sprawdź aktualizacje…")
+            }
         }
         .disabled(!viewModel.canCheckForUpdates)
     }
