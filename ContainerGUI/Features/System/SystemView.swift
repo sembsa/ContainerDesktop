@@ -46,10 +46,9 @@ struct SystemView: View {
         } message: {
             Text("Tworzenie domeny DNS wymaga uprawnień administratora.")
         }
-        .confirmationDialog(
-            "Usunąć domenę DNS?",
-            isPresented: Binding(get: { pendingDNSDelete != nil }, set: { if !$0 { pendingDNSDelete = nil } }),
-            presenting: pendingDNSDelete
+        .itemConfirmationDialog(
+            Text("Usunąć domenę DNS?"),
+            item: $pendingDNSDelete
         ) { domain in
             Button("Usuń", role: .destructive) {
                 Task {

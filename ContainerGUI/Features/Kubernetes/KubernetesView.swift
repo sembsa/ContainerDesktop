@@ -38,18 +38,16 @@ struct KubernetesView: View {
         .sheet(item: $loadImageTarget) { cluster in
             LoadImageSheet(cluster: cluster)
         }
-        .alert(item: $deleteTarget) { cluster in
-            Alert(
-                title: Text("Usunąć klaster?"),
-                message: Text(String(
-                    format: String(localized: "Klaster „%@” i wszystkie uruchomione w nim obciążenia zostaną trwale usunięte."),
-                    cluster.name
-                )),
-                primaryButton: .destructive(Text("Usuń")) {
-                    Task { await perform { try await store.delete(cluster) } }
-                },
-                secondaryButton: .cancel(Text("Anuluj"))
-            )
+        .itemAlert("Usunąć klaster?", item: $deleteTarget) { cluster in
+            Button("Usuń", role: .destructive) {
+                Task { await perform { try await store.delete(cluster) } }
+            }
+            Button("Anuluj", role: .cancel) {}
+        } message: { cluster in
+            Text(String(
+                format: String(localized: "Klaster „%@” i wszystkie uruchomione w nim obciążenia zostaną trwale usunięte."),
+                cluster.name
+            ))
         }
     }
 

@@ -59,10 +59,9 @@ struct ImagesView: View {
         .sheet(item: $detailTarget) { img in
             ImageDetailSheet(image: img).environment(model)
         }
-        .confirmationDialog(
-            confirmationTitle,
-            isPresented: Binding(get: { confirmation != nil }, set: { if !$0 { confirmation = nil } }),
-            presenting: confirmation
+        .itemConfirmationDialog(
+            Text(confirmationTitle),
+            item: $confirmation
         ) { item in
             confirmationButtons(item)
         } message: { item in
@@ -98,16 +97,44 @@ struct ImagesView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItemGroup {
-                InfoTip(text: String(localized: "Obraz to tylko-do-odczytu szablon z systemem plików i konfiguracją, z którego uruchamia się kontenery. Pobierz gotowy (pull) albo zbuduj własny z Dockerfile (build)."), size: .regular)
-            Button { activeSheet = .pull } label: { Label("Pobierz", systemImage: "arrow.down.circle") }
-                .disabled(!model.system.serviceState.isRunning)
-            Button { activeSheet = .build } label: { Label("Zbuduj", systemImage: "hammer") }
-                .disabled(!model.system.serviceState.isRunning)
-            Button { confirmation = .prune } label: { Label("Wyczyść", systemImage: "trash") }
-                .disabled(!model.system.serviceState.isRunning)
-            Button { Task { await store.refresh() } } label: { Label("Odśwież", systemImage: "arrow.clockwise") }
+        // On 26.1+ pull/build hold the bar; prune/refresh overflow first.
+        if #available(macOS 26.1, *) {
+            ToolbarItemGroup { imagesInfoTip; pullButton; buildButton }
+                .visibilityPriority(.high)
+            ToolbarItemGroup { pruneButton; refreshButton }
+                .visibilityPriority(.low)
+        } else {
+            ToolbarItemGroup {
+                imagesInfoTip
+                pullButton
+                buildButton
+                pruneButton
+                refreshButton
+            }
         }
+    }
+
+    private var imagesInfoTip: some View {
+        InfoTip(text: String(localized: "Obraz to tylko-do-odczytu szablon z systemem plików i konfiguracją, z którego uruchamia się kontenery. Pobierz gotowy (pull) albo zbuduj własny z Dockerfile (build)."), size: .regular)
+    }
+
+    private var pullButton: some View {
+        Button { activeSheet = .pull } label: { Label("Pobierz", systemImage: "arrow.down.circle") }
+            .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var buildButton: some View {
+        Button { activeSheet = .build } label: { Label("Zbuduj", systemImage: "hammer") }
+            .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var pruneButton: some View {
+        Button { confirmation = .prune } label: { Label("Wyczyść", systemImage: "trash") }
+            .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var refreshButton: some View {
+        Button { Task { await store.refresh() } } label: { Label("Odśwież", systemImage: "arrow.clockwise") }
     }
 
     private var confirmationTitle: String {
