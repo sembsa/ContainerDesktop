@@ -18,6 +18,10 @@ final class SystemStore {
     var transitionDetail: String?
     var systemLogs: String?
     var isLoadingLogs = false
+    /// Whether x86-64 images can run at all: `container` turns Rosetta on for
+    /// every amd64 image on an arm64 host, flag or no flag.
+    var rosetta: RosettaStatus.Availability = .notApplicable
+    var isInstallingRosetta = false
 
     private let cli = ContainerCLI.shared
     private var epoch: UInt64 = 0
@@ -88,6 +92,25 @@ final class SystemStore {
     func restart() async {
         await stop()
         await start()
+    }
+
+    func refreshRosetta() {
+        rosetta = RosettaStatus.current()
+    }
+
+    /// Runs Apple's installer with administrator privileges, then re-checks.
+    func installRosetta() async {
+        isInstallingRosetta = true
+        defer { isInstallingRosetta = false }
+        do {
+            try await RosettaStatus.install()
+            lastActionError = nil
+        } catch let error as CLIError {
+            lastActionError = error
+        } catch {
+            lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
+        }
+        refreshRosetta()
     }
 
     func refreshDiskUsage() async {

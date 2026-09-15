@@ -883,3 +883,13 @@
 "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego." = "A six-bar activity strip now sits beside the menu bar icon. Idle, it is a row of dots; under load the bars rise — you can see something is happening without clicking anything.";
 "Kolory projektów i ikony" = "Project colours and icons";
 "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość." = "Containers from the same compose project share a colour, and the menu items gained icons and a full-width hover highlight.";
+
+/* Rosetta i komunikat o usłudze */
+"Brakuje Rosetty — obrazy amd64 nie wystartują" = "Rosetta is missing — amd64 images will not start";
+"Rosetta pozwala uruchamiać obrazy x86-64 na Apple Silicon. Instalacja wymaga hasła administratora i oznacza akceptację licencji Apple." = "Rosetta is what runs x86-64 images on Apple silicon. Installing it needs an administrator password and means accepting Apple’s licence.";
+"Zainstaluj Rosettę" = "Install Rosetta";
+"Rosetta" = "Rosetta";
+"zainstalowana" = "installed";
+"brak — obrazy amd64 nie wystartują" = "missing — amd64 images will not start";
+"Usługa container nie jest uruchomiona" = "The container service is not running";
+"To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować." = "It manages containers, images, networks and volumes — without it the app has nothing to drive.";
