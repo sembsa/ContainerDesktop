@@ -64,18 +64,16 @@ struct HelmView: View {
         .sheet(item: $historyTarget) { release in
             ReleaseHistorySheet(release: release)
         }
-        .alert(item: $uninstallTarget) { release in
-            Alert(
-                title: Text("Odinstalować wdrożenie?"),
-                message: Text(String(
-                    format: String(localized: "Wdrożenie „%@” w przestrzeni nazw „%@” zostanie usunięte z klastra."),
-                    release.name, release.namespace
-                )),
-                primaryButton: .destructive(Text("Odinstaluj")) {
-                    Task { await perform { try await store.uninstall(release) } }
-                },
-                secondaryButton: .cancel(Text("Anuluj"))
-            )
+        .itemAlert("Odinstalować wdrożenie?", item: $uninstallTarget) { release in
+            Button("Odinstaluj", role: .destructive) {
+                Task { await perform { try await store.uninstall(release) } }
+            }
+            Button("Anuluj", role: .cancel) {}
+        } message: { release in
+            Text(String(
+                format: String(localized: "Wdrożenie „%@” w przestrzeni nazw „%@” zostanie usunięte z klastra."),
+                release.name, release.namespace
+            ))
         }
     }
 

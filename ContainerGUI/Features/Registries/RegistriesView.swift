@@ -42,10 +42,9 @@ struct RegistriesView: View {
             }
         }
         .sheet(isPresented: $showLogin) { RegistryLoginSheet().environment(model) }
-        .confirmationDialog(
-            "Wylogować z rejestru?",
-            isPresented: Binding(get: { pendingLogout != nil }, set: { if !$0 { pendingLogout = nil } }),
-            presenting: pendingLogout
+        .itemConfirmationDialog(
+            Text("Wylogować z rejestru?"),
+            item: $pendingLogout
         ) { login in
             Button("Wyloguj", role: .destructive) {
                 Task {

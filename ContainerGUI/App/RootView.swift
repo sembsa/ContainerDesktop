@@ -59,14 +59,7 @@ struct RootView: View {
             default: model.startPolling()
             }
         }
-        .alert(
-            "Wystąpił błąd",
-            isPresented: Binding(
-                get: { model.globalError != nil },
-                set: { if !$0 { model.globalError = nil } }
-            ),
-            presenting: model.globalError
-        ) { _ in
+        .itemAlert("Wystąpił błąd", item: $model.globalError) { _ in
             Button("OK", role: .cancel) {}
         } message: { error in
             Text(error.message)

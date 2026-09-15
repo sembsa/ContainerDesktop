@@ -75,10 +75,9 @@ struct VolumesView: View {
             case .browse(let volume): VolumeFilesView(volume: volume).environment(model)
             }
         }
-        .confirmationDialog(
-            confirmationTitle,
-            isPresented: Binding(get: { confirmation != nil }, set: { if !$0 { confirmation = nil } }),
-            presenting: confirmation
+        .itemConfirmationDialog(
+            Text(confirmationTitle),
+            item: $confirmation
         ) { item in
             switch item {
             case .remove(let volume):

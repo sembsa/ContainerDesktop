@@ -50,10 +50,9 @@ struct MachinesView: View {
             }
         }
         .sheet(isPresented: $showCreate) { MachineCreateSheet().environment(model) }
-        .confirmationDialog(
-            "Usunąć maszynę?",
-            isPresented: Binding(get: { pendingDelete != nil }, set: { if !$0 { pendingDelete = nil } }),
-            presenting: pendingDelete
+        .itemConfirmationDialog(
+            Text("Usunąć maszynę?"),
+            item: $pendingDelete
         ) { machine in
             Button("Usuń", role: .destructive) {
                 Task { await perform { try await store.delete(machine) } }

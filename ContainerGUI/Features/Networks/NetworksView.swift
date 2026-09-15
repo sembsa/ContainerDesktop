@@ -58,10 +58,9 @@ struct NetworksView: View {
             }
         }
         .sheet(isPresented: $showCreate) { NetworkCreateSheet().environment(model) }
-        .confirmationDialog(
-            confirmationTitle,
-            isPresented: Binding(get: { confirmation != nil }, set: { if !$0 { confirmation = nil } }),
-            presenting: confirmation
+        .itemConfirmationDialog(
+            Text(confirmationTitle),
+            item: $confirmation
         ) { item in
             switch item {
             case .remove(let network):

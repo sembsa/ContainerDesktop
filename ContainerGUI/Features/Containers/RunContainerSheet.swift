@@ -249,6 +249,7 @@ struct RunContainerSheet: View {
                 tint: .orange,
                 tip: String(localized: "Trwały zapis danych: nazwa wolumenu (utworzonego w zakładce Wolumeny) albo ścieżka lokalna, montowana pod wskazaną ścieżką w kontenerze. Dane przetrwają usunięcie kontenera."),
                 items: $config.volumes,
+                reorderable: true,
                 add: { config.volumes.append(.init()) }
             ) { $mount in
                 TextField("źródło / nazwa", text: $mount.source, prompt: Text("źródło / nazwa"))
@@ -340,6 +341,8 @@ struct RunContainerSheet: View {
             hardeningSection
         }
         .formStyle(.grouped)
+        // macOS 27: mount order can matter, so the volume rows drag to reorder.
+        .reorderContainerCompat(items: $config.volumes)
     }
 
     /// Read-only root filesystem plus the per-path hardening flags added in
@@ -473,6 +476,7 @@ struct RunContainerSheet: View {
         tint: Color = .secondary,
         tip: String? = nil,
         items: Binding<[Item]>,
+        reorderable: Bool = false,
         add: @escaping () -> Void,
         @ViewBuilder row: @escaping (Binding<Item>) -> Row
     ) -> some View {
@@ -481,7 +485,7 @@ struct RunContainerSheet: View {
             // binding-ForEach hands out index-based bindings, and a focused
             // TextField writing through one after its row is deleted crashes
             // with "Index out of range".
-            ForEach(items.wrappedValue) { item in
+            let rows = ForEach(items.wrappedValue) { item in
                 HStack {
                     row(Self.safeBinding(for: item, in: items))
                     Button(role: .destructive) {
@@ -491,6 +495,17 @@ struct RunContainerSheet: View {
                     }
                     .buttonStyle(.borderless)
                 }
+            }
+            if reorderable {
+                // Takes effect once the Form registers a reorder container
+                // for this item type (macOS 27).
+                if #available(macOS 27.0, *) {
+                    rows.reorderable()
+                } else {
+                    rows
+                }
+            } else {
+                rows
             }
             Button("Dodaj", systemImage: "plus", action: add)
                 .buttonStyle(.borderless)

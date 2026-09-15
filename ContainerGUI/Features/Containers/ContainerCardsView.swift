@@ -49,6 +49,8 @@ struct ContainerCardsView: View {
             .animation(.smooth(duration: 0.25), value: containers.map(\.id))
         }
         .scrollContentBackground(.hidden)
+        // macOS 27: lets each card's swipeActions work outside a List.
+        .swipeActionsContainerCompat()
     }
 
     // MARK: - Grouping
@@ -139,6 +141,17 @@ struct ContainerCard: View {
         .animation(.smooth(duration: 0.18), value: isHovering)
         .animation(.smooth(duration: 0.18), value: isSelected)
         .contextMenu { ContainerCardMenu(container: container, onRecreate: onRecreate, onRemove: onRemove) }
+        // Inert until the enclosing ScrollView is a swipe-actions container
+        // (macOS 27); removal keeps its confirmation dialog either way.
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button("Usuń", systemImage: "trash", role: .destructive) { onRemove(container) }
+            if container.isRunning {
+                Button("Zatrzymaj", systemImage: "stop.fill") { act { try await store.stop(container) } }
+            } else {
+                Button("Uruchom", systemImage: "play.fill") { act { try await store.start(container) } }
+                    .tint(.green)
+            }
+        }
         .accessibilityElement(children: .contain)
         .accessibilityLabel(Text(String(format: String(localized: "Kontener %@, stan %@"), container.id, container.state)))
     }

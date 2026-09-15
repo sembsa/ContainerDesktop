@@ -142,10 +142,9 @@ struct ContainersView: View {
             RunContainerSheet(recreating: container)
                 .environment(model)
         }
-        .confirmationDialog(
-            confirmationTitle,
-            isPresented: Binding(get: { confirmation != nil }, set: { if !$0 { confirmation = nil } }),
-            presenting: confirmation
+        .itemConfirmationDialog(
+            Text(confirmationTitle),
+            item: $confirmation
         ) { item in
             switch item {
             case .remove(let container):
@@ -510,45 +509,70 @@ struct ContainersView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        ToolbarItemGroup {
-            Picker("Widok", selection: $listStyle) {
-                ForEach(ContainerListStyle.allCases) { style in
-                    Label(style.title, systemImage: style.symbol).tag(style)
-                }
+        // On 26.1+ the primary actions hold the bar and the housekeeping ones
+        // overflow first when the window gets narrow.
+        if #available(macOS 26.1, *) {
+            ToolbarItemGroup { viewStylePicker; composeButton; runButton }
+                .visibilityPriority(.high)
+            ToolbarItemGroup { pruneButton; refreshButton }
+                .visibilityPriority(.low)
+        } else {
+            ToolbarItemGroup {
+                viewStylePicker
+                composeButton
+                runButton
+                pruneButton
+                refreshButton
             }
-            .pickerStyle(.segmented)
-            .labelStyle(.iconOnly)
-            .help("Przełącz między kartami a tabelą")
-
-            Button {
-                showComposeSheet = true
-            } label: {
-                Label("Compose", systemImage: "square.stack.3d.down.right")
-                    .labelStyle(.titleAndIcon)
-            }
-            .disabled(!model.system.serviceState.isRunning)
-
-            Button {
-                showRunSheet = true
-            } label: {
-                Label("Uruchom kontener", systemImage: "plus")
-            }
-            .disabled(!model.system.serviceState.isRunning)
-
-            Button {
-                confirmation = .prune
-            } label: {
-                Label("Wyczyść zatrzymane", systemImage: "trash")
-            }
-            .disabled(!model.system.serviceState.isRunning)
-
-            Button {
-                Task { await store.refresh() }
-            } label: {
-                Label("Odśwież", systemImage: "arrow.clockwise")
-            }
-            .keyboardShortcut("r")
         }
+    }
+
+    private var viewStylePicker: some View {
+        Picker("Widok", selection: $listStyle) {
+            ForEach(ContainerListStyle.allCases) { style in
+                Label(style.title, systemImage: style.symbol).tag(style)
+            }
+        }
+        .pickerStyle(.segmented)
+        .labelStyle(.iconOnly)
+        .help("Przełącz między kartami a tabelą")
+    }
+
+    private var composeButton: some View {
+        Button {
+            showComposeSheet = true
+        } label: {
+            Label("Compose", systemImage: "square.stack.3d.down.right")
+                .labelStyle(.titleAndIcon)
+        }
+        .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var runButton: some View {
+        Button {
+            showRunSheet = true
+        } label: {
+            Label("Uruchom kontener", systemImage: "plus")
+        }
+        .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var pruneButton: some View {
+        Button {
+            confirmation = .prune
+        } label: {
+            Label("Wyczyść zatrzymane", systemImage: "trash")
+        }
+        .disabled(!model.system.serviceState.isRunning)
+    }
+
+    private var refreshButton: some View {
+        Button {
+            Task { await store.refresh() }
+        } label: {
+            Label("Odśwież", systemImage: "arrow.clockwise")
+        }
+        .keyboardShortcut("r")
     }
 
     private func perform(_ action: @escaping () async throws -> Void) async {
