@@ -79,11 +79,15 @@ struct DetailContainer: View {
             } else if let skew = model.system.versionSkew {
                 VersionSkewBanner(skew: skew)
                     .transition(.move(edge: .top).combined(with: .opacity))
+            } else if model.system.rosetta == .missing {
+                RosettaBanner()
+                    .transition(.move(edge: .top).combined(with: .opacity))
             }
             sectionContent
         }
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.system.serviceState)
         .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.system.versionSkew)
+        .animation(.spring(response: 0.4, dampingFraction: 0.85), value: model.system.rosetta)
         .task(id: model.selection) {
             await model.refreshCurrent()
         }

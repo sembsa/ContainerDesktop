@@ -883,3 +883,13 @@
 "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego." = "菜单栏图标旁新增了六条活动柱。空闲时是一排圆点，有负载时柱子升高——无需点击即可看出正在发生什么。";
 "Kolory projektów i ikony" = "项目配色与图标";
 "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość." = "同一 compose 项目的容器共用一种颜色，菜单项也新增了图标和整行悬停高亮。";
+
+/* Rosetta i komunikat o usłudze */
+"Brakuje Rosetty — obrazy amd64 nie wystartują" = "缺少 Rosetta——amd64 镜像将无法启动";
+"Rosetta pozwala uruchamiać obrazy x86-64 na Apple Silicon. Instalacja wymaga hasła administratora i oznacza akceptację licencji Apple." = "Rosetta 用于在 Apple 芯片上运行 x86-64 镜像。安装需要管理员密码，并表示接受 Apple 的许可协议。";
+"Zainstaluj Rosettę" = "安装 Rosetta";
+"Rosetta" = "Rosetta";
+"zainstalowana" = "已安装";
+"brak — obrazy amd64 nie wystartują" = "缺失——amd64 镜像无法启动";
+"Usługa container nie jest uruchomiona" = "container 服务未运行";
+"To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować." = "它负责管理容器、镜像、网络和卷——没有它，应用就无从操作。";

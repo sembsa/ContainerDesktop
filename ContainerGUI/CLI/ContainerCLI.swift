@@ -143,26 +143,8 @@ actor ContainerCLI {
     /// commands the CLI documents as administrator-only (e.g. `system dns create`).
     func runElevated(_ arguments: [String], timeout: Duration? = .seconds(120)) async throws {
         guard let binary = BinaryResolver.resolve() else { throw CLIError.notInstalled }
-        let shellCommand = ([binary] + arguments).map(Self.shellQuote).joined(separator: " ")
-        let appleScript = "do shell script \"\(Self.appleScriptQuote(shellCommand))\" with administrator privileges"
-        let result = try await runProcess(
-            executable: "/usr/bin/osascript",
-            arguments: ["-e", appleScript],
-            input: nil,
-            timeout: timeout
-        )
-        guard result.exitCode == 0 else {
-            throw CLIError.command(exitCode: result.exitCode, stderr: result.stderr)
-        }
+        try await ElevatedCommand.run(executable: binary, arguments: arguments, timeout: timeout)
     }
 
-    private static func shellQuote(_ value: String) -> String {
-        "'" + value.replacingOccurrences(of: "'", with: "'\\''") + "'"
-    }
 
-    private static func appleScriptQuote(_ value: String) -> String {
-        value
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "\"", with: "\\\"")
-    }
 }

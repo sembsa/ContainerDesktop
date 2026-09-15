@@ -9,9 +9,9 @@ struct ServiceBanner: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.orange)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Usługa systemowa nie jest uruchomiona")
+                Text("Usługa container nie jest uruchomiona")
                     .font(.headline)
-                Text("Uruchom usługę container, aby zarządzać kontenerami i obrazami.")
+                Text("To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }

@@ -883,3 +883,13 @@
 "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego." = "Przy ikonie w pasku menu pojawił się pasek sześciu słupków. Przy bezczynności to rząd kropek, przy pracy słupki rosną — widzisz, że coś się dzieje, nie klikając niczego.";
 "Kolory projektów i ikony" = "Kolory projektów i ikony";
 "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość." = "Kontenery z jednego projektu compose dostały wspólny kolor, a pozycje menu ikony i podświetlenie pod kursorem na całą szerokość.";
+
+/* Rosetta i komunikat o usłudze */
+"Brakuje Rosetty — obrazy amd64 nie wystartują" = "Brakuje Rosetty — obrazy amd64 nie wystartują";
+"Rosetta pozwala uruchamiać obrazy x86-64 na Apple Silicon. Instalacja wymaga hasła administratora i oznacza akceptację licencji Apple." = "Rosetta pozwala uruchamiać obrazy x86-64 na Apple Silicon. Instalacja wymaga hasła administratora i oznacza akceptację licencji Apple.";
+"Zainstaluj Rosettę" = "Zainstaluj Rosettę";
+"Rosetta" = "Rosetta";
+"zainstalowana" = "zainstalowana";
+"brak — obrazy amd64 nie wystartują" = "brak — obrazy amd64 nie wystartują";
+"Usługa container nie jest uruchomiona" = "Usługa container nie jest uruchomiona";
+"To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować." = "To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować.";

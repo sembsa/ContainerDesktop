@@ -158,6 +158,7 @@ struct SystemView: View {
                     infoRow(String(localized: "Usługa w tle"), status.serverVersionNumber)
                     infoRow(String(localized: "System operacyjny"), status.host?.operatingSystem)
                     infoRow(String(localized: "Architektura"), status.host?.architecture)
+                    infoRow(String(localized: "Rosetta"), rosettaText)
                     infoRow(String(localized: "Rdzenie procesora"), status.host?.cpus.map(String.init))
                     infoRow(String(localized: "Kontenery"), containerCountText(status.resources))
                     infoRow(String(localized: "Obrazy"), status.resources?.images.map(String.init))
@@ -168,6 +169,15 @@ struct SystemView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(16)
             .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        }
+    }
+
+    /// Only on Apple silicon — elsewhere the row would be noise.
+    private var rosettaText: String? {
+        switch store.rosetta {
+        case .notApplicable: nil
+        case .installed: String(localized: "zainstalowana")
+        case .missing: String(localized: "brak — obrazy amd64 nie wystartują")
         }
     }
 

@@ -152,6 +152,8 @@ targets:
       - path: ContainerGUI/CLI/ProcessLineReader.swift
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/CLI/ContainerCopyCheck.swift
+      - path: ContainerGUI/CLI/ElevatedCommand.swift
+      - path: ContainerGUI/Common/RosettaStatus.swift
       - path: ContainerGUI/CLI/ContainerFileTransfer.swift
       - path: ContainerGUI/Features/WhatsNew/WhatsNew.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
