@@ -893,3 +893,9 @@
 "brak — obrazy amd64 nie wystartują" = "缺失——amd64 镜像无法启动";
 "Usługa container nie jest uruchomiona" = "container 服务未运行";
 "To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować." = "它负责管理容器、镜像、网络和卷——没有它，应用就无从操作。";
+
+/* 0.7.3 — Rosetta i macOS 27 */
+"Instalacja Rosetty z poziomu aplikacji" = "在应用内安装 Rosetta";
+"Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem." = "没有 Rosetta，amd64 镜像在 Apple 芯片上无法启动——无论设置如何，container 都会为这类镜像自动启用它。macOS 大版本升级后需要重新安装。应用会检测到并提供一键安装。";
+"Zgodność z macOS 27" = "支持 macOS 27";
+"Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26." = "应用在可用之处使用新的系统 API，在 macOS 26 上表现一致。";
