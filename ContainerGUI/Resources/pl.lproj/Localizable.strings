@@ -893,3 +893,9 @@
 "brak — obrazy amd64 nie wystartują" = "brak — obrazy amd64 nie wystartują";
 "Usługa container nie jest uruchomiona" = "Usługa container nie jest uruchomiona";
 "To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować." = "To ona zarządza kontenerami, obrazami, sieciami i wolumenami — bez niej aplikacja nie ma czym sterować.";
+
+/* 0.7.3 — Rosetta i macOS 27 */
+"Instalacja Rosetty z poziomu aplikacji" = "Instalacja Rosetty z poziomu aplikacji";
+"Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem." = "Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem.";
+"Zgodność z macOS 27" = "Zgodność z macOS 27";
+"Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26." = "Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26.";

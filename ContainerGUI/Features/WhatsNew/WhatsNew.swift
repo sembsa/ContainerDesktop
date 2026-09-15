@@ -37,6 +37,21 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.7.3",
+            items: [
+                Item(
+                    symbol: "cpu",
+                    title: String(localized: "Instalacja Rosetty z poziomu aplikacji"),
+                    detail: String(localized: "Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem.")
+                ),
+                Item(
+                    symbol: "sparkles",
+                    title: String(localized: "Zgodność z macOS 27"),
+                    detail: String(localized: "Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.7.2",
             items: [
                 Item(
