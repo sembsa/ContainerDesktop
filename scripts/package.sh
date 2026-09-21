@@ -34,13 +34,29 @@ mkdir -p "$DIST/dmg"
 cp -R "$APP" "$DIST/dmg/"
 ln -s /Applications "$DIST/dmg/Applications"
 
-hdiutil create \
-  -volname "Container Desktop" \
-  -srcfolder "$DIST/dmg" \
-  -ov -format UDZO \
-  "$DIST/ContainerDesktop.dmg"
+DMG="$DIST/ContainerDesktop.dmg"
 
-echo "Gotowe: $DIST/ContainerDesktop.dmg"
+# macOS 27 deprecates `hdiutil create`, naming `diskutil image create` as the
+# replacement. Both produce the same thing here — an APFS volume holding the
+# .app and the /Applications symlink, with the signature intact — and the new
+# one comes out smaller. `hdiutil` stays as a fallback for anyone packaging on
+# a macOS without `diskutil image`.
+if diskutil image create from --help >/dev/null 2>&1; then
+  diskutil image create from \
+    --format UDZO \
+    --volumeName "Container Desktop" \
+    "$DIST/dmg" \
+    "$DMG"
+else
+  echo "diskutil image niedostępne — pakuję starym hdiutil."
+  hdiutil create \
+    -volname "Container Desktop" \
+    -srcfolder "$DIST/dmg" \
+    -ov -format UDZO \
+    "$DMG"
+fi
+
+echo "Gotowe: $DMG"
 
 # --- Sparkle: appcast ---
 # WAŻNE: najpierw podpisz (Developer ID) i znotaryzuj DMG (zob. komentarz na górze),
