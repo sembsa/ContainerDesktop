@@ -165,6 +165,7 @@ targets:
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift
+      - path: ContainerGUI/Features/Kubernetes/K8sCommands.swift
       - path: ContainerGUI/CLI/KubectlJSON.swift
       - path: ContainerGUI/Features/Helm/ChartValues.swift
       - path: ContainerGUI/Features/Helm/ChartSchema.swift

@@ -65,7 +65,9 @@ struct SidebarView: View {
             }
         } icon: {
             Image(systemName: section.symbol)
-                .font(.system(size: 14, weight: .semibold))
+                // Smaller than the tile by a clear margin: at 14 pt the glyph
+                // crowded the 24 pt square and the tiles read as solid blocks.
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
                 .background(section.tint.gradient, in: RoundedRectangle(cornerRadius: 6))
