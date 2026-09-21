@@ -899,3 +899,7 @@
 "Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem." = "Bez Rosetty żaden obraz amd64 nie wystartuje na Apple Silicon — container włącza ją automatycznie dla takich obrazów, niezależnie od ustawień. Po dużej aktualizacji macOS trzeba ją zainstalować od nowa. Aplikacja to wykrywa i proponuje instalację jednym kliknięciem.";
 "Zgodność z macOS 27" = "Zgodność z macOS 27";
 "Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26." = "Aplikacja korzysta z nowych API systemu tam, gdzie są dostępne, i działa tak samo na macOS 26.";
+
+/* Klaster k8s: własny manifest CNI */
+"Manifest CNI (opcjonalnie)" = "Manifest CNI (opcjonalnie)";
+"Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci." = "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci.";

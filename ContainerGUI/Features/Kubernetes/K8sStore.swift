@@ -125,14 +125,15 @@ final class K8sStore {
         cpus: String,
         memory: String,
         nodeImage: String,
+        cniManifest: String,
         removeOnStop: Bool
     ) -> AsyncThrowingStream<String, Error> {
-        var args = ["k8s", "create", "--name", name]
-        if !cpus.isEmpty { args.append(contentsOf: ["--cpus", cpus]) }
-        if !memory.isEmpty { args.append(contentsOf: ["--memory", memory]) }
-        if !nodeImage.isEmpty { args.append(contentsOf: ["--node-image", nodeImage]) }
-        if removeOnStop { args.append("--rm") }
-        return ContainerCLI.shared.streamChecked(args)
+        ContainerCLI.shared.streamChecked(
+            K8sCommands.create(
+                name: name, cpus: cpus, memory: memory,
+                nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop
+            )
+        )
     }
 
     /// Writes the cluster's context to a user-chosen kubeconfig. Distinct from

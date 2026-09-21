@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// `container k8s create` with live progress — the command pulls an ~850 MB
 /// node image and then waits for kubeadm, so it must not look frozen.
@@ -10,6 +11,7 @@ struct CreateClusterSheet: View {
     @State private var cpus = "4"
     @State private var memory = "4G"
     @State private var nodeImage = ""
+    @State private var cniManifest = ""
     @State private var removeOnStop = false
     @State private var isCreating = false
     @State private var finished = false
@@ -49,6 +51,12 @@ struct CreateClusterSheet: View {
                     HStack(spacing: 6) {
                         TextField("Obraz węzła (opcjonalnie)", text: $nodeImage)
                         InfoTip(text: String(localized: "Pozostaw puste, aby użyć domyślnego obrazu kindest/node dopasowanego do tej wersji container. Własny obraz pozwala wskazać inną wersję Kubernetes."))
+                    }
+                    HStack(spacing: 6) {
+                        TextField("Manifest CNI (opcjonalnie)", text: $cniManifest)
+                        Button("Wybierz…") { chooseCNIManifest() }
+                            .disabled(isCreating)
+                        InfoTip(text: String(localized: "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci."))
                     }
                     Toggle("Usuń klaster po zatrzymaniu (--rm)", isOn: $removeOnStop)
                 } header: {
@@ -102,6 +110,18 @@ struct CreateClusterSheet: View {
         .frame(width: 640)
     }
 
+    /// The CLI rejects a missing manifest, but only after it has started —
+    /// and starting means pulling an ~850 MB node image first.
+    private func chooseCNIManifest() {
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [.yaml]
+        if panel.runModal() == .OK, let url = panel.url {
+            cniManifest = url.path
+        }
+    }
+
     private func create() async {
         isCreating = true
         finished = false
@@ -113,6 +133,7 @@ struct CreateClusterSheet: View {
             cpus: cpus,
             memory: memory,
             nodeImage: nodeImage,
+            cniManifest: cniManifest,
             removeOnStop: removeOnStop
         )
         do {
