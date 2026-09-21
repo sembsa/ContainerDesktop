@@ -6,11 +6,15 @@ import Sparkle
 struct ContainerGUIApp: App {
     @State private var model = AppModel()
 
+    /// Sparkle holds its delegate weakly, so it lives for the process instead of
+    /// for the initializer that hands it over.
+    private static let updaterDelegate = UpdaterDelegate()
+
     /// Sparkle auto-updater. Starts on launch; feed URL and EdDSA public key
     /// come from Info.plist (SUFeedURL / SUPublicEDKey).
     private let updaterController = SPUStandardUpdaterController(
         startingUpdater: true,
-        updaterDelegate: nil,
+        updaterDelegate: ContainerGUIApp.updaterDelegate,
         userDriverDelegate: nil
     )
 

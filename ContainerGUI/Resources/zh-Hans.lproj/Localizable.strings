@@ -930,3 +930,6 @@
 "Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji." = "在容器的右键菜单中勾选，或用一个按钮直接采用当前正在运行的容器。登录后，系统会等待服务启动并将它们启动——无需打开应用。";
 "Uruchamianie usługi przy logowaniu potwierdzone" = "登录时启动服务已确认";
 "Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły." = "上一版本中的开关有效——退出应用后服务仍保持运行。感谢所有参与验证的人。";
+"Prywatność" = "隐私";
+"Anonimowe statystyki" = "匿名统计";
+"Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "检查更新时会发送一个随机的安装标识符、应用版本和 macOS 版本 — 仅用于统计有多少人在使用本应用以及使用哪个版本。不会发送你的 IP 地址、电脑名称，或任何可以指向你的信息。";

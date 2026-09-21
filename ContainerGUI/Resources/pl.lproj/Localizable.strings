@@ -930,3 +930,6 @@
 "Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji." = "Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji.";
 "Uruchamianie usługi przy logowaniu potwierdzone" = "Uruchamianie usługi przy logowaniu potwierdzone";
 "Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły." = "Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły.";
+"Prywatność" = "Prywatność";
+"Anonimowe statystyki" = "Anonimowe statystyki";
+"Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie.";
