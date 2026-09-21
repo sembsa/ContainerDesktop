@@ -151,9 +151,44 @@ version runs and is reopenable from the app menu. **Add an entry when you bump
 2. `scripts/package.sh` → builds the Release `.app`, makes `dist/ContainerDesktop.dmg`, and runs Sparkle `generate_appcast` (signs with the Keychain EdDSA key) → updates `docs/appcast.xml`.
 3. Publish the GitHub release: `gh release create vX.Y.Z dist/ContainerDesktop.dmg --title "X.Y.Z" --notes "…"`. The DMG asset **must be named `ContainerDesktop.dmg`** (the appcast enclosure points at `releases/latest/download/ContainerDesktop.dmg`).
 4. Commit `docs/appcast.xml` to `main` (GitHub Pages serves it at `SUFeedURL`).
-5. Verify: appcast URL returns HTTP 200 with the new `sparkle:version`; the DMG URL returns 200.
+5. Verify: **both** feed URLs return HTTP 200 with the new `sparkle:version` — the
+   Worker (`SUFeedURL`) and the Pages original it proxies — and the DMG URL returns 200.
+   The Worker serves whatever Pages serves, so a stale Pages commit is invisible from
+   the app's side until someone compares the two.
 - Distribution is **ad-hoc signed, not notarized** → first launch needs *System Settings → Privacy & Security → Open Anyway* (or `xattr -dr com.apple.quarantine`). Sparkle clears quarantine on its installed updates, so updates after the first install are seamless.
 - **Caveat**: builds older than ~mid-June (no Sparkle) cannot auto-update — they must be replaced manually once.
+
+## Counting installations
+
+`SUFeedURL` points at a Cloudflare Worker (`metrics/`), not at GitHub Pages:
+`https://containerdesktop-appcast.sembsa.workers.dev/appcast.xml`. It proxies
+`docs/appcast.xml` from Pages **unchanged** — releases are published exactly as
+before, and the Worker is never part of publishing — and on the way past upserts
+one row per installation into D1 (`containerdesktop-installs`, region EEUR).
+
+- **Run `scripts/metrics.sh`** to answer "how many people, which version". It
+  needs `wrangler login` once. `/stats` on the Worker returns the same thing as
+  JSON, but only once `wrangler secret put STATS_TOKEN` has been set — with no
+  secret it answers 401, which is the safe default and the state it ships in.
+- **One row per install, not per check.** `ON CONFLICT(id) DO UPDATE` keeps
+  writes at one per install per day against D1's free 100k/day. An append-only
+  table would answer the same question and eventually pause the database.
+- **The feed must survive the database.** The upsert runs inside
+  `ctx.waitUntil` and swallows its errors. A paused or broken D1 must never stop
+  an update from installing — that trade is not negotiable.
+- **`SUEnableSystemProfiling` stays off.** Sparkle's profile reports the Mac
+  model, the CPU and the memory, none of which is needed. It is not needed for
+  the parameters either: `parameterizedFeedURL` appends the delegate's array
+  unconditionally and gates *only* the profile array — verified in
+  `SPUUpdater.m`, and the reason `UpdaterDelegate` works at all.
+- **The identifier is a UUID in `UserDefaults` and nothing else** — not derived
+  from hardware, account or address. `InstallIdentifierTests` asserts that no
+  parameter value contains `NSUserName()`, `NSFullUserName()` or the hostname.
+  Settings → Privacy switches it off; the key stores the *opt-out*, so the
+  absent default (`false`) means counting is on.
+- **Changing `SUFeedURL` is a one-way door.** Every install from 0.8.3 onwards
+  updates only through the Worker; if it goes down they stop seeing updates.
+  Installs older than 0.8.3 keep using Pages and are never counted.
 
 ## Git conventions
 
