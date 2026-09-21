@@ -3,12 +3,12 @@
     <channel>
         <title>ContainerGUI</title>
         <item>
-            <title>0.8.0</title>
-            <pubDate>Mon, 21 Sep 2026 14:39:23 +0200</pubDate>
-            <sparkle:version>13</sparkle:version>
-            <sparkle:shortVersionString>0.8.0</sparkle:shortVersionString>
+            <title>0.8.1</title>
+            <pubDate>Mon, 21 Sep 2026 15:21:14 +0200</pubDate>
+            <sparkle:version>14</sparkle:version>
+            <sparkle:shortVersionString>0.8.1</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg" length="21463991" type="application/octet-stream" sparkle:edSignature="tqvU/jw+GRVCxrIT5NUFsoe88uoC6LikYV1PjIVfg1554BVY431uCOPtyAxhaqlrISly50VJMVZ6DBBA3HZsCg=="/>
+            <enclosure url="https://github.com/sembsa/ContainerDesktop/releases/latest/download/ContainerDesktop.dmg" length="21501079" type="application/octet-stream" sparkle:edSignature="bT1KhzmMPF38Fj+8MxbWUcSpFxLm2R4AVDQbDTuPWa/UYdvGNVX+mAYsXIlGu8h5I/NOZJm+/sZMJafvJB1XDw=="/>
         </item>
     </channel>
 </rss>
