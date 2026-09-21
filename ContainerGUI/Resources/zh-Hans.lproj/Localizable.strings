@@ -903,3 +903,9 @@
 /* Klaster k8s: własny manifest CNI */
 "Manifest CNI (opcjonalnie)" = "CNI 清单（可选）";
 "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci." = "网络插件 YAML 清单的路径，在集群启动后应用——例如 Cilium。留空则使用默认网络。";
+
+/* 0.8.0 — CNI i ikony paska bocznego */
+"Własna wtyczka sieciowa dla klastra" = "为集群指定自己的网络插件";
+"Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną." = "创建 Kubernetes 集群时可以指定 CNI 清单——例如 Cilium——集群启动后立即应用。留空则使用默认网络。";
+"Czytelniejsze ikony na pasku bocznym" = "更清晰的边栏图标";
+"Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru." = "彩色方块中的图形更小并留有边距，因此方块看起来像图标，而不是纯色块。";

@@ -37,6 +37,21 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.8.0",
+            items: [
+                Item(
+                    symbol: "point.3.filled.connected.trianglepath.dotted",
+                    title: String(localized: "Własna wtyczka sieciowa dla klastra"),
+                    detail: String(localized: "Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną.")
+                ),
+                Item(
+                    symbol: "sidebar.left",
+                    title: String(localized: "Czytelniejsze ikony na pasku bocznym"),
+                    detail: String(localized: "Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.7.3",
             items: [
                 Item(

@@ -903,3 +903,9 @@
 /* Klaster k8s: własny manifest CNI */
 "Manifest CNI (opcjonalnie)" = "Manifest CNI (opcjonalnie)";
 "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci." = "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci.";
+
+/* 0.8.0 — CNI i ikony paska bocznego */
+"Własna wtyczka sieciowa dla klastra" = "Własna wtyczka sieciowa dla klastra";
+"Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną." = "Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną.";
+"Czytelniejsze ikony na pasku bocznym" = "Czytelniejsze ikony na pasku bocznym";
+"Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru." = "Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru.";
