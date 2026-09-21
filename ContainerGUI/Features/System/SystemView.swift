@@ -63,6 +63,7 @@ struct SystemView: View {
     private func refreshAll() async {
         await store.refreshState()
         store.refreshAutostart()
+        store.refreshContainerAutostart()
         await store.refreshDiskUsage()
         await store.refreshBuilder()
         await store.refreshProperties()
@@ -144,6 +145,39 @@ struct SystemView: View {
                     Label("Zadziała od następnego zalogowania.", systemImage: "info.circle")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+
+                    Divider().padding(.vertical, 2)
+
+                    Toggle(isOn: Binding(
+                        get: { store.containerAutostart == .on },
+                        set: { store.setContainerAutostart($0) }
+                    )) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Uruchamiaj też wybrane kontenery")
+                                .font(.subheadline.weight(.medium))
+                            Text("container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .disabled(store.containerAutostart == .foreign)
+
+                    if store.containerAutostart == .on {
+                        HStack(spacing: 8) {
+                            Text(autostartSelectionText)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Spacer(minLength: 4)
+                            Button("Zaznacz te, które teraz działają") {
+                                let running = model.containers.items.filter(\.isRunning).map(\.id)
+                                store.setAutostartContainers(
+                                    Set(running), existing: model.containers.items.map(\.id)
+                                )
+                            }
+                            .controlSize(.small)
+                        }
+                    }
                 }
                 if store.autostart == .foreign {
                     Label("W ~/Library/LaunchAgents jest już własny wpis o tej nazwie — aplikacja go nie rusza.", systemImage: "exclamationmark.triangle")
@@ -214,6 +248,12 @@ struct SystemView: View {
             .padding(16)
             .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
         }
+    }
+
+    private var autostartSelectionText: String {
+        let ids = store.autostartContainerIDs
+        if ids.isEmpty { return String(localized: "Nie zaznaczono żadnego kontenera.") }
+        return String(format: String(localized: "Zaznaczone: %@"), ids.joined(separator: ", "))
     }
 
     /// Only on Apple silicon — elsewhere the row would be noise.

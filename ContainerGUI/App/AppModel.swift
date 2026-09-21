@@ -82,6 +82,7 @@ final class AppModel {
         guard binaryFound else { return }
         system.refreshRosetta()
         system.refreshAutostart()
+        system.refreshContainerAutostart()
         await system.refreshState()
         guard system.serviceState.isRunning else { return }
         // Prefetch primary sections so switching is instant.

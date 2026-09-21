@@ -918,3 +918,15 @@
 "Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać." = "请先启动一次服务——此项所指向的文件届时才会生成。";
 "Usługa może startować przy logowaniu" = "服务可在登录时启动";
 "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga." = "从应用启动的服务会在退出应用时停止——这是系统行为，并非应用的选择。System 区块中新增的开关会把启动交给系统，使服务与应用无关地保持运行。下次登录时生效。此方案仍待实践验证——请告诉我们它是否对你有效。";
+
+/* 0.8.2 — autostart kontenerów */
+"Uruchamiaj przy logowaniu" = "登录时启动";
+"Uruchamiaj też wybrane kontenery" = "同时启动选定的容器";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container 本身没有重启策略，因此由一个独立的系统项来完成：等待服务启动后，再启动选定的容器。";
+"Zaznacz te, które teraz działają" = "选择当前正在运行的容器";
+"Nie zaznaczono żadnego kontenera." = "未选择任何容器。";
+"Zaznaczone: %@" = "已选择：%@";
+"Wybrane kontenery wstają przy logowaniu" = "选定的容器在登录时启动";
+"Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji." = "在容器的右键菜单中勾选，或用一个按钮直接采用当前正在运行的容器。登录后，系统会等待服务启动并将它们启动——无需打开应用。";
+"Uruchamianie usługi przy logowaniu potwierdzone" = "登录时启动服务已确认";
+"Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły." = "上一版本中的开关有效——退出应用后服务仍保持运行。感谢所有参与验证的人。";

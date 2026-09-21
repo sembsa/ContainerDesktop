@@ -918,3 +918,15 @@
 "Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać." = "Start the service once — only then does the file this points at exist.";
 "Usługa może startować przy logowaniu" = "The service can start at login";
 "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga." = "A service started from the app goes down when the app quits — that is the system's behaviour, not the app's choice. A new switch in the System section hands the starting over to the system, so the service stays up regardless of the app. It takes effect from your next login. This still needs confirming in practice — please say whether it helps for you.";
+
+/* 0.8.2 — autostart kontenerów */
+"Uruchamiaj przy logowaniu" = "Start at login";
+"Uruchamiaj też wybrane kontenery" = "Start selected containers too";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container has no restart policy of its own, so a separate system entry does it: it waits for the service to come up, then starts the selected containers.";
+"Zaznacz te, które teraz działają" = "Select the ones running now";
+"Nie zaznaczono żadnego kontenera." = "No containers selected.";
+"Zaznaczone: %@" = "Selected: %@";
+"Wybrane kontenery wstają przy logowaniu" = "Selected containers come up at login";
+"Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji." = "Tick containers in their context menu, or take whatever is running right now with one button. After you log in the system waits for the service and starts them — without opening the app.";
+"Uruchamianie usługi przy logowaniu potwierdzone" = "Starting the service at login is confirmed";
+"Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły." = "The switch from the previous release works — the service stays up after the app quits. Thanks to everyone who checked.";
