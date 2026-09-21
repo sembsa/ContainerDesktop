@@ -37,6 +37,16 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.8.1",
+            items: [
+                Item(
+                    symbol: "power",
+                    title: String(localized: "Usługa może startować przy logowaniu"),
+                    detail: String(localized: "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.8.0",
             items: [
                 Item(

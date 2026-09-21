@@ -41,7 +41,7 @@ final class WhatsNewTests: XCTestCase {
     /// `Bundle.main` here is the `xctest` runner, not the app, so the shipping
     /// version cannot be read at runtime — stating it makes bumping the version
     /// without writing notes fail loudly, which is the point.
-    private let shippingVersion = "0.8.0"
+    private let shippingVersion = "0.8.1"
 
     func testTheNewestNotesAreForTheVersionBeingShipped() {
         XCTAssertEqual(WhatsNew.all.first?.version, shippingVersion)

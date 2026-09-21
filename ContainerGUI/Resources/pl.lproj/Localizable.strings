@@ -909,3 +909,12 @@
 "Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną." = "Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną.";
 "Czytelniejsze ikony na pasku bocznym" = "Czytelniejsze ikony na pasku bocznym";
 "Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru." = "Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru.";
+
+/* 0.8.1 — usługa startująca przy logowaniu */
+"Uruchamiaj usługę przy logowaniu" = "Uruchamiaj usługę przy logowaniu";
+"Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu. Gdy uruchamia ją system przy logowaniu, zostaje włączona niezależnie od aplikacji." = "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu. Gdy uruchamia ją system przy logowaniu, zostaje włączona niezależnie od aplikacji.";
+"Zadziała od następnego zalogowania." = "Zadziała od następnego zalogowania.";
+"W ~/Library/LaunchAgents jest już własny wpis o tej nazwie — aplikacja go nie rusza." = "W ~/Library/LaunchAgents jest już własny wpis o tej nazwie — aplikacja go nie rusza.";
+"Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać." = "Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać.";
+"Usługa może startować przy logowaniu" = "Usługa może startować przy logowaniu";
+"Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga." = "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga.";

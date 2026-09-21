@@ -909,3 +909,12 @@
 "Przy tworzeniu klastra Kubernetes można wskazać manifest CNI — na przykład Cilium — zastosowany zaraz po jego starcie. Puste pole oznacza sieć domyślną." = "When creating a Kubernetes cluster you can point at a CNI manifest — Cilium, for example — applied as soon as the cluster is up. Leave it empty for the default network.";
 "Czytelniejsze ikony na pasku bocznym" = "Clearer sidebar icons";
 "Symbole w kolorowych kafelkach są mniejsze i mają margines, więc kafelki czytają się jak ikony, a nie jak pełne bloki koloru." = "The glyphs in the coloured tiles are smaller and have room around them, so the tiles read as icons rather than as solid blocks of colour.";
+
+/* 0.8.1 — usługa startująca przy logowaniu */
+"Uruchamiaj usługę przy logowaniu" = "Start the service at login";
+"Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu. Gdy uruchamia ją system przy logowaniu, zostaje włączona niezależnie od aplikacji." = "A service started from the app goes down when the app quits. Started by the system at login, it stays up regardless of the app.";
+"Zadziała od następnego zalogowania." = "Takes effect from your next login.";
+"W ~/Library/LaunchAgents jest już własny wpis o tej nazwie — aplikacja go nie rusza." = "There is already an entry of your own under that name in ~/Library/LaunchAgents — the app leaves it alone.";
+"Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać." = "Start the service once — only then does the file this points at exist.";
+"Usługa może startować przy logowaniu" = "The service can start at login";
+"Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga." = "A service started from the app goes down when the app quits — that is the system's behaviour, not the app's choice. A new switch in the System section hands the starting over to the system, so the service stays up regardless of the app. It takes effect from your next login. This still needs confirming in practice — please say whether it helps for you.";

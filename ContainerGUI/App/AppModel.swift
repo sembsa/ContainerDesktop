@@ -81,6 +81,7 @@ final class AppModel {
         binaryFound = BinaryResolver.resolve() != nil
         guard binaryFound else { return }
         system.refreshRosetta()
+        system.refreshAutostart()
         await system.refreshState()
         guard system.serviceState.isRunning else { return }
         // Prefetch primary sections so switching is instant.

@@ -15,6 +15,7 @@ struct SystemView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 serviceCard
+                autostartCard
                 environmentSection
                 builderCard
                 diskSection
@@ -61,6 +62,7 @@ struct SystemView: View {
 
     private func refreshAll() async {
         await store.refreshState()
+        store.refreshAutostart()
         await store.refreshDiskUsage()
         await store.refreshBuilder()
         await store.refreshProperties()
@@ -112,6 +114,48 @@ struct SystemView: View {
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: store.serviceState)
+    }
+
+    /// Letting launchd start the service at login.
+    ///
+    /// Worth its own row rather than a settings checkbox: it changes who owns
+    /// the service, which is the difference between it surviving a quit and
+    /// not.
+    @ViewBuilder
+    private var autostartCard: some View {
+        if store.autostart != .unavailable {
+            VStack(alignment: .leading, spacing: 8) {
+                Toggle(isOn: Binding(
+                    get: { store.autostart == .on },
+                    set: { store.setAutostart($0) }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Uruchamiaj usługę przy logowaniu")
+                            .font(.headline)
+                        Text("Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu. Gdy uruchamia ją system przy logowaniu, zostaje włączona niezależnie od aplikacji.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .disabled(store.autostart == .foreign)
+
+                if store.autostart == .on {
+                    Label("Zadziała od następnego zalogowania.", systemImage: "info.circle")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                if store.autostart == .foreign {
+                    Label("W ~/Library/LaunchAgents jest już własny wpis o tej nazwie — aplikacja go nie rusza.", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
+            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        }
     }
 
     /// What `container system status` reports since 1.4.1.
