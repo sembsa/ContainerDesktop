@@ -6,6 +6,9 @@ struct SettingsView: View {
     @State private var binaryPath = BinaryResolver.overridePath ?? ""
     @AppStorage("appLanguageOverride") private var languageOverride = "system"
     @AppStorage(TerminalEngine.storageKey) private var terminalEngine = TerminalEngine.default.rawValue
+    /// Stored as an opt-*out* so that the absent default — `false` — means the
+    /// statistics are on, which is what a fresh install should do.
+    @AppStorage(InstallIdentifier.optOutKey) private var metricsOptOut = false
     @State private var showRelaunchNote = false
 
     var body: some View {
@@ -103,6 +106,20 @@ struct SettingsView: View {
                     Text("Odświeżanie")
                 }
             }
+
+            Section {
+                Toggle("Anonimowe statystyki", isOn: metricsEnabled)
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "hand.raised.fill")
+                        .foregroundStyle(Color.indigo.gradient)
+                    Text("Prywatność")
+                }
+            } footer: {
+                Text("Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
         .frame(width: 460)
@@ -114,6 +131,10 @@ struct SettingsView: View {
             applyLanguage(newValue)
             showRelaunchNote = true
         }
+    }
+
+    private var metricsEnabled: Binding<Bool> {
+        Binding(get: { !metricsOptOut }, set: { metricsOptOut = !$0 })
     }
 
     /// Overrides (or clears) the app's UI language by writing `AppleLanguages`.

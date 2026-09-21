@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "containerdesktop-appcast",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-21",
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "containerdesktop-installs",
+      // Filled in by `wrangler d1 create containerdesktop-installs`.
+      "database_id": "REPLACE_ME"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "containerdesktop-appcast",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "migrate:local": "wrangler d1 migrations apply containerdesktop-installs --local",
+    "migrate": "wrangler d1 migrations apply containerdesktop-installs --remote"
+  },
+  "devDependencies": {
+    "wrangler": "^4.136.1",
+    "@cloudflare/workers-types": "^5.20260921.1",
+    "typescript": "^5.7.0"
+  }
+}
