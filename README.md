@@ -86,6 +86,24 @@ Download the DMG from [Releases](../../releases), open it and drag **Container D
 ### Automatic updates
 Once installed, Container Desktop checks for updates with [Sparkle](https://sparkle-project.org) (use *Check for Updates…* in the app or menu-bar menu). Updates are verified with an EdDSA signature and Sparkle clears quarantine on the installed update, so after the first launch you won't need the Gatekeeper step again. Maintainer release flow (sign/notarize if available → `generate_appcast` → publish DMG + `docs/appcast.xml`) is documented in `scripts/package.sh`.
 
+### What the app sends back
+The update check is the only thing Container Desktop sends anywhere, and since
+0.8.3 it carries three values: a random identifier generated once on this
+installation, the app version, and the macOS version. They exist so the project
+can tell how many people use it and on which version — a question the appcast's
+own traffic cannot answer, because one machine checking daily looks like thirty
+machines checking once.
+
+It does **not** send your IP address, your computer's name, your account, or
+anything about the hardware. Sparkle's own system profile — which reports the
+Mac model, the CPU and the memory — stays switched off. Turn the whole thing off
+in *Settings → Privacy → Anonymous statistics*; updates keep working.
+
+*Od 0.8.3 program przy sprawdzaniu aktualizacji wysyła losowy identyfikator
+instalacji, swoją wersję i wersję macOS — po to, by dało się policzyć, ilu ludzi
+go używa. Bez adresu IP, bez nazwy komputera, bez danych o sprzęcie. Wyłącznik:
+Ustawienia → Prywatność → Anonimowe statystyki.*
+
 ### Build from source
 
 ```bash

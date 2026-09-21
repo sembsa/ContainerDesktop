@@ -44,8 +44,8 @@ schemes:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.8.2"
-    CURRENT_PROJECT_VERSION: "15"
+    MARKETING_VERSION: "0.8.3"
+    CURRENT_PROJECT_VERSION: "16"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     CODE_SIGN_IDENTITY: "-"
@@ -99,7 +99,7 @@ targets:
         NSSupportsAutomaticTermination: true
         NSSupportsSuddenTermination: false
         # Sparkle auto-update (appcast hosted on GitHub Pages).
-        SUFeedURL: https://sembsa.github.io/ContainerDesktop/appcast.xml
+        SUFeedURL: https://containerdesktop-appcast.sembsa.workers.dev/appcast.xml
         SUEnableAutomaticChecks: true
         SUPublicEDKey: D/C+a86F4ZfbqGMnz4YoO/EjNZKxYRSJ8eUgcjvHKbY=
 

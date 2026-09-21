@@ -9,7 +9,7 @@
       "binding": "DB",
       "database_name": "containerdesktop-installs",
       // Filled in by `wrangler d1 create containerdesktop-installs`.
-      "database_id": "REPLACE_ME"
+      "database_id": "37c8f721-5f53-48ac-bbc1-b6c224dad818"
     }
   ]
 }

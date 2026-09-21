@@ -933,3 +933,5 @@
 "Prywatność" = "Prywatność";
 "Anonimowe statystyki" = "Anonimowe statystyki";
 "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie.";
+"Anonimowe statystyki instalacji" = "Anonimowe statystyki instalacji";
+"Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność." = "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność.";

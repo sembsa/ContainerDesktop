@@ -37,6 +37,16 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.8.3",
+            items: [
+                Item(
+                    symbol: "hand.raised",
+                    title: String(localized: "Anonimowe statystyki instalacji"),
+                    detail: String(localized: "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.8.2",
             items: [
                 Item(
