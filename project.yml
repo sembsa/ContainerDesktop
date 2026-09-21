@@ -44,8 +44,8 @@ schemes:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.8.1"
-    CURRENT_PROJECT_VERSION: "14"
+    MARKETING_VERSION: "0.8.2"
+    CURRENT_PROJECT_VERSION: "15"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     CODE_SIGN_IDENTITY: "-"
@@ -95,7 +95,7 @@ targets:
         CFBundleName: Container Desktop
         LSApplicationCategoryType: public.app-category.developer-tools
         LSMinimumSystemVersion: "26.0"
-        NSHumanReadableCopyright: ""
+        NSHumanReadableCopyright: "© 2026 Sebastian Trześniewski · github.com/sembsa"
         NSSupportsAutomaticTermination: true
         NSSupportsSuddenTermination: false
         # Sparkle auto-update (appcast hosted on GitHub Pages).
@@ -154,6 +154,7 @@ targets:
       - path: ContainerGUI/CLI/ContainerCopyCheck.swift
       - path: ContainerGUI/CLI/ElevatedCommand.swift
       - path: ContainerGUI/CLI/ServiceAutostart.swift
+      - path: ContainerGUI/CLI/ContainerAutostart.swift
       - path: ContainerGUI/Common/RosettaStatus.swift
       - path: ContainerGUI/CLI/ContainerFileTransfer.swift
       - path: ContainerGUI/Features/WhatsNew/WhatsNew.swift

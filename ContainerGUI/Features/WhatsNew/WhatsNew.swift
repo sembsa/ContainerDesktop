@@ -37,6 +37,21 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.8.2",
+            items: [
+                Item(
+                    symbol: "play.circle",
+                    title: String(localized: "Wybrane kontenery wstają przy logowaniu"),
+                    detail: String(localized: "Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji.")
+                ),
+                Item(
+                    symbol: "checkmark.seal",
+                    title: String(localized: "Uruchamianie usługi przy logowaniu potwierdzone"),
+                    detail: String(localized: "Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.8.1",
             items: [
                 Item(

@@ -456,6 +456,19 @@ struct ContainersView: View {
         }
         .disabled(isPending)
         Divider()
+        Toggle(
+            "Uruchamiaj przy logowaniu",
+            isOn: Binding(
+                get: { model.system.autostartContainerIDs.contains(container.id) },
+                set: { _ in
+                    model.system.toggleAutostart(
+                        for: container.id, existing: store.items.map(\.id)
+                    )
+                }
+            )
+        )
+        .disabled(model.system.containerAutostart != .on)
+        Divider()
         Button("Eksportuj do tar…") { exportContainer(container) }
             .disabled(isPending)
         Button("Usuń…", role: .destructive) { confirmation = .remove(container) }

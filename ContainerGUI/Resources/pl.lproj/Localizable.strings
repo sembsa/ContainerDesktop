@@ -918,3 +918,15 @@
 "Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać." = "Uruchom usługę choć raz — dopiero wtedy powstaje plik, do którego można się odwołać.";
 "Usługa może startować przy logowaniu" = "Usługa może startować przy logowaniu";
 "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga." = "Usługa uruchomiona z aplikacji gaśnie po jej zamknięciu — to zachowanie systemu, nie decyzja aplikacji. Nowy przełącznik w sekcji System pozwala oddać jej uruchamianie systemowi, dzięki czemu zostaje włączona niezależnie od aplikacji. Działa od następnego zalogowania. To rozwiązanie wymaga jeszcze sprawdzenia w praktyce — daj znać, czy u Ciebie pomaga.";
+
+/* 0.8.2 — autostart kontenerów */
+"Uruchamiaj przy logowaniu" = "Uruchamiaj przy logowaniu";
+"Uruchamiaj też wybrane kontenery" = "Uruchamiaj też wybrane kontenery";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery.";
+"Zaznacz te, które teraz działają" = "Zaznacz te, które teraz działają";
+"Nie zaznaczono żadnego kontenera." = "Nie zaznaczono żadnego kontenera.";
+"Zaznaczone: %@" = "Zaznaczone: %@";
+"Wybrane kontenery wstają przy logowaniu" = "Wybrane kontenery wstają przy logowaniu";
+"Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji." = "Zaznacz kontenery w ich menu kontekstowym albo jednym przyciskiem przejmij te, które akurat działają. Po zalogowaniu system poczeka aż usługa wstanie i uruchomi je — bez otwierania aplikacji.";
+"Uruchamianie usługi przy logowaniu potwierdzone" = "Uruchamianie usługi przy logowaniu potwierdzone";
+"Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły." = "Przełącznik z poprzedniej wersji działa — usługa zostaje włączona po zamknięciu aplikacji. Dziękujemy osobom, które to sprawdziły.";

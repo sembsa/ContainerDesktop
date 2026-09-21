@@ -25,6 +25,11 @@ final class SystemStore {
     /// Whether launchd starts the service at login instead of the app starting
     /// it — the app starting it is what binds the service to the app's lifetime.
     var autostart: ServiceAutostart.State = .unavailable
+    /// Containers launchd should bring up at login, and whether the agent that
+    /// does it is installed. The list file on disk is the single source of
+    /// truth — keeping a second copy in preferences would only drift.
+    var containerAutostart: ContainerAutostart.State = .off
+    var autostartContainerIDs: [String] = []
 
     private let cli = ContainerCLI.shared
     private var epoch: UInt64 = 0
@@ -111,6 +116,48 @@ final class SystemStore {
             lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
         }
         refreshAutostart()
+    }
+
+    func refreshContainerAutostart() {
+        containerAutostart = ContainerAutostart.current()
+        let text = (try? String(contentsOf: ContainerAutostart.listURL, encoding: .utf8)) ?? ""
+        autostartContainerIDs = ContainerAutostart.parseList(text)
+    }
+
+    func setContainerAutostart(_ enabled: Bool) {
+        do {
+            if enabled {
+                guard let binary = BinaryResolver.resolve() else { throw CLIError.notInstalled }
+                try ContainerAutostart.enable(binary: binary)
+            } else {
+                try ContainerAutostart.disable()
+            }
+            lastActionError = nil
+        } catch let error as CLIError {
+            lastActionError = error
+        } catch {
+            lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
+        }
+        refreshContainerAutostart()
+    }
+
+    /// Replaces the selection, dropping ids that no longer exist.
+    func setAutostartContainers(_ selected: Set<String>, existing: [String]) {
+        do {
+            try ContainerAutostart.writeList(
+                ContainerAutostart.pruned(selected: selected, existing: existing)
+            )
+            lastActionError = nil
+        } catch {
+            lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
+        }
+        refreshContainerAutostart()
+    }
+
+    func toggleAutostart(for id: String, existing: [String]) {
+        var selected = Set(autostartContainerIDs)
+        if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
+        setAutostartContainers(selected, existing: existing)
     }
 
     func refreshRosetta() {
