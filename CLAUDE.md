@@ -154,7 +154,9 @@ version runs and is reopenable from the app menu. **Add an entry when you bump
 5. Verify: **both** feed URLs return HTTP 200 with the new `sparkle:version` — the
    Worker (`SUFeedURL`) and the Pages original it proxies — and the DMG URL returns 200.
    The Worker serves whatever Pages serves, so a stale Pages commit is invisible from
-   the app's side until someone compares the two.
+   the app's side until someone compares the two. **Expect the Worker to lag Pages by
+   up to ~15 min** right after the appcast commit — Pages has its own CDN cache and the
+   Worker adds a 300 s `cacheTtl` on top. Re-check; do not redeploy the Worker.
 - Distribution is **ad-hoc signed, not notarized** → first launch needs *System Settings → Privacy & Security → Open Anyway* (or `xattr -dr com.apple.quarantine`). Sparkle clears quarantine on its installed updates, so updates after the first install are seamless.
 - **Caveat**: builds older than ~mid-June (no Sparkle) cannot auto-update — they must be replaced manually once.
 
