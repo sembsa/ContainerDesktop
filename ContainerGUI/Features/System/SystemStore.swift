@@ -22,6 +22,9 @@ final class SystemStore {
     /// every amd64 image on an arm64 host, flag or no flag.
     var rosetta: RosettaStatus.Availability = .notApplicable
     var isInstallingRosetta = false
+    /// Whether launchd starts the service at login instead of the app starting
+    /// it — the app starting it is what binds the service to the app's lifetime.
+    var autostart: ServiceAutostart.State = .unavailable
 
     private let cli = ContainerCLI.shared
     private var epoch: UInt64 = 0
@@ -92,6 +95,22 @@ final class SystemStore {
     func restart() async {
         await stop()
         await start()
+    }
+
+    func refreshAutostart() {
+        autostart = ServiceAutostart.current()
+    }
+
+    func setAutostart(_ enabled: Bool) {
+        do {
+            if enabled { try ServiceAutostart.enable() } else { try ServiceAutostart.disable() }
+            lastActionError = nil
+        } catch let error as CLIError {
+            lastActionError = error
+        } catch {
+            lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
+        }
+        refreshAutostart()
     }
 
     func refreshRosetta() {

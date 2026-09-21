@@ -44,8 +44,8 @@ schemes:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.8.0"
-    CURRENT_PROJECT_VERSION: "13"
+    MARKETING_VERSION: "0.8.1"
+    CURRENT_PROJECT_VERSION: "14"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     CODE_SIGN_IDENTITY: "-"
@@ -153,6 +153,7 @@ targets:
       - path: ContainerGUI/CLI/BinaryResolver.swift
       - path: ContainerGUI/CLI/ContainerCopyCheck.swift
       - path: ContainerGUI/CLI/ElevatedCommand.swift
+      - path: ContainerGUI/CLI/ServiceAutostart.swift
       - path: ContainerGUI/Common/RosettaStatus.swift
       - path: ContainerGUI/CLI/ContainerFileTransfer.swift
       - path: ContainerGUI/Features/WhatsNew/WhatsNew.swift
