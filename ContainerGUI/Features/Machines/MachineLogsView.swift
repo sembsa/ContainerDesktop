@@ -40,9 +40,8 @@ struct MachineLogsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            controls
-            Divider()
             content
+            controls
         }
         .task(id: reloadKey) { await load() }
     }
@@ -51,32 +50,47 @@ struct MachineLogsView: View {
     /// than filtered.
     private var reloadKey: String { "\(machineName)|\(kind.rawValue)|\(follow)" }
 
+    @MainActor
+    private func export(_ scope: LogExportScope) async {
+        let subject = kind == .boot ? "\(machineName)-boot" : machineName
+        guard let url = LogExport.chooseDestination(
+            suggesting: LogExport.suggestedName(for: subject, at: .now)
+        ) else { return }
+        do {
+            switch scope {
+            case .visible:
+                try LogExport.write(lines.map(\.text), to: url)
+            case .everything:
+                // `lines: nil` is what omits -n, so the CLI prints the lot; it
+                // goes straight to the file rather than through a String.
+                let result = try await ContainerCLI.shared.runRedirecting(
+                    MachineCommands.logs(
+                        name: machineName, boot: kind == .boot, follow: false, lines: nil
+                    ),
+                    outputPath: url.path
+                )
+                if result.exitCode != 0 {
+                    throw CLIError.command(exitCode: result.exitCode, stderr: result.stderr)
+                }
+            }
+        } catch {
+            errorText = error.localizedDescription
+        }
+    }
+
     private var controls: some View {
-        HStack(spacing: 8) {
-            Picker("", selection: $kind) {
+        LogToolbar(
+            lineCount: lines.count, autoscroll: $follow, copy: copyAll,
+            exportScopes: [.visible, .everything],
+            export: { scope in Task { await export(scope) } }
+        ) {
+            Picker("Strumień", selection: $kind) {
                 ForEach(Kind.allCases) { Text($0.title).tag($0) }
             }
             .pickerStyle(.segmented)
             .labelsHidden()
             .fixedSize()
-
-            Toggle("Autoprzewijanie", isOn: $follow)
-                .toggleStyle(.button)
-                .controlSize(.small)
-
-            Spacer()
-
-            if !lines.isEmpty {
-                Text("\(lines.count) linii")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Button("Kopiuj", systemImage: "doc.on.doc") { copyAll() }
-                    .buttonStyle(.borderless)
-                    .controlSize(.small)
-            }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
     }
 
     @ViewBuilder

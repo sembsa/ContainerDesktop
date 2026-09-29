@@ -88,21 +88,28 @@ struct WorkloadDescribeView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView([.vertical, .horizontal]) {
-                    Text(text)
-                        .font(.system(.caption, design: .monospaced))
-                        .textSelection(.enabled)
-                        .padding(12)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .overlay(alignment: .bottomTrailing) {
-                    Button("Kopiuj", systemImage: "doc.on.doc") {
-                        NSPasteboard.general.clearContents()
-                        NSPasteboard.general.setString(text, forType: .string)
+                VStack(spacing: 0) {
+                    ScrollView([.vertical, .horizontal]) {
+                        Text(text)
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .buttonStyle(.borderless)
-                    .controlSize(.small)
-                    .padding(8)
+                    // The last floating control in the app: it used to sit on
+                    // the text, over whatever the description ended with.
+                    Divider()
+                    HStack {
+                        Spacer()
+                        Button("Kopiuj", systemImage: "doc.on.doc") {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(text, forType: .string)
+                        }
+                        .controlSize(.small)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(.bar)
                 }
             }
         }
@@ -141,9 +148,8 @@ struct PodLogsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            controls
-            Divider()
             content
+            controls
         }
         .task(id: reloadKey) { await load() }
     }
@@ -151,7 +157,14 @@ struct PodLogsView: View {
     private var reloadKey: String { "\(pod.id)|\(container ?? "")|\(follow)" }
 
     private var controls: some View {
-        HStack(spacing: 8) {
+        // Only what is loaded: these lines come from a store-owned stream rather
+        // than an argv this view could re-run, so "everything" would be a
+        // promise the view cannot keep.
+        LogToolbar(
+            lineCount: lines.count, autoscroll: $follow, copy: copyAll,
+            exportScopes: [.visible],
+            export: { _ in exportVisible() }
+        ) {
             if pod.containerNames.count > 1 {
                 Picker("Kontener", selection: $container) {
                     ForEach(pod.containerNames, id: \.self) { name in
@@ -159,25 +172,28 @@ struct PodLogsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                .labelsHidden()
                 .controlSize(.small)
                 .fixedSize()
             }
-            Toggle("Autoprzewijanie", isOn: $follow)
-                .toggleStyle(.button)
-                .controlSize(.small)
-            Spacer()
-            if !lines.isEmpty {
-                Text("\(lines.count) linii").font(.caption).foregroundStyle(.secondary)
-                Button("Kopiuj", systemImage: "doc.on.doc") {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(lines.map(\.text).joined(separator: "\n"), forType: .string)
-                }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
-            }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+    }
+
+    private func copyAll() {
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(lines.map(\.text).joined(separator: "\n"), forType: .string)
+    }
+
+    private func exportVisible() {
+        let subject = container.map { "\(pod.metadata.name)-\($0)" } ?? pod.metadata.name
+        guard let url = LogExport.chooseDestination(
+            suggesting: LogExport.suggestedName(for: subject, at: .now)
+        ) else { return }
+        do {
+            try LogExport.write(lines.map(\.text), to: url)
+        } catch {
+            errorText = error.localizedDescription
+        }
     }
 
     @ViewBuilder

@@ -494,7 +494,6 @@
 "kontener %@ zachowany do wglądu logów" = "container %@ kept for log inspection";
 
 /* Features/Containers/LogsView.swift — logs toolbar */
-"Kopiuj wszystko" = "Copy all";
 "Znaczniki czasu" = "Timestamps";
 "Kopiuje wszystkie widoczne linie logu do schowka" = "Copies every visible log line to the clipboard";
 
@@ -946,3 +945,12 @@
 "Rozwiń lub zwiń projekt" = "Expand or collapse the project";
 "Wybierz z pobranych obrazów" = "Pick from pulled images";
 "Tylko do odczytu" = "Read-only";
+"Linii: %d" = "Lines: %d";
+"Ile historii" = "How much history";
+"Strumień" = "Stream";
+"Zapisz widoczne…" = "Save what is shown…";
+"Zapisz cały log…" = "Save the whole log…";
+"Zapisuje log do pliku" = "Writes the log to a file";
+"Zapisz log" = "Save log";
+"Nie udało się zapisać logu" = "Could not save the log";
+"OK" = "OK";

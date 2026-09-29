@@ -494,7 +494,6 @@
 "kontener %@ zachowany do wglądu logów" = "kontener %@ zachowany do wglądu logów";
 
 /* Features/Containers/LogsView.swift — pasek narzędzi logów */
-"Kopiuj wszystko" = "Kopiuj wszystko";
 "Znaczniki czasu" = "Znaczniki czasu";
 "Kopiuje wszystkie widoczne linie logu do schowka" = "Kopiuje wszystkie widoczne linie logu do schowka";
 
@@ -946,3 +945,12 @@
 "Rozwiń lub zwiń projekt" = "Rozwiń lub zwiń projekt";
 "Wybierz z pobranych obrazów" = "Wybierz z pobranych obrazów";
 "Tylko do odczytu" = "Tylko do odczytu";
+"Linii: %d" = "Linii: %d";
+"Ile historii" = "Ile historii";
+"Strumień" = "Strumień";
+"Zapisz widoczne…" = "Zapisz widoczne…";
+"Zapisz cały log…" = "Zapisz cały log…";
+"Zapisuje log do pliku" = "Zapisuje log do pliku";
+"Zapisz log" = "Zapisz log";
+"Nie udało się zapisać logu" = "Nie udało się zapisać logu";
+"OK" = "OK";

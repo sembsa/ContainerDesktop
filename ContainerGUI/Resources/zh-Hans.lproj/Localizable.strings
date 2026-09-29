@@ -494,7 +494,6 @@
 "kontener %@ zachowany do wglądu logów" = "已保留容器 %@ 以便查看日志";
 
 /* Features/Containers/LogsView.swift — logs toolbar */
-"Kopiuj wszystko" = "全部复制";
 "Znaczniki czasu" = "时间戳";
 "Kopiuje wszystkie widoczne linie logu do schowka" = "将所有可见的日志行复制到剪贴板";
 
@@ -946,3 +945,12 @@
 "Rozwiń lub zwiń projekt" = "展开或折叠项目";
 "Wybierz z pobranych obrazów" = "从已拉取的镜像中选择";
 "Tylko do odczytu" = "只读";
+"Linii: %d" = "行数：%d";
+"Ile historii" = "历史范围";
+"Strumień" = "流";
+"Zapisz widoczne…" = "保存当前显示…";
+"Zapisz cały log…" = "保存完整日志…";
+"Zapisuje log do pliku" = "将日志写入文件";
+"Zapisz log" = "保存日志";
+"Nie udało się zapisać logu" = "无法保存日志";
+"OK" = "好";
