@@ -171,6 +171,7 @@ struct RunContainerSheet: View {
                         } label: {
                             Image(systemName: "chevron.down")
                         }
+                        .iconHelp(String(localized: "Wybierz z pobranych obrazów"))
                         .menuStyle(.borderlessButton)
                         .menuIndicator(.hidden)
                         .frame(width: 28)
@@ -283,7 +284,12 @@ struct RunContainerSheet: View {
                 TextField("ścieżka w kontenerze", text: $mount.destination, prompt: Text("ścieżka w kontenerze"))
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
-                Toggle("ro", isOn: $mount.readOnly).toggleStyle(.checkbox)
+                // A checkbox rather than the switch used elsewhere: this row is
+                // path → path → flag, and a switch would swallow it. "ro" is no
+                // use to a screen reader, hence the spelled-out name.
+                Toggle("ro", isOn: $mount.readOnly)
+                    .toggleStyle(.checkbox)
+                    .iconHelp(String(localized: "Tylko do odczytu"))
             }
 
             Section {

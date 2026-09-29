@@ -363,51 +363,34 @@ struct ContainersView: View {
         let isPending = store.pendingIDs.contains(container.id)
         HStack(spacing: 4) {
             if container.isRunning {
-                Button {
+                IconButton(symbol: "stop.fill", description: String(localized: "Zatrzymaj")) {
                     Task { await perform { try await store.stop(container) } }
-                } label: {
-                    Image(systemName: "stop.fill")
                 }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
                 .disabled(isPending)
-                .help("Zatrzymaj")
 
-                Button {
+                IconButton(
+                    symbol: "arrow.clockwise", description: String(localized: "Uruchom ponownie")
+                ) {
                     Task { await perform { try await store.restart(container) } }
-                } label: {
-                    Image(systemName: "arrow.clockwise")
                 }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
                 .disabled(isPending)
-                .help("Uruchom ponownie")
             } else {
-                Button {
+                IconButton(symbol: "play.fill", description: String(localized: "Uruchom")) {
                     Task { await perform { try await store.start(container) } }
-                } label: {
-                    Image(systemName: "play.fill")
                 }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
                 .disabled(isPending)
-                .help("Uruchom")
             }
 
             // Set apart and tinted: it is the only irreversible button in the
             // row, and it sits where a mis-aimed click at "stop" would land.
             // The confirmation dialog is what actually makes that safe.
             Divider().frame(height: 12)
-            Button {
+            IconButton(
+                symbol: "trash", description: String(localized: "Usuń"), tint: .red
+            ) {
                 confirmation = .remove(container)
-            } label: {
-                Image(systemName: "trash")
             }
-            .buttonStyle(.borderless)
-            .controlSize(.small)
-            .tint(.red)
             .disabled(isPending)
-            .help("Usuń")
         }
     }
 
@@ -418,44 +401,34 @@ struct ContainersView: View {
         let anyStopped = containers.contains { !$0.isRunning }
         HStack(spacing: 4) {
             if anyStopped {
-                Button {
+                IconButton(
+                    symbol: "play.fill", description: String(localized: "Uruchom wszystkie")
+                ) {
                     Task {
                         for c in containers where !c.isRunning {
                             await perform { try await store.start(c) }
                         }
                     }
-                } label: {
-                    Image(systemName: "play.fill")
                 }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
-                .help("Uruchom wszystkie")
             }
             if anyRunning {
-                Button {
+                IconButton(
+                    symbol: "stop.fill", description: String(localized: "Zatrzymaj wszystkie")
+                ) {
                     Task {
                         for c in containers where c.isRunning {
                             await perform { try await store.stop(c) }
                         }
                     }
-                } label: {
-                    Image(systemName: "stop.fill")
                 }
-                .buttonStyle(.borderless)
-                .controlSize(.small)
-                .help("Zatrzymaj wszystkie")
             }
 
             Divider().frame(height: 12)
-            Button {
+            IconButton(
+                symbol: "trash", description: String(localized: "Usuń projekt"), tint: .red
+            ) {
                 confirmation = .removeProject(projectName, containers)
-            } label: {
-                Image(systemName: "trash")
             }
-            .buttonStyle(.borderless)
-            .controlSize(.small)
-            .tint(.red)
-            .help("Usuń projekt")
         }
     }
 
@@ -526,7 +499,7 @@ struct ContainersView: View {
                             }
                             .buttonStyle(.borderless)
                             .controlSize(.mini)
-                            .help(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
+                            .iconHelp(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
                         }
                     }
                 }

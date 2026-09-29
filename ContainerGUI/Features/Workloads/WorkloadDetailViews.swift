@@ -162,9 +162,9 @@ struct PodLogsView: View {
                 .controlSize(.small)
                 .fixedSize()
             }
-            Toggle("Śledź", isOn: $follow)
-                .toggleStyle(.switch)
-                .controlSize(.mini)
+            Toggle("Autoprzewijanie", isOn: $follow)
+                .toggleStyle(.button)
+                .controlSize(.small)
             Spacer()
             if !lines.isEmpty {
                 Text("\(lines.count) linii").font(.caption).foregroundStyle(.secondary)

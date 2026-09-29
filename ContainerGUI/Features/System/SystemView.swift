@@ -139,6 +139,7 @@ struct SystemView: View {
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
+                .toggleStyle(.switch)
                 .disabled(store.autostart == .foreign)
 
                 if store.autostart == .on {
@@ -161,6 +162,7 @@ struct SystemView: View {
                                 .fixedSize(horizontal: false, vertical: true)
                         }
                     }
+                    .toggleStyle(.switch)
                     .disabled(store.containerAutostart == .foreign)
 
                     if store.containerAutostart == .on {
@@ -508,7 +510,7 @@ struct SystemView: View {
                     Image(systemName: "arrow.clockwise")
                 }
                 .buttonStyle(.borderless)
-                .help("Odśwież logi")
+                .iconHelp(String(localized: "Odśwież logi"))
             }
 
             if store.isLoadingLogs && store.systemLogs == nil {

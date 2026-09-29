@@ -43,11 +43,13 @@ struct FileBrowser: View {
         HStack(spacing: 6) {
             Button { goUp() } label: { Image(systemName: "arrow.up") }
                 .disabled(path == "/")
+                .iconHelp(String(localized: "Katalog wyżej"))
             TextField("Ścieżka", text: $path)
                 .textFieldStyle(.roundedBorder)
                 .onSubmit { Task { await load() } }
             InfoTip(text: String(localized: "Przeglądanie przez container exec ls — wymaga działającego kontenera. Kopiowanie plików: container cp w obie strony."))
             Button { Task { await load() } } label: { Image(systemName: "arrow.clockwise") }
+                .iconHelp(String(localized: "Odśwież listę plików"))
             Button { performUpload() } label: { Label("Wyślij…", systemImage: "square.and.arrow.up") }
             if busyMessage != nil { ProgressView().controlSize(.small) }
         }
@@ -78,7 +80,7 @@ struct FileBrowser: View {
                         if !entry.isDirectory {
                             Button { performDownload(entry) } label: { Image(systemName: "square.and.arrow.down") }
                                 .buttonStyle(.borderless)
-                                .help("Pobierz na dysk")
+                                .iconHelp(String(localized: "Pobierz na dysk"))
                         }
                     }
                     .contentShape(Rectangle())

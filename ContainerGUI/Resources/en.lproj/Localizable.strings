@@ -291,7 +291,6 @@
 /* Features/Machines/MachineLogsView.swift */
 "Standardowe wyjście" = "Standard output";
 "Log rozruchu" = "Boot log";
-"Śledź" = "Follow";
 "%lld linii" = "%lld lines";
 "Nie udało się odczytać logów" = "Could not read the logs";
 "Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona." = "The machine has written no boot log — usually that means it was never started.";
@@ -939,3 +938,11 @@
 "Wybrane ręcznie" = "Picked by hand";
 "Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca." = "Back come the containers that were running when the app last looked — you pick nothing. One you stopped on purpose simply does not return.";
 "Które kontenery" = "Which containers";
+"Katalog wyżej" = "Up one folder";
+"Odśwież listę plików" = "Refresh the file list";
+"Pokaż podpowiedź" = "Show hint";
+"Więcej działań" = "More actions";
+"Więcej działań projektu" = "More project actions";
+"Rozwiń lub zwiń projekt" = "Expand or collapse the project";
+"Wybierz z pobranych obrazów" = "Pick from pulled images";
+"Tylko do odczytu" = "Read-only";

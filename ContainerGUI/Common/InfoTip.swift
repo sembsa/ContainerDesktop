@@ -18,6 +18,7 @@ struct InfoTip: View {
                         .foregroundStyle(.secondary)
                 }
                 .buttonStyle(.borderless)
+                .iconHelp(String(localized: "Pokaż podpowiedź"))
                 .controlSize(.small)
             } else {
                 // Toolbar variant: NO style/font overrides — the toolbar then

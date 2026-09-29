@@ -258,6 +258,7 @@ struct ContainerCard: View {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 12, weight: .semibold))
             }
+            .iconHelp(String(localized: "Więcej działań"))
             .menuStyle(.borderlessButton)
             .menuIndicator(.hidden)
             .frame(width: 26)
@@ -432,6 +433,7 @@ struct ComposeProjectCard: View {
                     .frame(width: 16)
             }
             .buttonStyle(.plain)
+            .iconHelp(String(localized: "Rozwiń lub zwiń projekt"))
 
             Image(systemName: "square.stack.3d.down.right.fill")
                 .font(.system(size: 13, weight: .semibold))
@@ -483,6 +485,7 @@ struct ComposeProjectCard: View {
             } label: {
                 Image(systemName: "ellipsis").font(.system(size: 12, weight: .semibold))
             }
+            .iconHelp(String(localized: "Więcej działań projektu"))
             .menuStyle(.borderlessButton)
             .menuIndicator(.hidden)
             .frame(width: 26)
@@ -556,7 +559,7 @@ struct CardButton: View {
                 )
         }
         .buttonStyle(.plain)
-        .help(help)
+        .iconHelp(help)
         .onHover { isHovering = $0 }
         .animation(.smooth(duration: 0.15), value: isHovering)
     }

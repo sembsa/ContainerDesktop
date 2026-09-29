@@ -205,6 +205,7 @@ struct HelmView: View {
                 } label: {
                     Image(systemName: "ellipsis.circle")
                 }
+                .iconHelp(String(localized: "Więcej działań"))
                 .menuStyle(.borderlessButton)
                 .menuIndicator(.hidden)
                 .frame(width: 28)

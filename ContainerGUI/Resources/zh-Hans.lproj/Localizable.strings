@@ -291,7 +291,6 @@
 /* Features/Machines/MachineLogsView.swift */
 "Standardowe wyjście" = "标准输出";
 "Log rozruchu" = "启动日志";
-"Śledź" = "跟随";
 "%lld linii" = "%lld 行";
 "Nie udało się odczytać logów" = "无法读取日志";
 "Maszyna nie zapisała logu rozruchu — najczęściej znaczy to, że nigdy nie była uruchomiona." = "该虚拟机没有启动日志——通常说明它从未被启动过。";
@@ -939,3 +938,11 @@
 "Wybrane ręcznie" = "手动选择";
 "Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca." = "应用最后一次查看时正在运行的容器会自动回来 — 你无需选择任何东西。你有意停止的容器不会回来。";
 "Które kontenery" = "哪些容器";
+"Katalog wyżej" = "上一级文件夹";
+"Odśwież listę plików" = "刷新文件列表";
+"Pokaż podpowiedź" = "显示提示";
+"Więcej działań" = "更多操作";
+"Więcej działań projektu" = "更多项目操作";
+"Rozwiń lub zwiń projekt" = "展开或折叠项目";
+"Wybierz z pobranych obrazów" = "从已拉取的镜像中选择";
+"Tylko do odczytu" = "只读";

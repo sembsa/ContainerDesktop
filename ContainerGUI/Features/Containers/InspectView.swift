@@ -258,7 +258,7 @@ private struct EnvRow: View {
             }
             .buttonStyle(.borderless)
             .controlSize(.small)
-            .help("Kopiuj \(entry)")
+            .iconHelp(String(format: String(localized: "Kopiuj %@"), entry))
         }
         .padding(.vertical, 1)
     }
@@ -295,7 +295,7 @@ private struct PortsCard: View {
                                 }
                                 .buttonStyle(.borderless)
                                 .controlSize(.mini)
-                                .help(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
+                                .iconHelp(String(format: String(localized: "Otwórz http://localhost:%lld w przeglądarce"), hostPort))
                             }
                         }
                     }

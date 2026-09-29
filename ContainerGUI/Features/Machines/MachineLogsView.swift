@@ -60,9 +60,9 @@ struct MachineLogsView: View {
             .labelsHidden()
             .fixedSize()
 
-            Toggle("Śledź", isOn: $follow)
-                .toggleStyle(.switch)
-                .controlSize(.mini)
+            Toggle("Autoprzewijanie", isOn: $follow)
+                .toggleStyle(.button)
+                .controlSize(.small)
 
             Spacer()
 
