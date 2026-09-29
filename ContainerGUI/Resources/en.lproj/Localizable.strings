@@ -921,8 +921,8 @@
 
 /* 0.8.2 — autostart kontenerów */
 "Uruchamiaj przy logowaniu" = "Start at login";
-"Uruchamiaj też wybrane kontenery" = "Start selected containers too";
-"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container has no restart policy of its own, so a separate system entry does it: it waits for the service to come up, then starts the selected containers.";
+"Uruchamiaj też kontenery" = "Start containers too";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia kontenery z listy." = "container has no restart policy of its own, so a separate system entry does it: it waits for the service to come up, then starts the containers on the list.";
 "Zaznacz te, które teraz działają" = "Select the ones running now";
 "Nie zaznaczono żadnego kontenera." = "No containers selected.";
 "Zaznaczone: %@" = "Selected: %@";
@@ -935,3 +935,7 @@
 "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "When the app checks for updates it sends a random installation identifier, the app version and the macOS version — just enough to count how many people use the app and on which version. It does not send your IP address, your computer's name, or anything that points back to you.";
 "Anonimowe statystyki instalacji" = "Anonymous installation statistics";
 "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność." = "When it checks for updates the app sends a random installation identifier, its own version and the macOS version — just enough to count how many people use it and on which version. No IP address, no computer name. The switch is in Settings, under Privacy.";
+"Te, które działały" = "Whatever was running";
+"Wybrane ręcznie" = "Picked by hand";
+"Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca." = "Back come the containers that were running when the app last looked — you pick nothing. One you stopped on purpose simply does not return.";
+"Które kontenery" = "Which containers";

@@ -87,9 +87,19 @@ final class AppModel {
         guard system.serviceState.isRunning else { return }
         // Prefetch primary sections so switching is instant.
         await containers.refresh()
+        syncContainerAutostart()
         await images.refresh()
         await volumes.refresh()
         await networks.refresh()
+    }
+
+    /// Records what is running so the login agent can bring it back.
+    ///
+    /// Does nothing unless container autostart is on and set to follow what
+    /// runs; `syncAutostartWithRunning` writes only when the set changed, so
+    /// calling this on every tick costs a set comparison.
+    private func syncContainerAutostart() {
+        system.syncAutostartWithRunning(containers.items.filter(\.isRunning).map(\.id))
     }
 
     func refreshCurrent() async {
@@ -106,6 +116,7 @@ final class AppModel {
         // hour-old snapshot stamped with the current time — which would make the
         // widget's "how fresh is this" label a lie.
         await containers.refresh()
+        syncContainerAutostart()
 
         switch selection {
         case .containers: break // just refreshed

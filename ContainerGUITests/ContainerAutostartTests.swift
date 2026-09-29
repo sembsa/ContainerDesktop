@@ -6,6 +6,61 @@ import XCTest
 /// the bookkeeping around the selection — the parts that are wrong silently.
 final class ContainerAutostartTests: XCTestCase {
 
+    // MARK: - Following what runs
+
+    func testTheListIsNotRewrittenWhenNothingChanged() {
+        // Asked on every refresh, so an unconditional answer would rewrite the
+        // file every few seconds for no reason.
+        XCTAssertNil(
+            ContainerAutostart.listFollowingRunning(running: ["a", "b"], current: ["a", "b"])
+        )
+    }
+
+    func testReorderingAloneIsNotAChange() {
+        // The container list re-sorts; the set it describes did not move.
+        XCTAssertNil(
+            ContainerAutostart.listFollowingRunning(running: ["b", "a"], current: ["a", "b"])
+        )
+    }
+
+    func testAContainerThatStartedIsAdded() {
+        XCTAssertEqual(
+            ContainerAutostart.listFollowingRunning(running: ["a", "b"], current: ["a"]),
+            ["a", "b"]
+        )
+    }
+
+    func testAContainerStoppedOnPurposeStopsComingBack() {
+        // The whole point of the mode: stopping something is how you opt it out.
+        XCTAssertEqual(
+            ContainerAutostart.listFollowingRunning(running: ["a"], current: ["a", "b"]),
+            ["a"]
+        )
+    }
+
+    func testTheLastContainerStoppingEmptiesTheList() {
+        XCTAssertEqual(
+            ContainerAutostart.listFollowingRunning(running: [], current: ["a"]),
+            []
+        )
+    }
+
+    func testAnEmptyListStaysEmptyRatherThanBeingRewritten() {
+        XCTAssertNil(ContainerAutostart.listFollowingRunning(running: [], current: []))
+    }
+
+    // MARK: - Which mode an upgrade lands in
+
+    func testAFreshInstallFollowsWhatIsRunning() {
+        XCTAssertEqual(ContainerAutostart.initialMode(hasExistingSelection: false), .running)
+    }
+
+    func testAnExistingSelectionIsNotSilentlyConvertedToAutomatic() {
+        // Someone who picked 2 of 10 containers meant the other 8 to stay down;
+        // upgrading them into "whatever runs" would start all ten.
+        XCTAssertEqual(ContainerAutostart.initialMode(hasExistingSelection: true), .selected)
+    }
+
     // MARK: - The selection
 
     func testOnlyContainersThatStillExistSurvive() {

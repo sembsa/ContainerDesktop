@@ -393,6 +393,21 @@ struct ContainersView: View {
                 .disabled(isPending)
                 .help("Uruchom")
             }
+
+            // Set apart and tinted: it is the only irreversible button in the
+            // row, and it sits where a mis-aimed click at "stop" would land.
+            // The confirmation dialog is what actually makes that safe.
+            Divider().frame(height: 12)
+            Button {
+                confirmation = .remove(container)
+            } label: {
+                Image(systemName: "trash")
+            }
+            .buttonStyle(.borderless)
+            .controlSize(.small)
+            .tint(.red)
+            .disabled(isPending)
+            .help("Usuń")
         }
     }
 
@@ -430,6 +445,17 @@ struct ContainersView: View {
                 .controlSize(.small)
                 .help("Zatrzymaj wszystkie")
             }
+
+            Divider().frame(height: 12)
+            Button {
+                confirmation = .removeProject(projectName, containers)
+            } label: {
+                Image(systemName: "trash")
+            }
+            .buttonStyle(.borderless)
+            .controlSize(.small)
+            .tint(.red)
+            .help("Usuń projekt")
         }
     }
 
@@ -455,19 +481,21 @@ struct ContainersView: View {
             recreateTarget = container
         }
         .disabled(isPending)
-        Divider()
-        Toggle(
-            "Uruchamiaj przy logowaniu",
-            isOn: Binding(
-                get: { model.system.autostartContainerIDs.contains(container.id) },
-                set: { _ in
-                    model.system.toggleAutostart(
-                        for: container.id, existing: store.items.map(\.id)
-                    )
-                }
+        if model.system.containerAutostartMode == .selected {
+            Divider()
+            Toggle(
+                "Uruchamiaj przy logowaniu",
+                isOn: Binding(
+                    get: { model.system.autostartContainerIDs.contains(container.id) },
+                    set: { _ in
+                        model.system.toggleAutostart(
+                            for: container.id, existing: store.items.map(\.id)
+                        )
+                    }
+                )
             )
-        )
-        .disabled(model.system.containerAutostart != .on)
+            .disabled(model.system.containerAutostart != .on)
+        }
         Divider()
         Button("Eksportuj do tar…") { exportContainer(container) }
             .disabled(isPending)

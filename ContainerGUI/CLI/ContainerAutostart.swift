@@ -33,6 +33,41 @@ enum ContainerAutostart {
         case foreign
     }
 
+    /// Where the list comes from.
+    enum Mode: String, CaseIterable, Identifiable, Sendable {
+        /// The app keeps the list in step with whatever is actually running, so
+        /// a machine comes back up the way it went down and nobody picks
+        /// anything. The list is still a file of ids — only its author changes.
+        case running
+        /// The list is hand-picked, one container at a time.
+        case selected
+
+        static let storageKey = "containerAutostartMode"
+        var id: String { rawValue }
+    }
+
+    /// Which mode a copy of the app that has never stored one should start in.
+    ///
+    /// A fresh install wants `.running`: it is the behaviour people asked for
+    /// and the one that needs no explanation. But someone already running a
+    /// hand-picked list chose those containers on purpose, and flipping them to
+    /// "whatever runs" on upgrade would quietly start the ones they left out.
+    /// An existing selection therefore keeps its meaning.
+    static func initialMode(hasExistingSelection: Bool) -> Mode {
+        hasExistingSelection ? .selected : .running
+    }
+
+    /// The list to write so it follows what is running, or `nil` when the file
+    /// already says this.
+    ///
+    /// The caller asks on every refresh — every few seconds — so returning the
+    /// list unconditionally would rewrite the file constantly. Order is ignored
+    /// because it carries no meaning here and would otherwise force a write
+    /// whenever the container list re-sorted.
+    static func listFollowingRunning(running: [String], current: [String]) -> [String]? {
+        Set(running) == Set(current) ? nil : running
+    }
+
     // MARK: - The selection
 
     /// Drops ids that no longer exist, so a deleted container cannot haunt the

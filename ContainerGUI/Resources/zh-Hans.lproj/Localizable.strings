@@ -921,8 +921,8 @@
 
 /* 0.8.2 — autostart kontenerów */
 "Uruchamiaj przy logowaniu" = "登录时启动";
-"Uruchamiaj też wybrane kontenery" = "同时启动选定的容器";
-"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container 本身没有重启策略，因此由一个独立的系统项来完成：等待服务启动后，再启动选定的容器。";
+"Uruchamiaj też kontenery" = "同时启动容器";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia kontenery z listy." = "container 本身没有重启策略，因此由一个独立的系统项来完成：等待服务启动后，再启动列表中的容器。";
 "Zaznacz te, które teraz działają" = "选择当前正在运行的容器";
 "Nie zaznaczono żadnego kontenera." = "未选择任何容器。";
 "Zaznaczone: %@" = "已选择：%@";
@@ -935,3 +935,7 @@
 "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "检查更新时会发送一个随机的安装标识符、应用版本和 macOS 版本 — 仅用于统计有多少人在使用本应用以及使用哪个版本。不会发送你的 IP 地址、电脑名称，或任何可以指向你的信息。";
 "Anonimowe statystyki instalacji" = "匿名安装统计";
 "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność." = "检查更新时，应用会发送一个随机的安装标识符、自身版本和 macOS 版本 — 仅够统计有多少人在使用以及使用哪个版本。不含 IP 地址，不含电脑名称。开关位于「设置」的「隐私」一节。";
+"Te, które działały" = "此前运行中的";
+"Wybrane ręcznie" = "手动选择";
+"Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca." = "应用最后一次查看时正在运行的容器会自动回来 — 你无需选择任何东西。你有意停止的容器不会回来。";
+"Które kontenery" = "哪些容器";

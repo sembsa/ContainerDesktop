@@ -921,8 +921,8 @@
 
 /* 0.8.2 — autostart kontenerów */
 "Uruchamiaj przy logowaniu" = "Uruchamiaj przy logowaniu";
-"Uruchamiaj też wybrane kontenery" = "Uruchamiaj też wybrane kontenery";
-"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery." = "container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery.";
+"Uruchamiaj też kontenery" = "Uruchamiaj też kontenery";
+"container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia kontenery z listy." = "container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia kontenery z listy.";
 "Zaznacz te, które teraz działają" = "Zaznacz te, które teraz działają";
 "Nie zaznaczono żadnego kontenera." = "Nie zaznaczono żadnego kontenera.";
 "Zaznaczone: %@" = "Zaznaczone: %@";
@@ -935,3 +935,7 @@
 "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie." = "Przy sprawdzaniu aktualizacji wysyłany jest losowy identyfikator instalacji, wersja programu i wersja macOS — tyle, by policzyć, ilu ludzi używa programu i jakiej wersji. Nie wysyłamy adresu IP, nazwy komputera ani niczego, co wskazuje na Ciebie.";
 "Anonimowe statystyki instalacji" = "Anonimowe statystyki instalacji";
 "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność." = "Sprawdzając aktualizacje program wysyła losowy identyfikator instalacji, swoją wersję i wersję macOS — tyle, by dało się policzyć, ilu ludzi go używa i jakiej wersji. Bez adresu IP, bez nazwy komputera. Wyłącznik jest w Ustawieniach, w sekcji Prywatność.";
+"Te, które działały" = "Te, które działały";
+"Wybrane ręcznie" = "Wybrane ręcznie";
+"Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca." = "Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca.";
+"Które kontenery" = "Które kontenery";

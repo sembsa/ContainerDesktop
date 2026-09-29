@@ -230,7 +230,7 @@ struct ContainerCard: View {
     private var controls: some View {
         HStack(spacing: 2) {
             if isPending {
-                Color.clear.frame(width: 84, height: 22)
+                Color.clear.frame(width: 112, height: 22)
             } else if container.isRunning {
                 CardButton(symbol: "stop.fill", help: String(localized: "Zatrzymaj")) {
                     act { try await store.stop(container) }
@@ -245,6 +245,12 @@ struct ContainerCard: View {
                 CardButton(symbol: "play.fill", help: String(localized: "Uruchom"), tint: .green) {
                     act { try await store.start(container) }
                 }
+            }
+            // Tinted because it is the one button here that cannot be undone,
+            // sitting where a slightly missed click at "stop" would land. What
+            // makes it safe is the confirmation dialog it opens, not its colour.
+            CardButton(symbol: "trash", help: String(localized: "Usuń"), tint: .red) {
+                onRemove(container)
             }
             Menu {
                 ContainerCardMenu(container: container, onRecreate: onRecreate, onRemove: onRemove)
@@ -466,6 +472,9 @@ struct ComposeProjectCard: View {
                         }
                     }
                 }
+            }
+            CardButton(symbol: "trash", help: String(localized: "Usuń projekt"), tint: .red) {
+                onRemoveProject(project, containers)
             }
             Menu {
                 Button("Usuń projekt…", systemImage: "trash", role: .destructive) {

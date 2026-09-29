@@ -153,9 +153,9 @@ struct SystemView: View {
                         set: { store.setContainerAutostart($0) }
                     )) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Uruchamiaj też wybrane kontenery")
+                            Text("Uruchamiaj też kontenery")
                                 .font(.subheadline.weight(.medium))
-                            Text("container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia zaznaczone kontenery.")
+                            Text("container nie ma własnej polityki restartu, więc robi to osobny wpis systemowy: czeka aż usługa wstanie, potem uruchamia kontenery z listy.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .fixedSize(horizontal: false, vertical: true)
@@ -164,18 +164,38 @@ struct SystemView: View {
                     .disabled(store.containerAutostart == .foreign)
 
                     if store.containerAutostart == .on {
-                        HStack(spacing: 8) {
-                            Text(autostartSelectionText)
+                        Picker(selection: Binding(
+                            get: { store.containerAutostartMode },
+                            set: { store.setContainerAutostartMode($0, running: runningContainerIDs) }
+                        )) {
+                            Text("Te, które działały").tag(ContainerAutostart.Mode.running)
+                            Text("Wybrane ręcznie").tag(ContainerAutostart.Mode.selected)
+                        } label: {
+                            Text("Które kontenery")
+                        }
+                        .pickerStyle(.radioGroup)
+                        .labelsHidden()
+
+                        switch store.containerAutostartMode {
+                        case .running:
+                            Text("Wracają te, które działały, kiedy aplikacja patrzyła ostatni raz — nic nie zaznaczasz. Kontener zatrzymany świadomie po prostu nie wraca.")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
-                            Spacer(minLength: 4)
-                            Button("Zaznacz te, które teraz działają") {
-                                let running = model.containers.items.filter(\.isRunning).map(\.id)
-                                store.setAutostartContainers(
-                                    Set(running), existing: model.containers.items.map(\.id)
-                                )
+                                .fixedSize(horizontal: false, vertical: true)
+                        case .selected:
+                            HStack(spacing: 8) {
+                                Text(autostartSelectionText)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Spacer(minLength: 4)
+                                Button("Zaznacz te, które teraz działają") {
+                                    store.setAutostartContainers(
+                                        Set(runningContainerIDs),
+                                        existing: model.containers.items.map(\.id)
+                                    )
+                                }
+                                .controlSize(.small)
                             }
-                            .controlSize(.small)
                         }
                     }
                 }
@@ -248,6 +268,10 @@ struct SystemView: View {
             .padding(16)
             .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
         }
+    }
+
+    private var runningContainerIDs: [String] {
+        model.containers.items.filter(\.isRunning).map(\.id)
     }
 
     private var autostartSelectionText: String {

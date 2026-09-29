@@ -30,6 +30,7 @@ final class SystemStore {
     /// truth — keeping a second copy in preferences would only drift.
     var containerAutostart: ContainerAutostart.State = .off
     var autostartContainerIDs: [String] = []
+    var containerAutostartMode: ContainerAutostart.Mode = .running
 
     private let cli = ContainerCLI.shared
     private var epoch: UInt64 = 0
@@ -122,6 +123,45 @@ final class SystemStore {
         containerAutostart = ContainerAutostart.current()
         let text = (try? String(contentsOf: ContainerAutostart.listURL, encoding: .utf8)) ?? ""
         autostartContainerIDs = ContainerAutostart.parseList(text)
+
+        let defaults = UserDefaults.standard
+        if let stored = defaults.string(forKey: ContainerAutostart.Mode.storageKey),
+           let mode = ContainerAutostart.Mode(rawValue: stored) {
+            containerAutostartMode = mode
+        } else {
+            // First run since the mode existed: an upgrade with a list already
+            // in it keeps hand-picking, a fresh install follows what runs.
+            containerAutostartMode = ContainerAutostart.initialMode(
+                hasExistingSelection: !autostartContainerIDs.isEmpty
+            )
+            defaults.set(containerAutostartMode.rawValue, forKey: ContainerAutostart.Mode.storageKey)
+        }
+    }
+
+    func setContainerAutostartMode(_ mode: ContainerAutostart.Mode, running: [String]) {
+        containerAutostartMode = mode
+        UserDefaults.standard.set(mode.rawValue, forKey: ContainerAutostart.Mode.storageKey)
+        // Switching to "whatever runs" takes effect at once rather than at the
+        // next refresh, so the selection shown underneath is never a lie.
+        if mode == .running { syncAutostartWithRunning(running) }
+    }
+
+    /// Keeps the list in step with what is actually running.
+    ///
+    /// Called after every container refresh, so it writes only when the set
+    /// genuinely changed — polling every few seconds through a file write would
+    /// be pointless churn.
+    func syncAutostartWithRunning(_ running: [String]) {
+        guard containerAutostart == .on, containerAutostartMode == .running else { return }
+        guard let updated = ContainerAutostart.listFollowingRunning(
+            running: running, current: autostartContainerIDs
+        ) else { return }
+        do {
+            try ContainerAutostart.writeList(updated)
+            autostartContainerIDs = updated
+        } catch {
+            lastActionError = .command(exitCode: -1, stderr: error.localizedDescription)
+        }
     }
 
     func setContainerAutostart(_ enabled: Bool) {
