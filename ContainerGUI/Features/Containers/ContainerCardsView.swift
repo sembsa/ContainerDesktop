@@ -135,7 +135,7 @@ struct ContainerCard: View {
         .padding(.vertical, 7)
         .background(background)
         .overlay(border)
-        .contentShape(RoundedRectangle(cornerRadius: 12))
+        .contentShape(RoundedRectangle(cornerRadius: Radius.panel))
         .onTapGesture { selection = isSelected ? nil : container.id }
         .onHover { isHovering = $0 }
         .animation(.smooth(duration: 0.18), value: isHovering)
@@ -162,7 +162,7 @@ struct ContainerCard: View {
     /// without relying on colour alone.
     private var stateTile: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 7)
+            RoundedRectangle(cornerRadius: Radius.card)
                 .fill(stateColor.gradient.opacity(container.isRunning ? 1 : 0.35))
                 .frame(width: 30, height: 30)
             if isPending {
@@ -360,12 +360,12 @@ struct ContainerCard: View {
 
     @ViewBuilder
     private var background: some View {
-        RoundedRectangle(cornerRadius: 12)
+        RoundedRectangle(cornerRadius: Radius.panel)
             .fill(isSelected ? AnyShapeStyle(Color.accentColor.opacity(0.12)) : AnyShapeStyle(.quaternary.opacity(isHovering ? 0.55 : 0.35)))
     }
 
     private var border: some View {
-        RoundedRectangle(cornerRadius: 12)
+        RoundedRectangle(cornerRadius: Radius.panel)
             .strokeBorder(
                 isSelected ? Color.accentColor.opacity(0.55) : Color.primary.opacity(0.06),
                 lineWidth: isSelected ? 1.5 : 1
@@ -412,8 +412,8 @@ struct ComposeProjectCard: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 8)
-        .background(RoundedRectangle(cornerRadius: 14).fill(.quaternary.opacity(0.22)))
-        .overlay(RoundedRectangle(cornerRadius: 14).strokeBorder(Color.cyan.opacity(0.18), lineWidth: 1))
+        .background(RoundedRectangle(cornerRadius: Radius.panel).fill(.quaternary.opacity(0.22)))
+        .overlay(RoundedRectangle(cornerRadius: Radius.panel).strokeBorder(Color.cyan.opacity(0.18), lineWidth: 1))
         .animation(.smooth(duration: 0.22), value: isExpanded)
     }
 
@@ -439,7 +439,7 @@ struct ComposeProjectCard: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 26, height: 26)
-                .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: 7))
+                .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: Radius.card))
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(project)
@@ -554,7 +554,7 @@ struct CardButton: View {
                 .foregroundStyle(tint)
                 .frame(width: 26, height: 22)
                 .background(
-                    RoundedRectangle(cornerRadius: 6)
+                    RoundedRectangle(cornerRadius: Radius.chip)
                         .fill(.quaternary.opacity(isHovering ? 0.9 : 0))
                 )
         }

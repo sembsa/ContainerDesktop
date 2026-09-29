@@ -60,7 +60,7 @@ struct ClusterDetailView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
-                .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: 7))
+                .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: Radius.card))
             VStack(alignment: .leading, spacing: 1) {
                 Text(cluster.name).font(.headline)
                 Text(cluster.isRunning ? String(localized: "Klaster działa") : String(localized: "Klaster zatrzymany"))
@@ -73,7 +73,7 @@ struct ClusterDetailView: View {
                     model.selection = .helm
                     Task { await model.helm.select(cluster: cluster.name) }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.glass)
                 .controlSize(.small)
             }
         }
@@ -127,8 +127,8 @@ struct ClusterDetailView: View {
                 .textSelection(.enabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     @ViewBuilder
@@ -173,8 +173,8 @@ struct ClusterDetailView: View {
                 }
             }
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     // MARK: - Nodes
@@ -201,8 +201,8 @@ struct ClusterDetailView: View {
                             .foregroundStyle(.secondary)
                             .textSelection(.enabled)
                     }
-                    .padding(10)
-                    .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 9))
+                    .padding(Padding.card)
+                    .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Radius.card))
                 }
             }
             .padding(12)
@@ -250,8 +250,8 @@ struct ClusterDetailView: View {
                 .controlSize(.small)
             }
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     // MARK: - Data

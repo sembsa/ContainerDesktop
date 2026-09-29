@@ -85,7 +85,7 @@ struct BuildImageSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 620)
+        .frame(width: SheetWidth.standard)
     }
 
     private var canBuild: Bool { !contextDir.isEmpty && !tag.isEmpty && !isBuilding }

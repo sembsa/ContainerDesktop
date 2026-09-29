@@ -112,7 +112,7 @@ struct RegistryLoginSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 480)
+        .frame(width: SheetWidth.narrow)
     }
 
     private func login() async {

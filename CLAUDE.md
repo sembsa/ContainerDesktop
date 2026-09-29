@@ -192,6 +192,37 @@ one row per installation into D1 (`containerdesktop-installs`, region EEUR).
   updates only through the Worker; if it goes down they stop seeing updates.
   Installs older than 0.8.3 keep using Pages and are never counted.
 
+## The numbers the UI is built from
+
+`Common/DesignTokens.swift` holds them: `Radius.chip/card/panel` (6/10/14),
+`Padding.chip/card` (6/14), `SheetWidth.narrow/standard` (480/640). A literal
+that is not one of these is a decision somebody should justify in review.
+
+They exist because the app drew one thing — a section card — **fifteen** ways:
+five paddings crossed with seven corner radii, none chosen, all arrived at.
+Nothing looked wrong on its own screen; it looked unsettled across screens,
+which is harder to point at and worse to live with.
+
+- **Buttons:** `.glassProminent` for the leading action, `.glass` for a
+  secondary one, `.borderless` inside a row, `.plain` when the control draws
+  itself. `.bordered`/`.borderedProminent` are the pre-Tahoe look and were
+  removed — do not reintroduce them.
+- **Toggles are switches.** Every view but `SystemView` wraps them in a `Form`,
+  which makes them switches; `SystemView` has no `Form` and therefore says
+  `.toggleStyle(.switch)` out loud. A toggle in a *context menu* is the one
+  exception — menus draw checkmarks, and forcing a style there is wrong.
+- **Label and value:** `LabeledContent` inside a `Form`, `Grid` + `GridRow` for
+  a block of rows outside one (see `SystemView.infoRow`). A hand-rolled
+  `HStack { Text; Spacer(); Text }` is a *list row*, not a label-value pair, and
+  that is a different thing — do not "fix" those into either.
+- **Icon-only controls** take `iconHelp`, or are built with `IconButton` /
+  `CardButton`, which apply it for you. `.help()` alone is a tooltip a pointer
+  finds and nothing VoiceOver reads; the app had 51 of those and one
+  `accessibilityLabel` before this rule.
+- `LocalizationTests` fails the build if the three `.strings` files drift apart,
+  if `pl` stops being the identity mapping, if a key is defined twice with
+  different text, or if a translation drops a `%@`.
+
 ## Git conventions
 
 - **Never push directly to `main`** (it's restricted). Always: branch → push → `gh pr create` → `gh pr merge <pr> --rebase --delete-branch`.

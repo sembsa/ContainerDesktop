@@ -150,7 +150,7 @@ struct NetworkCreateSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 480)
+        .frame(width: SheetWidth.narrow)
     }
 
     private func create() async {

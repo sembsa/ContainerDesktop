@@ -187,7 +187,7 @@ struct MachineCreateSheet: View {
             Divider()
             footer
         }
-        .frame(width: 640, height: 580)
+        .frame(width: SheetWidth.standard, height: 580)
         .task {
             guard !didPrefill else { return }
             didPrefill = true

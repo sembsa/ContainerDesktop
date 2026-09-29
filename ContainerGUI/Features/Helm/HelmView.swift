@@ -271,7 +271,7 @@ struct HelmView: View {
                                 }
                             }
                             Button("Zainstaluj…") { installChart = chart }
-                                .buttonStyle(.bordered)
+                                .buttonStyle(.glass)
                                 .controlSize(.small)
                                 .disabled(store.targetCluster == nil)
                         }
@@ -455,7 +455,7 @@ struct ReleaseHistorySheet: View {
                                         } catch { errorText = error.localizedDescription }
                                     }
                                 }
-                                .buttonStyle(.bordered)
+                                .buttonStyle(.glass)
                                 .controlSize(.small)
                             }
                         }
@@ -472,7 +472,7 @@ struct ReleaseHistorySheet: View {
             }
             .padding(12)
         }
-        .frame(width: 620, height: 460)
+        .frame(width: SheetWidth.standard, height: 460)
         .task {
             do { revisions = try await model.helm.history(of: release) }
             catch { errorText = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription }

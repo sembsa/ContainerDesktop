@@ -266,8 +266,8 @@ private struct StatChart: View {
                 }
             }
         }
-        .padding(8)
-        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: 8))
+        .padding(Padding.card)
+        .glassEffect(.regular, in: RoundedRectangle(cornerRadius: Radius.card))
     }
 }
 
@@ -586,8 +586,8 @@ private struct StatCard<ChartContent: View>: View {
             chartContent()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 8))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
         .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
     }
 }

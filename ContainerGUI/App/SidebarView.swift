@@ -70,7 +70,7 @@ struct SidebarView: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 24, height: 24)
-                .background(section.tint.gradient, in: RoundedRectangle(cornerRadius: 6))
+                .background(section.tint.gradient, in: RoundedRectangle(cornerRadius: Radius.chip))
         }
         .tag(section)
     }

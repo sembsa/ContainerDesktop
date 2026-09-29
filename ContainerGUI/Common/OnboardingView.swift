@@ -22,10 +22,10 @@ struct OnboardingView: View {
 
             HStack(spacing: 12) {
                 Button("Wskaż plik…") { locateBinary() }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
 
                 Link("Strona projektu", destination: URL(string: "https://github.com/apple/container")!)
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.glass)
             }
 
             Text("Szukane lokalizacje: /usr/local/bin/container, /opt/homebrew/bin/container")

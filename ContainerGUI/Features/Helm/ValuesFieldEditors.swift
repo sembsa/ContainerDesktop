@@ -64,7 +64,7 @@ struct ExpandableTextField: View {
                         .frame(minHeight: 78, maxHeight: 190)
                         .scrollContentBackground(.hidden)
                         .padding(4)
-                        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 6))
+                        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.chip))
                         .overlay(alignment: .topLeading) {
                             if text.isEmpty {
                                 Text(placeholder)
@@ -176,7 +176,7 @@ struct ValuesYAMLEditor: View {
                     .frame(height: CGFloat(min(max(lineCount, 3), 12)) * 15 + 10)
                     .scrollContentBackground(.hidden)
                     .padding(4)
-                    .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 6))
+                    .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.chip))
                     .overlay(alignment: .topLeading) {
                         if text.isEmpty {
                             Text(placeholder.isEmpty ? "klucz: wartość" : placeholder)

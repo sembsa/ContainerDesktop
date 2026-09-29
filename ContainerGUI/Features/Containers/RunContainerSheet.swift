@@ -145,7 +145,7 @@ struct RunContainerSheet: View {
             Divider()
             footer
         }
-        .frame(width: 640, height: 700)
+        .frame(width: SheetWidth.standard, height: 700)
     }
 
     private var header: some View {
@@ -435,9 +435,9 @@ struct RunContainerSheet: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxHeight: 96)
-            .padding(8)
-            .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(.quaternary, lineWidth: 1))
+            .padding(Padding.card)
+            .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: Radius.card))
+            .overlay(RoundedRectangle(cornerRadius: Radius.card).stroke(.quaternary, lineWidth: 1))
             if isRunning && !output.isEmpty {
                 StreamLogBox(lines: output)
                     .frame(height: 90)

@@ -111,7 +111,7 @@ struct SystemView: View {
                         else { await model.startService() }
                     }
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.glassProminent)
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: store.serviceState)
@@ -209,8 +209,8 @@ struct SystemView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+            .padding(Padding.card)
+            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
         }
     }
 
@@ -246,11 +246,11 @@ struct SystemView: View {
                         Button("Uruchom ponownie usługę") {
                             Task { await model.restartService() }
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.glassProminent)
                         .disabled(store.serviceState.isTransitioning)
                     }
-                    .padding(12)
-                    .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+                    .padding(Padding.card)
+                    .background(.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: Radius.card))
                 }
 
                 Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
@@ -267,8 +267,8 @@ struct SystemView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+            .padding(Padding.card)
+            .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
         }
     }
 
@@ -329,7 +329,7 @@ struct SystemView: View {
                 Button("Usuń") { Task { await store.deleteBuilder() } }
             } else {
                 Button("Uruchom") { Task { await store.startBuilder() } }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
             }
         }
     }
@@ -383,9 +383,9 @@ struct SystemView: View {
                 }
             }
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     @ViewBuilder
@@ -450,9 +450,9 @@ struct SystemView: View {
                 .font(.subheadline)
             }
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private struct PropertyRow {
@@ -528,10 +528,10 @@ struct SystemView: View {
                         .font(.system(.caption, design: .monospaced))
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(8)
+                        .padding(Padding.card)
                 }
                 .frame(maxHeight: 260)
-                .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: Radius.card))
             } else {
                 Text("Brak logów w wybranym oknie.")
                     .foregroundStyle(.secondary)
@@ -539,9 +539,9 @@ struct SystemView: View {
                     .padding(8)
             }
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     // MARK: - Building blocks
@@ -591,8 +591,8 @@ struct SystemView: View {
             }
         }
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: busy)
-        .padding(16)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private func usageCard(_ title: String, entry: DiskUsage.Entry?, tint: Color = .secondary) -> some View {
@@ -611,7 +611,7 @@ struct SystemView: View {
             .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 }

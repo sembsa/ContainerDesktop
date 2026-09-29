@@ -100,7 +100,7 @@ struct KubernetesView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
                     .frame(width: 26, height: 26)
-                    .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: 6))
+                    .background(Color.cyan.gradient, in: RoundedRectangle(cornerRadius: Radius.chip))
                 VStack(alignment: .leading, spacing: 2) {
                     Text(cluster.name).font(.headline)
                     if let node = cluster.controlPlane {
@@ -140,16 +140,16 @@ struct KubernetesView: View {
                 }
             }
         }
-        .padding(12)
+        .padding(Padding.card)
         .background(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: Radius.card)
                 .fill(selection == cluster.id ? AnyShapeStyle(Color.accentColor.opacity(0.12)) : AnyShapeStyle(.quaternary.opacity(0.4)))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: Radius.card)
                 .strokeBorder(selection == cluster.id ? Color.accentColor.opacity(0.55) : .clear, lineWidth: 1.5)
         )
-        .contentShape(RoundedRectangle(cornerRadius: 10))
+        .contentShape(RoundedRectangle(cornerRadius: Radius.card))
         .onTapGesture { selection = selection == cluster.id ? nil : cluster.id }
         .animation(.smooth(duration: 0.18), value: selection)
     }

@@ -50,7 +50,7 @@ struct WhatsNewView: View {
             HStack {
                 Spacer()
                 Button("Zaczynajmy") { onDismiss() }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.glassProminent)
                     .keyboardShortcut(.defaultAction)
             }
             .padding(16)

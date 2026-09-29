@@ -107,7 +107,7 @@ struct CreateClusterSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 640)
+        .frame(width: SheetWidth.standard)
     }
 
     /// The CLI rejects a missing manifest, but only after it has started —
@@ -233,7 +233,7 @@ struct LoadImageSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 560)
+        .frame(width: SheetWidth.standard)
     }
 
     private func load() async {

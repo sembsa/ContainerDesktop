@@ -85,8 +85,8 @@ struct MenuBarContent: View {
                 .foregroundStyle(.secondary)
                 .fixedSize()
         }
-        .padding(10)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private func reading(_ symbol: String, _ label: String, _ value: String) -> some View {

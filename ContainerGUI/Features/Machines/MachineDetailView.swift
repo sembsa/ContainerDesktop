@@ -81,7 +81,7 @@ struct MachineDetailView: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
-                .background(Color.indigo.gradient, in: RoundedRectangle(cornerRadius: 7))
+                .background(Color.indigo.gradient, in: RoundedRectangle(cornerRadius: Radius.card))
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 6) {
                     Text(machine.name).font(.headline)
@@ -112,14 +112,14 @@ struct MachineDetailView: View {
             Button("Zatrzymaj", systemImage: "stop.fill") {
                 Task { await perform { try await model.machines.stop(machine) } }
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.glass)
             .controlSize(.small)
             .disabled(isBusy)
         } else {
             Button("Uruchom", systemImage: "play.fill") {
                 Task { await perform { try await model.machines.boot(machine) } }
             }
-            .buttonStyle(.bordered)
+            .buttonStyle(.glass)
             .controlSize(.small)
             .disabled(isBusy)
         }
@@ -189,8 +189,8 @@ struct MachineDetailView: View {
                 .textSelection(.enabled)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private func sourceSection(_ inspect: MachineInspect) -> some View {
@@ -206,8 +206,8 @@ struct MachineDetailView: View {
                 sourceRow(String(localized: "Kontener maszyny"), inspect.containerId)
             }
         }
-        .padding(12)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private func sourceRow(_ label: String, _ value: String?) -> some View {
@@ -317,11 +317,11 @@ struct MachineDetailView: View {
             Button("Zainstaluj pulpit", systemImage: "arrow.down.circle") {
                 Task { await installDesktop() }
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.glassProminent)
             .controlSize(.small)
         }
-        .padding(12)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private var desktopConnect: some View {
@@ -337,7 +337,7 @@ struct MachineDetailView: View {
                 Button("Połącz przez VNC", systemImage: "display") {
                     Task { await connectDesktop() }
                 }
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.glassProminent)
                 .controlSize(.small)
                 .disabled(machine.ipAddress == nil)
                 if machine.ipAddress == nil {
@@ -359,12 +359,12 @@ struct MachineDetailView: View {
                     .buttonStyle(.borderless)
                     .controlSize(.small)
                 }
-                .padding(10)
-                .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 8))
+                .padding(Padding.card)
+                .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Radius.card))
             }
         }
-        .padding(12)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+        .padding(Padding.card)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     private func installDesktop() async {

@@ -47,7 +47,7 @@ struct ImageDetailSheet: View {
             }
             .padding(12)
         }
-        .frame(width: 640, height: 700)
+        .frame(width: SheetWidth.standard, height: 700)
         .task { await load() }
     }
 
@@ -177,9 +177,9 @@ private struct ImageSectionCard<Content: View>: View {
             }
             content()
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 }
 

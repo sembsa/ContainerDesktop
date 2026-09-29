@@ -45,9 +45,9 @@ private struct SectionCard<Content: View>: View {
             }
             content()
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 }
 
@@ -424,7 +424,7 @@ private struct RawJSONCard: View {
             DisclosureGroup(isExpanded: $isExpanded) {
                 rawContent
                     .frame(maxHeight: 400)
-                    .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: 8))
+                    .background(Color(nsColor: .textBackgroundColor), in: RoundedRectangle(cornerRadius: Radius.card))
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "chevron.left.forwardslash.chevron.right")
@@ -439,9 +439,9 @@ private struct RawJSONCard: View {
                 }
             }
         }
-        .padding(14)
+        .padding(Padding.card)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: 10))
+        .background(.quaternary.opacity(0.4), in: RoundedRectangle(cornerRadius: Radius.card))
     }
 
     @ViewBuilder

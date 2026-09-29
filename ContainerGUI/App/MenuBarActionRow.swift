@@ -17,7 +17,7 @@ struct MenuBarRow: ViewModifier {
             .padding(.vertical, 5)
             .contentShape(Rectangle())
             .background(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: Radius.chip)
                     .fill(isHovering ? Color.accentColor.opacity(0.18) : .clear)
             )
             .onHover { isHovering = $0 }

@@ -23,8 +23,8 @@ struct WorkloadFactGrid: View {
                         .textSelection(.enabled)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(10)
-                .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: 9))
+                .padding(Padding.card)
+                .background(.quaternary.opacity(0.35), in: RoundedRectangle(cornerRadius: Radius.card))
             }
         }
     }
@@ -44,7 +44,7 @@ struct WorkloadDetailHeader<Trailing: View>: View {
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
-                .background(tint.gradient, in: RoundedRectangle(cornerRadius: 7))
+                .background(tint.gradient, in: RoundedRectangle(cornerRadius: Radius.card))
             VStack(alignment: .leading, spacing: 1) {
                 Text(title).font(.headline).lineLimit(1).truncationMode(.middle)
                 if !subtitle.isEmpty {
@@ -302,7 +302,7 @@ struct PodDetailView: View {
                 subtitle: "\(namespace) · \(pod.status?.phase ?? "—")"
             ) {
                 Button("Usuń…", systemImage: "trash") { confirmDelete = true }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.glass)
                     .controlSize(.small)
                     .disabled(model.workloads.busyIDs.contains(pod.id))
             }
@@ -371,8 +371,8 @@ struct PodDetailView: View {
                             }
                         }
                     }
-                    .padding(12)
-                    .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+                    .padding(Padding.card)
+                    .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
                 }
             }
             .padding(12)
@@ -466,7 +466,7 @@ struct DeploymentDetailView: View {
                         } catch { model.present(error) }
                     }
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.glass)
                 .controlSize(.small)
                 .disabled(isBusy)
                 .help(String(localized: "rollout restart — wymienia pody po kolei, bez przestoju."))
@@ -530,8 +530,8 @@ struct DeploymentDetailView: View {
                             .foregroundStyle(.orange)
                     }
                 }
-                .padding(12)
-                .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+                .padding(Padding.card)
+                .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
 
                 if !deployment.images.isEmpty {
                     VStack(alignment: .leading, spacing: 6) {
@@ -543,8 +543,8 @@ struct DeploymentDetailView: View {
                                 .textSelection(.enabled)
                         }
                     }
-                    .padding(12)
-                    .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 9))
+                    .padding(Padding.card)
+                    .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: Radius.card))
                 }
             }
             .padding(12)
@@ -610,8 +610,8 @@ struct SecretDetailView: View {
                                     .foregroundStyle(.tertiary)
                             }
                         }
-                        .padding(10)
-                        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 8))
+                        .padding(Padding.card)
+                        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Radius.card))
                     }
                 }
                 .padding(12)
@@ -647,8 +647,8 @@ struct ConfigMapDetailView: View {
                                 .textSelection(.enabled)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .padding(10)
-                        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: 8))
+                        .padding(Padding.card)
+                        .background(.quaternary.opacity(0.3), in: RoundedRectangle(cornerRadius: Radius.card))
                     }
                 }
                 .padding(12)
