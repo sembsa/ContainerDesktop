@@ -37,6 +37,31 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.9.0",
+            items: [
+                Item(
+                    symbol: "trash",
+                    title: String(localized: "Kosz przy każdym kontenerze"),
+                    detail: String(localized: "Usuwanie było schowane w menu kontekstowym, choć obok stały uruchom, zatrzymaj i terminal. Teraz to przycisk jak reszta — dla kontenerów i dla projektów compose. Potwierdzenie pojawia się jak dotąd, więc chybione kliknięcie nic nie kasuje.")
+                ),
+                Item(
+                    symbol: "arrow.clockwise.circle",
+                    title: String(localized: "Kontenery wracają same"),
+                    detail: String(localized: "Zamiast zaznaczać je po jednym, program zapamiętuje, co działało, i podnosi to po zalogowaniu. Zatrzymanie kontenera jest teraz sposobem na wypisanie go. Ręczny wybór został jako drugi tryb.")
+                ),
+                Item(
+                    symbol: "square.and.arrow.down",
+                    title: String(localized: "Logi: własny pasek i zapis do pliku"),
+                    detail: String(localized: "Przyciski nie pływają już na tekście — najnowsze linie przestały się chować za nimi. Doszedł zapis do pliku: albo to, co widać, albo cały log, pobierany od nowa prosto na dysk.")
+                ),
+                Item(
+                    symbol: "accessibility",
+                    title: String(localized: "Czytelniej i spójniej"),
+                    detail: String(localized: "Każdy przycisk z samą ikoną ma wreszcie nazwę, którą przeczyta VoiceOver — wcześniej miał ją jeden. Przełączniki wyglądają tak samo w całym programie, a karty i okna dialogowe korzystają z jednej skali marginesów i zaokrągleń.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.8.3",
             items: [
                 Item(
