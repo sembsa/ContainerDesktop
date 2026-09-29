@@ -117,11 +117,11 @@ struct ClusterDetailView: View {
                     .font(.system(size: 10))
                     .foregroundStyle(.cyan)
                 Text(title)
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
             Text(value)
-                .font(.system(size: 13, weight: .medium).monospacedDigit())
+                .font(.body.weight(.medium).monospacedDigit())
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .textSelection(.enabled)
@@ -232,7 +232,7 @@ struct ClusterDetailView: View {
     private func commandRow(_ title: String, _ value: String) -> some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(title)
-                .font(.system(size: 10, weight: .semibold))
+                .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
             HStack(spacing: 6) {
                 Text(value)

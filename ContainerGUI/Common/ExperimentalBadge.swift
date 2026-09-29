@@ -6,7 +6,7 @@ import SwiftUI
 struct ExperimentalBadge: View {
     var body: some View {
         Text("EKSPERYMENTALNE")
-            .font(.system(size: 9, weight: .bold))
+            .font(.caption2.weight(.bold))
             .padding(.horizontal, 5)
             .padding(.vertical, 1)
             .background(Color.orange.opacity(0.18), in: Capsule())

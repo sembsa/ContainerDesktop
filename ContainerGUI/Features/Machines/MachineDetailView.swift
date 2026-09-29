@@ -179,11 +179,11 @@ struct MachineDetailView: View {
                     .font(.system(size: 10))
                     .foregroundStyle(.indigo)
                 Text(title)
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
             Text(value)
-                .font(.system(size: 13, weight: .medium).monospacedDigit())
+                .font(.body.weight(.medium).monospacedDigit())
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .textSelection(.enabled)

@@ -256,7 +256,7 @@ struct InstallChartSheet: View {
                     .foregroundStyle(isEdited ? Color.accentColor : .primary)
                 if !field.oneOfAlternatives.isEmpty {
                     Text("jedno z")
-                        .font(.system(size: 9, weight: .semibold))
+                        .font(.caption2.weight(.semibold))
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
                         .background(Color.orange.opacity(0.14), in: Capsule())
@@ -264,7 +264,7 @@ struct InstallChartSheet: View {
                         .help(String(format: String(localized: "Chart wymaga dokładnie jednego z: %@"), field.oneOfAlternatives.joined(separator: ", ")))
                 } else if field.isRequired {
                     Text("wymagane")
-                        .font(.system(size: 9, weight: .semibold))
+                        .font(.caption2.weight(.semibold))
                         .padding(.horizontal, 5)
                         .padding(.vertical, 1)
                         .background(Color.orange.opacity(0.18), in: Capsule())

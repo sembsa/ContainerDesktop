@@ -184,7 +184,7 @@ struct ContainerCard: View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 6) {
                 Text(container.composeService ?? container.id)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.body.weight(.semibold))
                     .lineLimit(1)
                     .truncationMode(.middle)
                 statePill
@@ -199,7 +199,7 @@ struct ContainerCard: View {
 
     private var statePill: some View {
         Text(container.state)
-            .font(.system(size: 10, weight: .medium))
+            .font(.caption.weight(.medium))
             .padding(.horizontal, 6)
             .padding(.vertical, 1)
             .background(stateColor.opacity(0.15), in: Capsule())
@@ -339,7 +339,7 @@ struct ContainerCard: View {
             if let symbol = chip.symbol {
                 Image(systemName: symbol).font(.system(size: 9, weight: .medium))
             }
-            Text(chip.text).font(.system(size: 10, weight: .medium).monospacedDigit())
+            Text(chip.text).font(.caption.weight(.medium).monospacedDigit())
         }
         .padding(.horizontal, 7)
         .padding(.vertical, 3)
@@ -443,7 +443,7 @@ struct ComposeProjectCard: View {
 
             VStack(alignment: .leading, spacing: 1) {
                 Text(project)
-                    .font(.system(size: 13, weight: .semibold))
+                    .font(.body.weight(.semibold))
                 Text(String(format: String(localized: "%lld z %lld działa"), Int64(runningCount), Int64(containers.count)))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
@@ -508,7 +508,7 @@ struct MeterView: View {
         VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 4) {
                 Text(label)
-                    .font(.system(size: 9, weight: .semibold))
+                    .font(.caption2.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .fixedSize()
@@ -517,7 +517,7 @@ struct MeterView: View {
                 // made the whole meter shuffle as soon as the number grew from
                 // "0%" to "100%" or from "18 MB" to "1,2 GB".
                 Text(caption ?? "—")
-                    .font(.system(size: 9, weight: .medium).monospacedDigit())
+                    .font(.caption2.weight(.medium).monospacedDigit())
                     .foregroundStyle(value == nil ? .tertiary : .secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.75)

@@ -13,10 +13,10 @@ struct WorkloadFactGrid: View {
             ForEach(facts.indices, id: \.self) { index in
                 VStack(alignment: .leading, spacing: 3) {
                     Text(facts[index].0)
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.caption.weight(.semibold))
                         .foregroundStyle(.secondary)
                     Text(facts[index].1.isEmpty ? "—" : facts[index].1)
-                        .font(.system(size: 13, weight: .medium).monospacedDigit())
+                        .font(.body.weight(.medium).monospacedDigit())
                         .lineLimit(1)
                         .truncationMode(.middle)
                         .help(facts[index].1)

@@ -79,7 +79,7 @@ struct ExpandableTextField: View {
                         Spacer()
                         if !text.isEmpty {
                             Text(String(format: String(localized: "%lld znaków"), Int64(text.count)))
-                                .font(.system(size: 9).monospacedDigit())
+                                .font(.caption2.monospacedDigit())
                                 .foregroundStyle(.tertiary)
                         }
                         Button("Zwiń", systemImage: "arrow.down.right.and.arrow.up.left") {

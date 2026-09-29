@@ -219,6 +219,15 @@ which is harder to point at and worse to live with.
   `CardButton`, which apply it for you. `.help()` alone is a tooltip a pointer
   finds and nothing VoiceOver reads; the app had 51 of those and one
   `accessibilityLabel` before this rule.
+- **Text takes a semantic font, never a point size.** `.system(size:)` on a
+  `Text` opts that string out of Dynamic Type, so it stays 9pt however the
+  person has set text size. Measured on macOS 27: `body` 13, `callout` 12,
+  `subheadline` 11, `footnote`/`caption`/`caption2` 10, `title3` 15 — the old
+  literals mapped one-to-one except 9, which has no equivalent because 10 is the
+  smallest macOS offers. Weight rides along: `.body.weight(.semibold)`.
+  A point size on an **`Image`** is a different question and still allowed —
+  those 23 are sized to the layout around them, and moving them is a visual
+  change rather than an accessibility fix.
 - `LocalizationTests` fails the build if the three `.strings` files drift apart,
   if `pl` stops being the identity mapping, if a key is defined twice with
   different text, or if a translation drops a `%@`.
