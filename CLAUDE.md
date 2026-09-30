@@ -54,6 +54,16 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 `Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.
 
 - **The plugin has no `--format json`.** `K8sListParser` (in `Models/K8sModels.swift`) slices the fixed-width `k8s list` table on header-column offsets — splitting on whitespace loses `6144 MB` and mangles rows with blank trailing columns. Covered by `K8sListParserTests`.
+- **1.5.0 removed `container k8s start`.** A stopped node is restarted by
+  deleting the cluster and creating it again — there is no other way. The
+  command is still in `K8sStore` because the app runs against whatever CLI is
+  installed and it works on 1.4.x; `KubernetesView` gates the button on
+  `ContainerVersion.isAtLeast(K8sStore.lastVersionWithStart, …)` and otherwise
+  explains the situation. Calling it on 1.5.0 exits **64** with "Unknown option
+  '--name'", which names the wrong problem. Everything else the app sends still
+  exists in 1.5.0 — verified against `--help`: every `container run` flag the
+  builder emits, and `k8s create`'s `--name --rm --cpus --memory --node-image
+  --cni`. The `k8s list` header is unchanged, so `K8sListParser` still lines up.
 - **Cluster nodes are ordinary containers** labelled `com.apple.container.plugin=k8s` and `com.apple.container.resource.role`. `ContainerStore.refresh()` filters them out so nobody deletes a control plane from the Containers list.
 - **Version skew** is detected app-wide now, not here — see *Copying files, and two ways the CLI lies* below. `K8sStore.diagnose` still consults it, because a skewed service is a common reason for `k8s list` to fail.
 - **Never touch `~/.kube/config`.** This is the rule that matters. `helm` acts on whatever the current context points at, `k8s create` rewrites that file *and* switches the current context, and the people using this app have real clusters in there. Every cluster therefore gets its own kubeconfig under Application Support via `KubeconfigManager` (`container k8s write-config` — note it *appends*, so the old file is deleted first), and `HelmCLI.ClusterTarget` makes the kubeconfig argument mandatory rather than optional. Pass **both** `--kubeconfig` and `--kube-context`: the file `write-config` writes has no `current-context`, so `--kubeconfig` alone fails with "cluster unreachable … localhost:8080".

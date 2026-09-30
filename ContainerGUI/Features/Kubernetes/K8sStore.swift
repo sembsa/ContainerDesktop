@@ -95,6 +95,15 @@ final class K8sStore {
         return try await action()
     }
 
+    /// Only reachable on a CLI older than 1.5.0.
+    ///
+    /// 1.5.0 removed `k8s start` outright — a stopped node is restarted by
+    /// deleting the cluster and creating it again. The command is still here
+    /// because the app runs against whatever CLI is installed, and on 1.4.x this
+    /// works; `KubernetesView` is what decides whether to offer it. Calling it
+    /// on 1.5.0 exits 64 with "Unknown option '--name'", which explains nothing.
+    static let lastVersionWithStart = "1.5.0"
+
     func start(_ cluster: K8sCluster) async throws {
         try await withPending(cluster.name) {
             try await cli.run(["k8s", "start", "--name", cluster.name], timeout: .seconds(300))

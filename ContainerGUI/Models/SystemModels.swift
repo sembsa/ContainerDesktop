@@ -30,6 +30,33 @@ enum ContainerVersion {
         }
         return nil
     }
+
+    /// Compares dotted versions component by component.
+    ///
+    /// Numerically, because "1.10.0" is newer than "1.9.0" and a string
+    /// comparison says the opposite. Missing components count as zero, so
+    /// "1.5" and "1.5.0" are the same version.
+    static func compare(_ lhs: String, _ rhs: String) -> ComparisonResult {
+        let left = lhs.split(separator: ".").map { Int($0) ?? 0 }
+        let right = rhs.split(separator: ".").map { Int($0) ?? 0 }
+        for index in 0..<max(left.count, right.count) {
+            let a = index < left.count ? left[index] : 0
+            let b = index < right.count ? right[index] : 0
+            if a != b { return a < b ? .orderedAscending : .orderedDescending }
+        }
+        return .orderedSame
+    }
+
+    /// Whether `version` is at least `minimum`.
+    ///
+    /// An unreadable version counts as new enough. Callers use this to decide
+    /// whether a command still exists: offering one that has been removed fails
+    /// in front of the person, while withholding one that is still there costs
+    /// them a detour they can see.
+    static func isAtLeast(_ minimum: String, _ version: String?) -> Bool {
+        guard let version else { return true }
+        return compare(version, minimum) != .orderedAscending
+    }
 }
 
 /// `container system status --format json`.

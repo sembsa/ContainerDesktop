@@ -152,3 +152,33 @@ final class K8sListParserTests: XCTestCase {
         XCTAssertNil(ContainerVersion.number(in: "no version here"))
     }
 }
+
+/// Comparing CLI versions, which decides whether a command still exists.
+final class ContainerVersionComparisonTests: XCTestCase {
+
+    func testTenIsNewerThanNineEvenThoughTheStringSaysOtherwise() {
+        // The whole reason this is not a string comparison.
+        XCTAssertEqual(ContainerVersion.compare("1.10.0", "1.9.0"), .orderedDescending)
+    }
+
+    func testAMissingComponentCountsAsZero() {
+        XCTAssertEqual(ContainerVersion.compare("1.5", "1.5.0"), .orderedSame)
+    }
+
+    func testOrderingWithinOneMinor() {
+        XCTAssertEqual(ContainerVersion.compare("1.4.1", "1.5.0"), .orderedAscending)
+        XCTAssertEqual(ContainerVersion.compare("1.5.0", "1.4.1"), .orderedDescending)
+    }
+
+    func testAtLeastIsInclusive() {
+        XCTAssertTrue(ContainerVersion.isAtLeast("1.5.0", "1.5.0"))
+        XCTAssertTrue(ContainerVersion.isAtLeast("1.5.0", "1.5.1"))
+        XCTAssertFalse(ContainerVersion.isAtLeast("1.5.0", "1.4.1"))
+    }
+
+    func testAnUnreadableVersionIsTreatedAsNewEnough() {
+        // Withholding a command costs a visible detour; calling one that was
+        // removed fails in front of the person.
+        XCTAssertTrue(ContainerVersion.isAtLeast("1.5.0", nil))
+    }
+}

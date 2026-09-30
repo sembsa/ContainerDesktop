@@ -962,3 +962,4 @@
 "Przyciski nie pływają już na tekście — najnowsze linie przestały się chować za nimi. Doszedł zapis do pliku: albo to, co widać, albo cały log, pobierany od nowa prosto na dysk." = "按钮不再浮动在文本之上，最新的日志行也就不会再被挡住。新增了保存到文件：可以只保存当前显示的内容，也可以重新抓取完整日志并直接写入磁盘。";
 "Czytelniej i spójniej" = "更清晰，也更统一";
 "Każdy przycisk z samą ikoną ma wreszcie nazwę, którą przeczyta VoiceOver — wcześniej miał ją jeden. Przełączniki wyglądają tak samo w całym programie, a karty i okna dialogowe korzystają z jednej skali marginesów i zaokrągleń." = "每个纯图标按钮终于都有了 VoiceOver 能读出的名称 — 此前只有一个有。开关在整个应用中外观一致，卡片和对话框也采用统一的内边距与圆角比例。";
+"Od container 1.5.0 zatrzymanego klastra nie da się uruchomić ponownie — trzeba go usunąć i utworzyć na nowo. Usuwanie znajdziesz w menu obok." = "自 container 1.5.0 起，已停止的集群无法重新启动 — 需要删除后重新创建。删除操作在旁边的菜单中。";

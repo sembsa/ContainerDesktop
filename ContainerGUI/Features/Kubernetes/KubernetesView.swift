@@ -12,6 +12,13 @@ struct KubernetesView: View {
 
     private var store: K8sStore { model.kubernetes }
 
+    /// `container k8s start` exists only before 1.5.0.
+    private var canStartClusters: Bool {
+        !ContainerVersion.isAtLeast(
+            K8sStore.lastVersionWithStart, model.system.status?.clientVersionNumber
+        )
+    }
+
     var body: some View {
         Group {
             switch store.availability {
@@ -164,10 +171,16 @@ struct KubernetesView: View {
     @ViewBuilder
     private func clusterActions(_ cluster: K8sCluster) -> some View {
         if !cluster.isRunning {
-            Button("Uruchom", systemImage: "play.fill") {
-                Task { await perform { try await store.start(cluster) } }
+            if canStartClusters {
+                Button("Uruchom", systemImage: "play.fill") {
+                    Task { await perform { try await store.start(cluster) } }
+                }
+                .buttonStyle(.borderless)
+            } else {
+                // 1.5.0 removed `k8s start`. Saying so beats a button that
+                // fails with "Unknown option '--name'".
+                InfoTip(text: String(localized: "Od container 1.5.0 zatrzymanego klastra nie da się uruchomić ponownie — trzeba go usunąć i utworzyć na nowo. Usuwanie znajdziesz w menu obok."))
             }
-            .buttonStyle(.borderless)
         }
         Button("Helm", systemImage: "shippingbox.and.arrow.backward") {
             model.selection = .helm
