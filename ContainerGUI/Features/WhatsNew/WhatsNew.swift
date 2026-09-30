@@ -37,6 +37,21 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.9.1",
+            items: [
+                Item(
+                    symbol: "exclamationmark.triangle",
+                    title: String(localized: "Zgodność z container 1.5.0"),
+                    detail: String(localized: "To wydanie usunęło polecenie restartu klastra Kubernetes. Przycisk „Uruchom” znikał więc z błędem, który mówił o czymś zupełnie innym — teraz program tłumaczy, że zatrzymany klaster trzeba usunąć i utworzyć na nowo. Na starszym CLI przycisk działa jak dotąd.")
+                ),
+                Item(
+                    symbol: "textformat.size",
+                    title: String(localized: "Tekst znów skaluje się z systemem"),
+                    detail: String(localized: "Kilkanaście napisów miało wpisany sztywny rozmiar i nie reagowało na powiększenie tekstu w ustawieniach systemowych. Teraz reagują. Najdrobniejsze plakietki urosły przy okazji o punkt — były poniżej tego, co macOS w ogóle przewiduje.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.9.0",
             items: [
                 Item(
