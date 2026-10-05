@@ -257,9 +257,9 @@ struct RunContainerSheet: View {
                     .labelsHidden()
                     .frame(maxWidth: .infinity)
                 Menu {
-                    if !model.volumes.items.isEmpty {
+                    if !model.volumes.localAppleItems.isEmpty {
                         Section(String(localized: "Wolumeny")) {
-                            ForEach(model.volumes.items) { volume in
+                            ForEach(model.volumes.localAppleItems) { volume in
                                 Button(volume.name) { $mount.wrappedValue.source = volume.name }
                             }
                         }
@@ -297,7 +297,7 @@ struct RunContainerSheet: View {
                 TextField("Pamięć (np. 512M, 2G)", text: $config.memory)
                 Picker("Sieć", selection: $config.network) {
                     Text("domyślna").tag("")
-                    ForEach(model.networks.items) { network in
+                    ForEach(model.networks.localAppleItems) { network in
                         Text(network.name).tag(network.name)
                     }
                 }

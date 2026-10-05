@@ -7,18 +7,25 @@ import Foundation
 /// Kept free of SwiftUI so the logic tests can compile it on its own.
 enum TerminalTarget: Sendable, Hashable {
     case container(id: String)
+    /// A shell in a Docker container, through the `docker` binary.
+    /// `host` is a `unix://` socket for engines reached through an SSH tunnel.
+    case dockerContainer(id: String, host: String?)
+    /// A shell on a remote engine, run as `ssh -t <host> <command>`.
+    case sshCommand(arguments: [String])
     /// `asRoot` maps to `--root`, which runs as root instead of matching the host user.
     case machine(name: String, asRoot: Bool)
     case pod(name: String, namespace: String, container: String?, kubeconfig: ClusterKubeconfig)
 
     /// Which executable runs the session. A pod exec cannot go through the
     /// `container` binary at all, so the view can no longer assume one.
-    enum Binary: Sendable, Hashable { case container, kubectl }
+    enum Binary: Sendable, Hashable { case container, kubectl, docker, ssh }
 
     var binary: Binary {
         switch self {
         case .container, .machine: .container
         case .pod: .kubectl
+        case .dockerContainer: .docker
+        case .sshCommand: .ssh
         }
     }
 
@@ -27,6 +34,12 @@ enum TerminalTarget: Sendable, Hashable {
         case .container(let id):
             // A container image has no login shell to fall back on, so `sh` is named.
             return ["exec", "-it", id, "sh"]
+
+        case .sshCommand(let arguments):
+            return arguments
+
+        case .dockerContainer(let id, let host):
+            return (host.map { ["-H", $0] } ?? []) + ["exec", "-it", id, "sh"]
 
         case .pod(let name, let namespace, let container, let kubeconfig):
             // Built by the same code that builds every other kubectl call, so the

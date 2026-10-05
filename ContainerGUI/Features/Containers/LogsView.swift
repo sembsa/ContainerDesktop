@@ -2,7 +2,10 @@ import AppKit
 import SwiftUI
 
 struct LogsView: View {
-    let containerID: String
+    @Environment(AppModel.self) private var model
+    let container: ContainerInfo
+
+    private var containerID: String { container.id }
 
     @AppStorage(LogTailLimit.storageKey) private var tailRawValue = LogTailLimit.default.rawValue
     @State private var lines: [LogLine] = []
@@ -114,12 +117,7 @@ struct LogsView: View {
             case .visible:
                 try LogExport.write(lines.map(display), to: url)
             case .everything:
-                let result = try await ContainerCLI.shared.runRedirecting(
-                    ["logs", containerID], outputPath: url.path
-                )
-                if result.exitCode != 0 {
-                    throw CLIError.command(exitCode: result.exitCode, stderr: result.stderr)
-                }
+                try await model.containers.writeFullLog(container, to: url)
             }
         } catch {
             exportError = error.localizedDescription
@@ -144,7 +142,7 @@ struct LogsView: View {
         backlog = []
         backlogDrawn = false
         streamEnded = false
-        let stream = ContainerCLI.shared.stream(["logs"] + tail.arguments + ["--follow", containerID])
+        let stream = model.containers.logStream(container, tail: tail)
         // Two phases. While the backlog pours in, lines are only collected — a
         // container with thousands of lines of history would otherwise be drawn a
         // batch at a time, all of it, and only the last screenful matters. After

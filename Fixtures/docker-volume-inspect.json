@@ -1,0 +1,23 @@
+[
+    {
+        "CreatedAt": "2026-10-04T08:30:43Z",
+        "Driver": "local",
+        "Labels": {
+            "com.docker.compose.project": "demo",
+            "purpose": "fixture"
+        },
+        "Mountpoint": "/var/lib/docker/volumes/cgui-fixture-data/_data",
+        "Name": "cgui-fixture-data",
+        "Options": null,
+        "Scope": "local"
+    },
+    {
+        "CreatedAt": "2026-10-04T08:30:43Z",
+        "Driver": "local",
+        "Labels": null,
+        "Mountpoint": "/var/lib/docker/volumes/cgui-fixture-unused/_data",
+        "Name": "cgui-fixture-unused",
+        "Options": null,
+        "Scope": "local"
+    }
+]

@@ -7,7 +7,7 @@ struct SidebarView: View {
     private let orchestration: [AppModel.Section] = [.kubernetes, .workloads, .helm]
     /// Machines sat under "Konfiguracja", which they are not: a machine is
     /// something you run things inside, like a container.
-    private let environments: [AppModel.Section] = [.machines]
+    private let environments: [AppModel.Section] = [.machines, .externalMachines]
     private let secondary: [AppModel.Section] = [.registries, .system]
 
     var body: some View {

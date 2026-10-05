@@ -1,0 +1,91 @@
+[
+    {
+        "Name": "bridge",
+        "Id": "c9d4b4aec3638155d1b59d6efdbb9ee4b37542cc0a0afc561a3395a9f17b5885",
+        "Created": "2026-10-04T07:22:50.310623083Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.17.0.0/16",
+                    "Gateway": "172.17.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "375987b817bbfa13759b66afb54282d8851880d211ac075d2396f29dc09d8a1c": {
+                "Name": "test-nginx",
+                "EndpointID": "9969aee491366360046be41472c70b4d2a8d47cd0b22ce834555c32b132dd260",
+                "MacAddress": "02:42:ac:11:00:02",
+                "IPv4Address": "172.17.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {
+            "com.docker.network.bridge.default_bridge": "true",
+            "com.docker.network.bridge.enable_icc": "true",
+            "com.docker.network.bridge.enable_ip_masquerade": "true",
+            "com.docker.network.bridge.host_binding_ipv4": "0.0.0.0",
+            "com.docker.network.bridge.name": "docker0",
+            "com.docker.network.driver.mtu": "65535"
+        },
+        "Labels": {}
+    },
+    {
+        "Name": "host",
+        "Id": "15118b5177762df0d98b6a356c5cb2278d6d6f31e740c4b9f80a19bdb2cdcaf5",
+        "Created": "2026-10-04T07:22:50.268808Z",
+        "Scope": "local",
+        "Driver": "host",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": null
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    },
+    {
+        "Name": "none",
+        "Id": "53e5416316f4741d66f37f90608b49fcfbdfa90428c152a55fd2fb324c9f481a",
+        "Created": "2026-10-04T07:22:50.260185042Z",
+        "Scope": "local",
+        "Driver": "null",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": null
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {},
+        "Options": {},
+        "Labels": {}
+    }
+]

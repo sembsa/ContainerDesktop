@@ -104,6 +104,8 @@ struct TerminalSessionView: View {
         switch target.binary {
         case .container: BinaryResolver.resolve()
         case .kubectl: KubectlBinaryResolver.resolve()
+        case .docker: DockerBinaryResolver.resolve()
+        case .ssh: "/usr/bin/ssh"
         }
     }
 
@@ -119,10 +121,17 @@ struct TerminalSessionView: View {
         } else {
             EmptyStateView(
                 symbol: "terminal",
-                title: target.binary == .kubectl
-                    ? String(localized: "Nie znaleziono narzędzia kubectl")
-                    : String(localized: "Nie znaleziono narzędzia container")
+                title: missingToolTitle
             )
+        }
+    }
+
+    private var missingToolTitle: String {
+        switch target.binary {
+        case .kubectl: String(localized: "Nie znaleziono narzędzia kubectl")
+        case .docker: String(localized: "Nie znaleziono narzędzia docker")
+        case .ssh: String(localized: "Nie znaleziono narzędzia ssh")
+        case .container: String(localized: "Nie znaleziono narzędzia container")
         }
     }
 

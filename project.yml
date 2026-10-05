@@ -159,8 +159,13 @@ targets:
       - path: ContainerGUI/Common/LogExport.swift
       - path: ContainerGUI/Common/RosettaStatus.swift
       - path: ContainerGUI/CLI/ContainerFileTransfer.swift
+      - path: ContainerGUI/Runtime
       - path: ContainerGUI/Features/WhatsNew/WhatsNew.swift
       - path: ContainerGUI/Features/Containers/LogTailLimit.swift
+      - path: ContainerGUI/Features/Containers/ContainerSourceFilter.swift
+      - path: ContainerGUI/Features/Containers/ContainerStore.swift
+      - path: ContainerGUI/Features/Networks/NetworkStore.swift
+      - path: ContainerGUI/Features/Volumes/VolumeStore.swift
       - path: ContainerGUI/Features/Containers/UsageHistory.swift
       - path: ContainerGUI/Features/Images/ImageVariantPickerStyle.swift
       - path: ContainerGUI/Features/Machines/MachineCommands.swift

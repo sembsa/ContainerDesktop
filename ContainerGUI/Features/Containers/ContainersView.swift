@@ -8,6 +8,9 @@ private struct ContainerRow: Identifiable {
     let container: ContainerInfo?    // nil = project header row
     let projectName: String?         // non-nil for header rows
     var children: [ContainerRow]?    // containers belonging to this project
+    /// Non-nil for a "Group by" section header row.
+    var groupTitle: String? = nil
+    var groupCount: Int = 0
 }
 
 struct ContainersView: View {
@@ -20,6 +23,9 @@ struct ContainersView: View {
     /// Cards by default — the table stays one click away for dense scanning.
     @AppStorage("containerListStyle") private var listStyle: ContainerListStyle = .cards
     @State private var search = ""
+    /// "Group by" — machine by default; persisted.
+    @AppStorage("containerGrouping") private var grouping: ListGrouping = .machine
+    @AppStorage("collapsedListGroups") private var collapsedGroups = ""
 
     enum ContainerConfirmation: Identifiable {
         case remove(ContainerInfo)
@@ -37,19 +43,13 @@ struct ContainersView: View {
     private var store: ContainerStore { model.containers }
 
     /// Containers matching the search field. Matches id, image, Compose project
-    /// and service, and the IP — the things you actually remember a container by.
+    /// and service, the IP, and the location / machine / runtime tags — the
+    /// things you actually remember a container by.
     private var filteredContainers: [ContainerInfo] {
         let needle = search.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !needle.isEmpty else { return store.items }
-        return store.items.filter { container in
-            [
-                container.id,
-                container.imageReference,
-                container.composeProject ?? "",
-                container.composeService ?? "",
-                container.primaryIPv4Address ?? "",
-            ].contains { $0.lowercased().contains(needle) }
-        }
+        let scoped = store.filteredItems
+        guard !needle.isEmpty else { return scoped }
+        return scoped.filter { $0.matchesSearch(needle) }
     }
 
     /// Expand/collapse binding for a Compose project group, backed by the store
@@ -77,13 +77,31 @@ struct ContainersView: View {
     // MARK: - Row computation
 
     private var rows: [ContainerRow] {
-        var result: [ContainerRow] = []
+        guard grouping != .none else { return Self.projectRows(filteredContainers) }
+        return ListGrouper.group(filteredContainers, by: grouping).map { section in
+            ContainerRow(
+                id: "group:" + section.id,
+                container: nil,
+                projectName: nil,
+                // Compose projects stay a level inside each section, except
+                // when the section is the project.
+                children: grouping == .compose
+                    ? section.items.sorted { $0.id < $1.id }.map { ContainerRow(id: $0.id, container: $0, projectName: nil, children: nil) }
+                    : Self.projectRows(section.items),
+                groupTitle: section.title,
+                groupCount: section.count
+            )
+        }
+    }
 
-        // Group by composeProject
+    /// Compose project header rows (alphabetical) with their containers, then
+    /// the containers that belong to none.
+    private static func projectRows(_ containers: [ContainerInfo]) -> [ContainerRow] {
+        var result: [ContainerRow] = []
         var projectMap: [String: [ContainerInfo]] = [:]
         var ungrouped: [ContainerInfo] = []
 
-        for container in filteredContainers {
+        for container in containers {
             if let proj = container.composeProject {
                 projectMap[proj, default: []].append(container)
             } else {
@@ -91,7 +109,6 @@ struct ContainersView: View {
             }
         }
 
-        // Project rows first (alphabetical)
         for projName in projectMap.keys.sorted() {
             let children = projectMap[projName]!
                 .sorted { $0.id < $1.id }
@@ -104,12 +121,30 @@ struct ContainersView: View {
             ))
         }
 
-        // Ungrouped containers after projects
         for container in ungrouped {
             result.append(ContainerRow(id: container.id, container: container, projectName: nil, children: nil))
         }
-
         return result
+    }
+
+    private func findRow(_ id: ContainerRow.ID, in list: [ContainerRow]) -> ContainerRow? {
+        for row in list {
+            if row.id == id { return row }
+            if let found = findRow(id, in: row.children ?? []) { return found }
+        }
+        return nil
+    }
+
+    private func groupExpansion(_ row: ContainerRow) -> Binding<Bool> {
+        let collapseID = "containers|" + String(row.id.dropFirst("group:".count))
+        return Binding(
+            get: { !CollapsedGroups.isCollapsed(collapseID, in: collapsedGroups) },
+            set: { expanded in
+                if expanded == CollapsedGroups.isCollapsed(collapseID, in: collapsedGroups) {
+                    collapsedGroups = CollapsedGroups.toggled(collapseID, in: collapsedGroups)
+                }
+            }
+        )
     }
 
     var body: some View {
@@ -129,6 +164,13 @@ struct ContainersView: View {
         .navigationTitle("Kontenery")
         .searchable(text: $search, placement: .toolbar, prompt: Text("Szukaj kontenerów"))
         .task { await store.refresh() }
+        .onChange(of: model.pendingContainerFocus, initial: true) { _, id in
+            // Asked for by the topology's "Open in list".
+            guard let id else { return }
+            search = id
+            selection = id
+            model.pendingContainerFocus = nil
+        }
         .toolbar { toolbarContent }
         .sheet(isPresented: $showRunSheet) {
             RunContainerSheet()
@@ -215,14 +257,15 @@ struct ContainersView: View {
                 containers: filteredContainers,
                 onRecreate: { recreateTarget = $0 },
                 onRemove: { confirmation = .remove($0) },
-                onRemoveProject: { confirmation = .removeProject($0, $1) }
+                onRemoveProject: { confirmation = .removeProject($0, $1) },
+                grouping: grouping
             )
         } else {
             Table(of: ContainerRow.self, selection: $selection) {
                 // Status indicator column
                 TableColumn("") { row in
-                    if row.projectName != nil {
-                        // Empty for project header
+                    if row.projectName != nil || row.groupTitle != nil {
+                        // Empty for project and section headers
                         Color.clear.frame(width: 9, height: 9)
                     } else if let container = row.container {
                         Group {
@@ -239,7 +282,18 @@ struct ContainersView: View {
                 .width(20)
 
                 TableColumn("Nazwa") { row in
-                    if let projName = row.projectName {
+                    if let groupTitle = row.groupTitle {
+                        HStack(spacing: 6) {
+                            Text(groupTitle)
+                                .fontWeight(.semibold)
+                            Text("\(row.groupCount)")
+                                .font(.caption2.weight(.medium))
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 1)
+                                .background(.quaternary, in: Capsule())
+                                .foregroundStyle(.secondary)
+                        }
+                    } else if let projName = row.projectName {
                         // Project header
                         let children = row.children ?? []
                         let running = children.filter { $0.container?.isRunning == true }.count
@@ -253,7 +307,10 @@ struct ContainersView: View {
                                 .font(.caption)
                         }
                     } else if let container = row.container {
-                        Text(container.id).fontWeight(.medium)
+                        HStack(spacing: 6) {
+                            Text(container.id).fontWeight(.medium)
+                            RuntimeBadge(container: container)
+                        }
                     }
                 }
 
@@ -310,7 +367,21 @@ struct ContainersView: View {
                 .width(110)
             } rows: {
                 ForEach(rows) { row in
-                    if let children = row.children {
+                    if row.groupTitle != nil {
+                        DisclosureTableRow(row, isExpanded: groupExpansion(row)) {
+                            ForEach(row.children ?? []) { child in
+                                if let grandchildren = child.children {
+                                    DisclosureTableRow(child, isExpanded: expansion(for: child.projectName ?? child.id)) {
+                                        ForEach(grandchildren) { leaf in
+                                            TableRow(leaf)
+                                        }
+                                    }
+                                } else {
+                                    TableRow(child)
+                                }
+                            }
+                        }
+                    } else if let children = row.children {
                         DisclosureTableRow(row, isExpanded: expansion(for: row.projectName ?? row.id)) {
                             ForEach(children) { child in
                                 TableRow(child)
@@ -323,7 +394,7 @@ struct ContainersView: View {
             }
             .contextMenu(forSelectionType: ContainerRow.ID.self) { ids in
                 if let id = ids.first {
-                    if let row = rows.first(where: { $0.id == id }), let projName = row.projectName {
+                    if let row = findRow(id, in: rows), let projName = row.projectName {
                         // Project context menu
                         let children = row.children ?? []
                         Button("Uruchom wszystkie") {
@@ -443,18 +514,22 @@ struct ContainersView: View {
             Button("Zatrzymaj") { Task { await perform { try await store.stop(container) } } }
             Button("Uruchom ponownie") { Task { await perform { try await store.restart(container) } } }
             Button("Zabij") { Task { await perform { try await store.kill(container) } } }
-            Button("Zwolnij miejsce na dysku") {
-                Task { await perform { try await store.clean(container) } }
+            if container.capabilities.contains(.clean) {
+                Button("Zwolnij miejsce na dysku") {
+                    Task { await perform { try await store.clean(container) } }
+                }
             }
         } else {
             Button("Uruchom") { Task { await perform { try await store.start(container) } } }
         }
         Divider()
-        Button("Zmień polecenie / konfigurację…", systemImage: "slider.horizontal.3") {
-            recreateTarget = container
+        if container.capabilities.contains(.recreate) {
+            Button("Zmień polecenie / konfigurację…", systemImage: "slider.horizontal.3") {
+                recreateTarget = container
+            }
+            .disabled(isPending)
         }
-        .disabled(isPending)
-        if model.system.containerAutostartMode == .selected {
+        if model.system.containerAutostartMode == .selected, container.capabilities.contains(.autostart) {
             Divider()
             Toggle(
                 "Uruchamiaj przy logowaniu",
@@ -462,7 +537,7 @@ struct ContainersView: View {
                     get: { model.system.autostartContainerIDs.contains(container.id) },
                     set: { _ in
                         model.system.toggleAutostart(
-                            for: container.id, existing: store.items.map(\.id)
+                            for: container.id, existing: store.autostartCandidates.map(\.id)
                         )
                     }
                 )
@@ -526,12 +601,14 @@ struct ContainersView: View {
         // On 26.1+ the primary actions hold the bar and the housekeeping ones
         // overflow first when the window gets narrow.
         if #available(macOS 26.1, *) {
-            ToolbarItemGroup { viewStylePicker; composeButton; runButton }
+            ToolbarItemGroup { sourcePicker; groupingPicker; viewStylePicker; composeButton; runButton }
                 .visibilityPriority(.high)
             ToolbarItemGroup { pruneButton; refreshButton }
                 .visibilityPriority(.low)
         } else {
             ToolbarItemGroup {
+                sourcePicker
+                groupingPicker
                 viewStylePicker
                 composeButton
                 runButton
@@ -539,6 +616,36 @@ struct ContainersView: View {
                 refreshButton
             }
         }
+    }
+
+    /// Each picker is only offered when it has something to choose between.
+    @ViewBuilder
+    private var sourcePicker: some View {
+        @Bindable var store = store
+        if store.machineOptions.count > 1 {
+            Picker("Maszyna", selection: $store.machineFilter) {
+                Text("Wszystkie maszyny").tag(MachineFilter?.none)
+                ForEach(store.machineOptions, id: \.self) { option in
+                    Text(option.title).tag(Optional(option))
+                }
+            }
+            .pickerStyle(.menu)
+            .help("Pokaż kontenery z jednej maszyny")
+        }
+        if store.engineOptions.count > 1 {
+            Picker("Silnik", selection: $store.engineFilter) {
+                Text("Wszystkie silniki").tag(ContainerEngine?.none)
+                ForEach(store.engineOptions) { option in
+                    Text(option.title).tag(Optional(option))
+                }
+            }
+            .pickerStyle(.menu)
+            .help("Pokaż kontenery z jednego silnika")
+        }
+    }
+
+    private var groupingPicker: some View {
+        GroupingPicker(selection: $grouping, options: ListGrouping.containers)
     }
 
     private var viewStylePicker: some View {

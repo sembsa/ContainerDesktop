@@ -4,7 +4,7 @@ import Observation
 @MainActor @Observable
 final class AppModel {
     enum Section: String, CaseIterable, Identifiable {
-        case containers, images, volumes, networks, kubernetes, workloads, helm, registries, machines, system
+        case containers, images, volumes, networks, kubernetes, workloads, helm, registries, machines, externalMachines, system
 
         var id: String { rawValue }
 
@@ -19,6 +19,7 @@ final class AppModel {
             case .helm: String(localized: "Helm")
             case .registries: String(localized: "Rejestry")
             case .machines: String(localized: "Maszyny")
+            case .externalMachines: String(localized: "Maszyny zewnętrzne")
             case .system: String(localized: "System")
             }
         }
@@ -34,6 +35,7 @@ final class AppModel {
             case .helm: "shippingbox.fill"
             case .registries: "key"
             case .machines: "desktopcomputer"
+            case .externalMachines: "server.rack"
             case .system: "gearshape"
             }
         }
@@ -49,12 +51,16 @@ final class AppModel {
             case .helm: .mint
             case .registries: .pink
             case .machines: .indigo
+            case .externalMachines: .brown
             case .system: .gray
             }
         }
     }
 
     var selection: Section = .containers
+    /// A container another section asked the Containers list to select (the
+    /// topology's "Open in list"). `ContainersView` takes it and clears it.
+    var pendingContainerFocus: String?
     var binaryFound: Bool
     var globalError: PresentedError?
 
@@ -65,6 +71,9 @@ final class AppModel {
     let networks = NetworkStore()
     let registries = RegistryStore()
     let machines = MachineStore()
+    /// Docker engines on other machines, reached over SSH. Its list feeds the
+    /// container store's extra runtimes.
+    let externalMachines = ExternalMachineStore()
     let kubernetes = K8sStore()
     let workloads = WorkloadStore()
     let helm = HelmStore()
@@ -75,6 +84,24 @@ final class AppModel {
 
     init() {
         binaryFound = BinaryResolver.resolve() != nil
+        containers.setExternal(externalMachines.machines, refreshNow: false)
+        networks.runtimeProvider = { [containers] in containers.allRuntimes }
+        volumes.runtimeProvider = { [containers] in containers.allRuntimes }
+        networks.machineProvider = { [containers] in containers.externalEndpoints }
+        externalMachines.onChange = { [containers, networks] machines in
+            containers.setExternal(machines)
+            Task { await networks.refresh() }
+        }
+    }
+
+    /// Switches to Containers and selects `container` there: the machine and
+    /// engine filters are cleared so it is in the list, and the search is set to
+    /// its name so it is the one in sight.
+    func openInContainerList(_ container: ContainerInfo) {
+        containers.machineFilter = nil
+        containers.engineFilter = nil
+        pendingContainerFocus = container.id
+        selection = .containers
     }
 
     func bootstrap() async {
@@ -99,12 +126,16 @@ final class AppModel {
     /// runs; `syncAutostartWithRunning` writes only when the set changed, so
     /// calling this on every tick costs a set comparison.
     private func syncContainerAutostart() {
-        system.syncAutostartWithRunning(containers.items.filter(\.isRunning).map(\.id))
+        system.syncAutostartWithRunning(containers.autostartCandidates.filter(\.isRunning).map(\.id))
     }
 
     func refreshCurrent() async {
         if system.serviceState == .unknown { await system.refreshState() }
         guard system.serviceState.isRunning else {
+            // Apple's service is down; Docker containers can still be listed.
+            await containers.refresh(appleAvailable: false)
+            if selection == .networks { await networks.refresh(appleAvailable: false) }
+            if selection == .volumes { await volumes.refresh(appleAvailable: false) }
             containers.publishWidgetSnapshot(serviceRunning: false)
             return
         }
@@ -125,6 +156,8 @@ final class AppModel {
         case .networks: await networks.refresh()
         case .registries: await registries.refresh()
         case .machines: await machines.refresh()
+        // Probed by the view itself (each probe opens an SSH connection).
+        case .externalMachines: break
         case .kubernetes: await kubernetes.refresh()
         // Objects are read on demand: one kubectl process per kind, and a
         // cluster holds enough of them that a three-second tick across seven

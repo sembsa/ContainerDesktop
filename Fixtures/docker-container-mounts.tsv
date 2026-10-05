@@ -1,0 +1,2 @@
+/cgui-fixture-c	[{"Type":"volume","Name":"cgui-fixture-data","Source":"/var/lib/docker/volumes/cgui-fixture-data/_data","Destination":"/data","Driver":"local","Mode":"z","RW":true,"Propagation":""},{"Type":"bind","Source":"/host_mnt/private/tmp","Destination":"/hosttmp","Mode":"ro","RW":false,"Propagation":"rprivate"}]
+/test-nginx	[]
