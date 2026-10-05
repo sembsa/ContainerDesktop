@@ -4,7 +4,7 @@ import SwiftUI
 struct VolumeFilesView: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
-    let volume: VolumeInfo
+    let volume: VolumeEntry
 
     private var store: VolumeStore { model.volumes }
 

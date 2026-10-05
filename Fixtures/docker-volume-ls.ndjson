@@ -1,0 +1,2 @@
+{"Availability":"N/A","Driver":"local","Group":"N/A","Labels":"com.docker.compose.project=demo,purpose=fixture","Links":"N/A","Mountpoint":"/var/lib/docker/volumes/cgui-fixture-data/_data","Name":"cgui-fixture-data","Scope":"local","Size":"N/A","Status":"N/A"}
+{"Availability":"N/A","Driver":"local","Group":"N/A","Labels":"","Links":"N/A","Mountpoint":"/var/lib/docker/volumes/cgui-fixture-unused/_data","Name":"cgui-fixture-unused","Scope":"local","Size":"N/A","Status":"N/A"}

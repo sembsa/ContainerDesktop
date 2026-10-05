@@ -16,30 +16,40 @@ struct ContainerCardsView: View {
     let onRecreate: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
     let onRemoveProject: (String, [ContainerInfo]) -> Void
+    /// "Group by" section of the toolbar. Compose projects keep their card
+    /// inside every section except when grouping by project itself.
+    var grouping: ListGrouping = .none
+
+    @AppStorage("collapsedListGroups") private var collapsedGroups = ""
 
     private var store: ContainerStore { model.containers }
 
     var body: some View {
         ScrollView {
             LazyVStack(spacing: 5) {
-                ForEach(groups) { group in
-                    if let project = group.project {
-                        ComposeProjectCard(
-                            project: project,
-                            containers: group.containers,
-                            selection: $selection,
-                            onRecreate: onRecreate,
-                            onRemove: onRemove,
-                            onRemoveProject: onRemoveProject
-                        )
-                    } else {
-                        ForEach(group.containers) { container in
-                            ContainerCard(
-                                container: container,
-                                selection: $selection,
-                                onRecreate: onRecreate,
-                                onRemove: onRemove
-                            )
+                if grouping == .none {
+                    projectCards(for: containers)
+                } else {
+                    ForEach(ListGrouper.group(containers, by: grouping)) { section in
+                        let collapseID = "containers|" + section.id
+                        let collapsed = CollapsedGroups.isCollapsed(collapseID, in: collapsedGroups)
+                        GroupHeader(title: section.title, count: section.count, isCollapsed: collapsed) {
+                            collapsedGroups = CollapsedGroups.toggled(collapseID, in: collapsedGroups)
+                        }
+                        if !collapsed {
+                            if grouping == .compose {
+                                // The section already is the project.
+                                ForEach(Self.runningFirst(section.items)) { container in
+                                    ContainerCard(
+                                        container: container,
+                                        selection: $selection,
+                                        onRecreate: onRecreate,
+                                        onRemove: onRemove
+                                    )
+                                }
+                            } else {
+                                projectCards(for: section.items)
+                            }
                         }
                     }
                 }
@@ -51,6 +61,32 @@ struct ContainerCardsView: View {
         .scrollContentBackground(.hidden)
         // macOS 27: lets each card's swipeActions work outside a List.
         .swipeActionsContainerCompat()
+    }
+
+    /// Compose projects as cards, loose containers beneath.
+    @ViewBuilder
+    private func projectCards(for containers: [ContainerInfo]) -> some View {
+        ForEach(Self.projectGroups(containers)) { group in
+            if let project = group.project {
+                ComposeProjectCard(
+                    project: project,
+                    containers: group.containers,
+                    selection: $selection,
+                    onRecreate: onRecreate,
+                    onRemove: onRemove,
+                    onRemoveProject: onRemoveProject
+                )
+            } else {
+                ForEach(group.containers) { container in
+                    ContainerCard(
+                        container: container,
+                        selection: $selection,
+                        onRecreate: onRecreate,
+                        onRemove: onRemove
+                    )
+                }
+            }
+        }
     }
 
     // MARK: - Grouping
@@ -70,7 +106,7 @@ struct ContainerCardsView: View {
         }
     }
 
-    private var groups: [Group] {
+    private static func projectGroups(_ containers: [ContainerInfo]) -> [Group] {
         var byProject: [String: [ContainerInfo]] = [:]
         var loose: [ContainerInfo] = []
         for container in containers {
@@ -188,6 +224,7 @@ struct ContainerCard: View {
                     .lineLimit(1)
                     .truncationMode(.middle)
                 statePill
+                RuntimeBadge(container: container)
             }
             Text(container.imageReference)
                 .font(.caption)
@@ -580,14 +617,18 @@ struct ContainerCardMenu: View {
             Button("Zatrzymaj", systemImage: "stop.fill") { act { try await store.stop(container) } }
             Button("Uruchom ponownie", systemImage: "arrow.clockwise") { act { try await store.restart(container) } }
             Button("Zabij", systemImage: "bolt.fill") { act { try await store.kill(container) } }
-            Button("Zwolnij miejsce na dysku", systemImage: "internaldrive") {
-                act { try await store.clean(container) }
+            if container.capabilities.contains(.clean) {
+                Button("Zwolnij miejsce na dysku", systemImage: "internaldrive") {
+                    act { try await store.clean(container) }
+                }
             }
         } else {
             Button("Uruchom", systemImage: "play.fill") { act { try await store.start(container) } }
         }
         Divider()
-        Button("Zmień polecenie / konfigurację…", systemImage: "slider.horizontal.3") { onRecreate(container) }
+        if container.capabilities.contains(.recreate) {
+            Button("Zmień polecenie / konfigurację…", systemImage: "slider.horizontal.3") { onRecreate(container) }
+        }
         Button("Kopiuj identyfikator", systemImage: "doc.on.doc") {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(container.id, forType: .string)

@@ -274,7 +274,10 @@ private struct StatChart: View {
 // MARK: - StatsView
 
 struct StatsView: View {
-    let containerID: String
+    @Environment(AppModel.self) private var model
+    let container: ContainerInfo
+
+    private var containerID: String { container.id }
 
     @State private var history: [DatedSample] = []
     @State private var window: TimeWindow = .twoMinutes
@@ -527,10 +530,7 @@ struct StatsView: View {
 
     private func pollStats() async {
         while !Task.isCancelled {
-            if let samples = try? await ContainerCLI.shared.json(
-                ["stats", "--no-stream", containerID],
-                as: [StatsSample].self
-            ), let s = samples.first {
+            if let s = await model.containers.latestStats(container) {
                 let dated = DatedSample(date: .now, sample: s)
                 if history.count >= historyLimit {
                     history.removeFirst()

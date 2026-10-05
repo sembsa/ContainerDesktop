@@ -193,7 +193,7 @@ struct SystemView: View {
                                 Button("Zaznacz te, które teraz działają") {
                                     store.setAutostartContainers(
                                         Set(runningContainerIDs),
-                                        existing: model.containers.items.map(\.id)
+                                        existing: model.containers.autostartCandidates.map(\.id)
                                     )
                                 }
                                 .controlSize(.small)
@@ -273,7 +273,7 @@ struct SystemView: View {
     }
 
     private var runningContainerIDs: [String] {
-        model.containers.items.filter(\.isRunning).map(\.id)
+        model.containers.autostartCandidates.filter(\.isRunning).map(\.id)
     }
 
     private var autostartSelectionText: String {

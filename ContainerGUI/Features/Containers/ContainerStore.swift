@@ -10,6 +10,45 @@ final class ContainerStore {
     var error: CLIError?
     var pendingIDs: Set<String> = []
 
+    /// Restricts the list to this Mac or to one external machine; `nil` shows all.
+    var machineFilter: MachineFilter?
+    /// Restricts the list to one runtime (Apple, Docker, Colima); `nil` shows all.
+    /// Combines with `machineFilter`.
+    var engineFilter: ContainerEngine?
+    /// Engines whose CLI is installed.
+    private(set) var installedRuntimes: Set<RuntimeKind> = [.apple]
+    /// The last list error per engine other than the primary one. A stopped
+    /// Docker daemon is normal, so it is recorded here instead of raised.
+    private(set) var runtimeErrors: [String: CLIError] = [:]
+
+    /// Machines present in the list, for the filter menu: this Mac first, then
+    /// every external machine that has containers, by label. The current choice
+    /// stays offered even when its last container is gone, so it can be cleared.
+    var machineOptions: [MachineFilter] {
+        var options = Set(items.map(\.machineFilterValue))
+        if let machineFilter { options.insert(machineFilter) }
+        return options.sorted()
+    }
+
+    /// Runtimes present in the list, in a fixed order (plus the current choice).
+    var engineOptions: [ContainerEngine] {
+        var options = Set(items.map(\.engine))
+        if let engineFilter { options.insert(engineFilter) }
+        return ContainerEngine.allCases.filter(options.contains)
+    }
+
+    /// `items` narrowed by the toolbar's machine and runtime filters.
+    var filteredItems: [ContainerInfo] {
+        ContainerSourceFilter.apply(machine: machineFilter, engine: engineFilter, to: items)
+    }
+
+
+    /// Items belonging to Apple's runtime — the only ones login autostart and
+    /// the `container`-specific system pages know how to handle.
+    var autostartCandidates: [ContainerInfo] {
+        items.filter { $0.capabilities.contains(.autostart) }
+    }
+
     /// Compose project names the user has collapsed in the list. Absent = expanded
     /// (Docker-Desktop-like default). Held on the store so the expand/collapse state
     /// survives `ContainersView` being recreated on sidebar navigation, and persisted
@@ -52,41 +91,185 @@ final class ContainerStore {
 
     private var previousSamples: [String: (sample: StatsSample, at: Date)] = [:]
 
+    /// Apple-only housekeeping (`prune`, `stop --all`, `clean`); guarded by
+    /// `RuntimeCapabilities` in the views.
     private let cli = ContainerCLI.shared
+    private let builtInRuntimes: [any ContainerRuntime]
+    /// One runtime per enabled external machine, rebuilt only when its entry
+    /// changes so the tunnel and CPU bookkeeping survive a refresh.
+    private var externalRuntimes: [(endpoint: DockerEndpoint, runtime: ExternalMachineRuntime)] = []
+
+    private var runtimes: [any ContainerRuntime] {
+        builtInRuntimes + externalRuntimes.map { $0.runtime as any ContainerRuntime }
+    }
+
+    /// The runtimes are injected so a test can substitute fakes; the defaults are
+    /// the two local engines. External machines are added with `setExternal`.
+    init(runtimes: [any ContainerRuntime] = [AppleRuntime(), DockerRuntime()]) {
+        self.builtInRuntimes = runtimes
+    }
+
+    /// Every runtime in play (built-in and external), for sections that list
+    /// the same engines — Networks shares them so tunnels and engine detection
+    /// are not duplicated.
+    var allRuntimes: [any ContainerRuntime] { runtimes }
+
+    /// The enabled external machines.
+    var externalEndpoints: [DockerEndpoint] { externalRuntimes.map(\.endpoint) }
+
+    func runtime(for container: ContainerInfo) -> any ContainerRuntime {
+        runtimes.first { $0.id == container.runtimeKey } ?? runtimes[0]
+    }
+
+    /// Feeds the enabled external machines in. Entries that did not change keep
+    /// their runtime; containers of removed or disabled ones leave the list at
+    /// once instead of waiting for the next poll.
+    func setExternal(_ endpoints: [DockerEndpoint], refreshNow: Bool = true) {
+        let wanted = endpoints.filter(\.enabled)
+        externalRuntimes = wanted.map { endpoint in
+            if let existing = externalRuntimes.first(where: { $0.endpoint == endpoint }) { return existing }
+            return (endpoint, ExternalMachineRuntime(endpoint: endpoint))
+        }
+        let live = Set(runtimes.map(\.id))
+        items = items.filter { live.contains($0.runtimeKey) }
+        runtimeErrors = runtimeErrors.filter { live.contains($0.key) }
+        if refreshNow { Task { await refresh() } }
+    }
 
     var runningCount: Int { items.filter(\.isRunning).count }
 
-    func refresh() async {
-        if items.isEmpty { isLoading = true }
-        defer { isLoading = false }
-        do {
-            let args = showAll ? ["ls", "-a"] : ["ls"]
-            // Kubernetes node containers belong to the Kubernetes section; showing
-            // them here invites deleting a cluster's control plane by mistake.
-            items = try await cli.json(args, as: [ContainerInfo].self)
-                .filter { $0.configuration.labels?["com.apple.container.plugin"] != "k8s" }
-            error = nil
-            await refreshLiveStats()
-        } catch let cliError as CLIError {
-            error = cliError
-        } catch {
-            self.error = .command(exitCode: -1, stderr: error.localizedDescription)
+    /// Lists every installed engine concurrently and merges the results.
+    ///
+    /// - Parameter appleAvailable: `false` while Apple's system service is down;
+    ///   its CLI would only fail, but Docker containers should still show.
+    ///
+    /// Runs as its own task: a caller that goes away (a view's `.task` restarting,
+    /// the 3 s poll) does not cancel a refresh that is under way — which would
+    /// surface as a bogus "CancellationError" for every engine — and a caller
+    /// that arrives meanwhile simply waits for that refresh instead of starting
+    /// another.
+    func refresh(appleAvailable: Bool = true) async {
+        if let running = refreshInFlight {
+            await running.value
+            return
         }
+        let task = Task { [self] in
+            await performRefresh(appleAvailable: appleAvailable)
+            refreshInFlight = nil
+        }
+        refreshInFlight = task
+        await task.value
     }
 
-    /// One `container stats --no-stream` call covers every running container,
-    /// so the card list's meters cost a single extra process per refresh.
+    private var refreshInFlight: Task<Void, Never>?
+
+    private func performRefresh(appleAvailable: Bool) async {
+        if items.isEmpty { isLoading = true }
+        defer { isLoading = false }
+
+        let includeStopped = showAll
+        let now = Date()
+        let active = runtimes.filter { runtime in
+            guard runtime.isInstalled, runtime.kind != .apple || appleAvailable else { return false }
+            // An unreachable machine is retried every 20 s, not every poll —
+            // each attempt can take seconds and would stall the whole list.
+            if runtime.kind != .apple, let failed = lastFailure[runtime.id],
+               now.timeIntervalSince(failed) < Self.retryAfterFailure { return false }
+            return true
+        }
+        installedRuntimes = Set(builtInRuntimes.filter(\.isInstalled).map(\.kind))
+
+        let results = await withTaskGroup(of: (String, Result<[ContainerInfo], Error>).self) { group in
+            for runtime in active {
+                group.addTask {
+                    do {
+                        let list = runtime.kind == .apple
+                            ? try await runtime.list(includeStopped: includeStopped)
+                            : try await Deadline.run(Self.listDeadline) {
+                                try await runtime.list(includeStopped: includeStopped)
+                            }
+                        return (runtime.id, .success(list))
+                    } catch { return (runtime.id, .failure(error)) }
+                }
+            }
+            var collected: [String: Result<[ContainerInfo], Error>] = [:]
+            for await (id, result) in group { collected[id] = result }
+            return collected
+        }
+
+        var merged: [ContainerInfo] = []
+        var primaryError: CLIError?
+        for runtime in runtimes {
+            let key = runtime.id
+            switch results[key] {
+            case .success(let list):
+                runtimeErrors[key] = nil
+                lastFailure[key] = nil
+                merged.append(contentsOf: list)
+            case .failure(let failure) where RefreshCancellation.isCancellation(failure):
+                // Cancelled, not broken: keep the last good list, record nothing.
+                merged.append(contentsOf: items.filter { $0.runtimeKey == key })
+            case .failure(let failure):
+                lastFailure[key] = Date()
+                let cliError = (failure as? CLIError) ?? .command(exitCode: -1, stderr: failure.localizedDescription)
+                if runtime.kind == .apple { primaryError = cliError } else { runtimeErrors[key] = cliError }
+                // Apple's CLI keeps its last good list across a failed poll;
+                // an engine that is simply gone (Docker quit, a laptop that
+                // went offline) must not.
+                if runtime.keepsLastListOnError {
+                    merged.append(contentsOf: items.filter { $0.runtimeKey == key })
+                }
+            case nil:
+                // Not asked this round (Apple's service is down, the CLI is
+                // missing, or an unreachable machine is backing off): nothing
+                // to show for it.
+                break
+            }
+        }
+        items = Self.makeIdentitiesUnique(merged)
+        error = primaryError
+        await refreshLiveStats()
+    }
+
+    private var lastFailure: [String: Date] = [:]
+    private static let retryAfterFailure: TimeInterval = 20
+    private static let listDeadline: Duration = .seconds(25)
+
+    /// Two engines can both have a container called `web`. Identity (selection,
+    /// meters, `ForEach`) is `id`, so the later one is renamed; commands still
+    /// go out under `reference`.
+    static func makeIdentitiesUnique(_ list: [ContainerInfo]) -> [ContainerInfo] {
+        ContainerSourceFilter.makeIdentitiesUnique(list)
+    }
+
+    /// One stats call per engine covers every running container, so the card
+    /// list's meters cost a single extra process per engine per refresh.
     private func refreshLiveStats() async {
         guard !items.isEmpty else {
             liveStats = [:]
             previousSamples = [:]
             return
         }
-        guard let samples = try? await cli.json(
-            ["stats", "--no-stream"],
-            as: [StatsSample].self,
-            timeout: .seconds(20)
-        ) else { return }
+
+        // Samples come back keyed by the engine's own name; the store keys
+        // everything by UI identity.
+        var identity: [String: [String: String]] = [:]
+        for container in items where container.isRunning {
+            identity[container.runtimeKey, default: [:]][container.reference] = container.id
+        }
+
+        var samples: [StatsSample] = []
+        var gotAny = false
+        for runtime in runtimes {
+            guard let names = identity[runtime.id] else { continue }
+            guard let fetched = try? await runtime.stats(references: nil) else { continue }
+            gotAny = true
+            for sample in fetched {
+                guard let id = names[sample.id] else { continue }
+                samples.append(sample.withID(id))
+            }
+        }
+        guard gotAny else { return }
 
         let now = Date()
         var updated: [String: LiveUsage] = [:]
@@ -199,61 +382,48 @@ final class ContainerStore {
 
     func start(_ container: ContainerInfo) async throws {
         try await withPending(container.id) {
-            try await cli.run(["start", container.id])
+            try await runtime(for: container).start(container.reference)
             await refresh()
         }
     }
 
     func stop(_ container: ContainerInfo) async throws {
         try await withPending(container.id) {
-            try await cli.run(["stop", container.id])
+            try await runtime(for: container).stop(container.reference)
             await refresh()
         }
     }
 
     func kill(_ container: ContainerInfo) async throws {
         try await withPending(container.id) {
-            try await cli.run(["kill", container.id])
+            try await runtime(for: container).kill(container.reference)
             await refresh()
         }
     }
 
     func restart(_ container: ContainerInfo) async throws {
         try await withPending(container.id) {
-            if container.isRunning {
-                do {
-                    try await cli.run(["stop", container.id])
-                } catch let error as CLIError {
-                    guard Self.isAlreadyStoppedError(error) else { throw error }
-                }
-            }
-            try await cli.run(["start", container.id])
+            try await runtime(for: container).restart(container.reference, wasRunning: container.isRunning)
             await refresh()
         }
     }
 
-    /// Stops every running container (menu bar quick action).
+    /// Stops every running Apple container (menu bar quick action). Docker's
+    /// containers are left alone: they are often long-lived services that
+    /// something other than this app depends on.
     func stopAll() async throws {
         try await cli.run(["stop", "--all"], timeout: .seconds(120))
         await refresh()
     }
 
-    private static func isAlreadyStoppedError(_ error: CLIError) -> Bool {
-        guard case .command(_, let stderr) = error else { return false }
-        let lower = stderr.lowercased()
-        return lower.contains("not running") || lower.contains("already stopped") || lower.contains("stopped")
-    }
-
     func remove(_ container: ContainerInfo, force: Bool = false) async throws {
         try await withPending(container.id) {
-            var args = ["rm"]
-            if force { args.append("--force") }
-            args.append(container.id)
-            try await cli.run(args)
+            try await runtime(for: container).remove(container.reference, force: force)
             await refresh()
         }
     }
 
+    /// Removes stopped Apple containers (`container prune`).
     func prune() async throws {
         try await cli.run(["prune"])
         await refresh()
@@ -261,77 +431,55 @@ final class ContainerStore {
 
     // MARK: - Detail data
 
-    func inspect(_ id: String) async throws -> String {
-        try await cli.run(["inspect", id])
+    func inspect(_ container: ContainerInfo) async throws -> String {
+        try await runtime(for: container).inspect(container.reference)
     }
 
-    func latestStats(_ id: String) async -> StatsSample? {
-        let samples = try? await cli.json(["stats", "--no-stream", id], as: [StatsSample].self)
-        return samples?.first
+    func latestStats(_ container: ContainerInfo) async -> StatsSample? {
+        let sample = try? await runtime(for: container).stats(references: [container.reference]).first
+        return sample?.withID(container.id)
+    }
+
+    /// `logs --follow` with the requested history, through the owning engine.
+    func logStream(_ container: ContainerInfo, tail: LogTailLimit) -> AsyncThrowingStream<String, Error> {
+        runtime(for: container).logs(container.reference, tail: tail)
+    }
+
+    func writeFullLog(_ container: ContainerInfo, to url: URL) async throws {
+        try await runtime(for: container).writeFullLog(container.reference, to: url.path)
+    }
+
+    func terminalTarget(_ container: ContainerInfo) -> TerminalTarget {
+        runtime(for: container).terminalTarget(container.reference)
     }
 
     // MARK: - Files & export
 
     func export(_ container: ContainerInfo, to url: URL) async throws {
-        try await cli.run(["export", "--output", url.path, container.id])
+        try await runtime(for: container).export(container.reference, to: url)
     }
 
     func copyToContainer(_ container: ContainerInfo, localPath: String, destination: String) async throws {
-        // `cp` first — it is the CLI's own path, and it handles cases the tar
-        // fallback does not.
-        let ran = (try? await cli.run(["cp", localPath, "\(container.id):\(destination)"])) != nil
-
-        // A zero exit status is not proof that anything was written. A container
-        // created before the installed CLI runs an older guest agent, and on
-        // 1.4.1 that agent accepts the upload, reports success, and writes
-        // nothing. Look for the file rather than take the CLI's word for it.
-        if ran, await ContainerCopyCheck.verify(
-            containerID: container.id, localPath: localPath, destination: destination
-        ) != .missing {
-            return
-        }
-
-        try await ContainerFileTransfer.upload(
-            containerID: container.id,
-            localURL: URL(fileURLWithPath: localPath),
-            destination: destination
-        )
-
-        if await ContainerCopyCheck.verify(
-            containerID: container.id, localPath: localPath, destination: destination
-        ) == .missing {
-            throw ContainerCopyCheck.silentFailure(destination: destination)
-        }
+        try await runtime(for: container).copyIn(container.reference, localPath: localPath, destination: destination)
     }
 
-    /// `container clean` — new in 1.4.1.
+    func copyFromContainer(_ container: ContainerInfo, source: String, localPath: String) async throws {
+        try await runtime(for: container).copyOut(container.reference, source: source, localPath: localPath)
+    }
+
+    /// Lists a directory inside a running container via `exec ls`.
+    func listFiles(_ container: ContainerInfo, path: String) async throws -> [FileEntry] {
+        try await runtime(for: container).listFiles(container.reference, path: path)
+    }
+
+    /// `container clean` — new in 1.4.1. Apple only (`RuntimeCapabilities.clean`).
     ///
     /// Trims the writable layers of a *running* container (its root filesystem
     /// unless read-only, plus every writable block mount), releasing the disk
     /// blocks they no longer use so the sparse image on the host shrinks back.
     /// It reclaims space; it does not reset or delete the container's data.
     func clean(_ container: ContainerInfo) async throws {
-        try await cli.run(["clean", container.id], timeout: .seconds(300))
+        try await cli.run(["clean", container.reference], timeout: .seconds(300))
         await refresh()
-    }
-
-    func copyFromContainer(_ container: ContainerInfo, source: String, localPath: String) async throws {
-        if (try? await cli.run(["cp", "\(container.id):\(source)", localPath])) != nil { return }
-
-        // `cp` reports "path not found" for files that plainly exist whenever the
-        // container's guest agent is older than the installed CLI — which is
-        // every container created before the last upgrade. `tar` over `exec`
-        // still works, so the user gets their file instead of an explanation.
-        try await ContainerFileTransfer.download(
-            containerID: container.id,
-            source: source,
-            to: URL(fileURLWithPath: localPath)
-        )
-    }
-
-    /// Lists a directory inside a running container via `exec ls`.
-    func listFiles(_ container: ContainerInfo, path: String) async throws -> [FileEntry] {
-        let output = try await cli.run(["exec", container.id, "ls", "-la", path])
-        return FileEntry.parse(lsOutput: output)
     }
 }

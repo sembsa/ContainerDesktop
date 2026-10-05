@@ -46,11 +46,11 @@ struct ContainerDetailView: View {
     private var content: some View {
         switch tab {
         case .logs:
-            LogsView(containerID: container.id)
+            LogsView(container: container)
                 .id(container.id)
         case .stats:
             if container.isRunning {
-                StatsView(containerID: container.id)
+                StatsView(container: container)
                     .id(container.id)
             } else {
                 EmptyStateView(
@@ -73,11 +73,11 @@ struct ContainerDetailView: View {
                 )
             }
         case .inspect:
-            InspectView(container: container, fetchRaw: { try await store.inspect(container.id) })
+            InspectView(container: container, fetchRaw: { try await store.inspect(container) })
                 .id(container.id)
         case .terminal:
             if container.isRunning {
-                TerminalSessionView(target: .container(id: container.id))
+                TerminalSessionView(target: store.terminalTarget(container))
                     .id(container.id)
             } else {
                 EmptyStateView(
@@ -101,6 +101,7 @@ struct ContainerDetailView: View {
                     Text(container.imageReference)
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    RuntimeBadge(container: container)
                     Text(container.state)
                         .font(.caption2)
                         .padding(.horizontal, 6)
@@ -136,10 +137,12 @@ struct ContainerDetailView: View {
 
     @ViewBuilder
     private var actionButtons: some View {
-        Button {
-            recreateTarget = container
-        } label: { Label("Zmień konfigurację…", systemImage: "slider.horizontal.3") }
-            .disabled(store.pendingIDs.contains(container.id))
+        if container.capabilities.contains(.recreate) {
+            Button {
+                recreateTarget = container
+            } label: { Label("Zmień konfigurację…", systemImage: "slider.horizontal.3") }
+                .disabled(store.pendingIDs.contains(container.id))
+        }
         if store.pendingIDs.contains(container.id) {
             ProgressView()
                 .controlSize(.small)

@@ -16,4 +16,19 @@ struct StatsSample: Codable, Identifiable, Sendable, Hashable {
         guard let used = memoryUsageBytes, let limit = memoryLimitBytes, limit > 0 else { return nil }
         return Double(used) / Double(limit)
     }
+
+    /// The same reading filed under another id (engine-local name -> UI identity).
+    func withID(_ newID: String) -> StatsSample {
+        StatsSample(
+            id: newID,
+            cpuUsageUsec: cpuUsageUsec,
+            memoryUsageBytes: memoryUsageBytes,
+            memoryLimitBytes: memoryLimitBytes,
+            blockReadBytes: blockReadBytes,
+            blockWriteBytes: blockWriteBytes,
+            networkRxBytes: networkRxBytes,
+            networkTxBytes: networkTxBytes,
+            numProcesses: numProcesses
+        )
+    }
 }

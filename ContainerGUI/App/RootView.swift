@@ -105,6 +105,7 @@ struct DetailContainer: View {
         case .helm: HelmView()
         case .registries: RegistriesView()
         case .machines: MachinesView()
+        case .externalMachines: ExternalMachinesView()
         case .system: SystemView()
         }
     }
