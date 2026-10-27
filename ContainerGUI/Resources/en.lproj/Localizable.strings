@@ -979,3 +979,11 @@
 "Węzły robocze: %d" = "Worker nodes: %d";
 "Zatrzymaj na czas migawki" = "Stop while snapshotting";
 "Zrób migawkę teraz" = "Take a snapshot now";
+"Migawki kontenerów" = "Container snapshots";
+"Nowe: w menu kontenera „Migawki…” zapisuje jego stan jako obraz i pozwala do niego wrócić. Przed przywróceniem program sam zapisuje stan bieżący, więc każde przywrócenie da się cofnąć. Migawka obejmuje system plików kontenera, nie wolumeny." = "New: \"Snapshots…\" in a container's menu saves its state as an image and lets you go back to it. Before restoring, the app saves the current state first, so every restore can be undone. A snapshot covers the container's filesystem, not its volumes.";
+"Klastry z węzłami roboczymi" = "Clusters with worker nodes";
+"Nowe: przy tworzeniu klastra Kubernetes możesz dodać węzły robocze obok control plane (wymaga container 1.6)." = "New: when creating a Kubernetes cluster you can add worker nodes beside the control plane (requires container 1.6).";
+"Compose: usługi widzą się po nazwie" = "Compose: services find each other by name";
+"Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera." = "Changed: a service is now reachable by its name from the compose file — an address like db:5432 simply works. Before, only the full container name did.";
+"Zgodność z container 1.6" = "Compatible with container 1.6";
+"Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów." = "Changed: container 1.6 renamed the Kubernetes command to \"cluster\". The Kubernetes section works again instead of asking for a newer version, and cluster nodes stay out of the containers list.";

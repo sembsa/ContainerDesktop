@@ -979,3 +979,11 @@
 "Węzły robocze: %d" = "Węzły robocze: %d";
 "Zatrzymaj na czas migawki" = "Zatrzymaj na czas migawki";
 "Zrób migawkę teraz" = "Zrób migawkę teraz";
+"Migawki kontenerów" = "Migawki kontenerów";
+"Nowe: w menu kontenera „Migawki…” zapisuje jego stan jako obraz i pozwala do niego wrócić. Przed przywróceniem program sam zapisuje stan bieżący, więc każde przywrócenie da się cofnąć. Migawka obejmuje system plików kontenera, nie wolumeny." = "Nowe: w menu kontenera „Migawki…” zapisuje jego stan jako obraz i pozwala do niego wrócić. Przed przywróceniem program sam zapisuje stan bieżący, więc każde przywrócenie da się cofnąć. Migawka obejmuje system plików kontenera, nie wolumeny.";
+"Klastry z węzłami roboczymi" = "Klastry z węzłami roboczymi";
+"Nowe: przy tworzeniu klastra Kubernetes możesz dodać węzły robocze obok control plane (wymaga container 1.6)." = "Nowe: przy tworzeniu klastra Kubernetes możesz dodać węzły robocze obok control plane (wymaga container 1.6).";
+"Compose: usługi widzą się po nazwie" = "Compose: usługi widzą się po nazwie";
+"Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera." = "Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera.";
+"Zgodność z container 1.6" = "Zgodność z container 1.6";
+"Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów." = "Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów.";

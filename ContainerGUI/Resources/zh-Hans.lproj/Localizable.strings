@@ -979,3 +979,11 @@
 "Węzły robocze: %d" = "工作节点：%d";
 "Zatrzymaj na czas migawki" = "快照期间停止容器";
 "Zrób migawkę teraz" = "立即创建快照";
+"Migawki kontenerów" = "容器快照";
+"Nowe: w menu kontenera „Migawki…” zapisuje jego stan jako obraz i pozwala do niego wrócić. Przed przywróceniem program sam zapisuje stan bieżący, więc każde przywrócenie da się cofnąć. Migawka obejmuje system plików kontenera, nie wolumeny." = "新增：容器菜单中的“快照…”可将其状态保存为镜像，并可随时恢复。恢复前应用会先保存当前状态，因此每次恢复都可以撤销。快照包含容器的文件系统，不包含卷。";
+"Klastry z węzłami roboczymi" = "带工作节点的集群";
+"Nowe: przy tworzeniu klastra Kubernetes możesz dodać węzły robocze obok control plane (wymaga container 1.6)." = "新增：创建 Kubernetes 集群时可在控制平面之外添加工作节点（需要 container 1.6）。";
+"Compose: usługi widzą się po nazwie" = "Compose：服务可按名称互相访问";
+"Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera." = "变更：现在可以通过 compose 文件中的服务名访问服务，像 db:5432 这样的地址可以直接使用。此前只有完整的容器名称可用。";
+"Zgodność z container 1.6" = "兼容 container 1.6";
+"Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów." = "变更：container 1.6 将 Kubernetes 命令更名为“cluster”。Kubernetes 页面恢复正常，不再提示需要更新版本，集群节点也不会出现在容器列表中。";

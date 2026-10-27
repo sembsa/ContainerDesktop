@@ -37,6 +37,31 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.10.0",
+            items: [
+                Item(
+                    symbol: "camera.shutter.button",
+                    title: String(localized: "Migawki kontenerów"),
+                    detail: String(localized: "Nowe: w menu kontenera „Migawki…” zapisuje jego stan jako obraz i pozwala do niego wrócić. Przed przywróceniem program sam zapisuje stan bieżący, więc każde przywrócenie da się cofnąć. Migawka obejmuje system plików kontenera, nie wolumeny.")
+                ),
+                Item(
+                    symbol: "server.rack",
+                    title: String(localized: "Klastry z węzłami roboczymi"),
+                    detail: String(localized: "Nowe: przy tworzeniu klastra Kubernetes możesz dodać węzły robocze obok control plane (wymaga container 1.6).")
+                ),
+                Item(
+                    symbol: "network",
+                    title: String(localized: "Compose: usługi widzą się po nazwie"),
+                    detail: String(localized: "Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera.")
+                ),
+                Item(
+                    symbol: "checkmark.seal",
+                    title: String(localized: "Zgodność z container 1.6"),
+                    detail: String(localized: "Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.9.1",
             items: [
                 Item(
