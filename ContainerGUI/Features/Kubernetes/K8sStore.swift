@@ -32,7 +32,7 @@ final class K8sStore {
 
     func refresh() async {
         do {
-            let output = try await cli.run(["k8s", "list"], timeout: .seconds(30))
+            let output = try await cli.run([K8sCommands.plugin(), "list"], timeout: .seconds(30))
             clusters = K8sCluster.group(K8sListParser.parse(output))
             availability = .available
             error = nil
@@ -106,21 +106,21 @@ final class K8sStore {
 
     func start(_ cluster: K8sCluster) async throws {
         try await withPending(cluster.name) {
-            try await cli.run(["k8s", "start", "--name", cluster.name], timeout: .seconds(300))
+            try await cli.run([K8sCommands.plugin(), "start", "--name", cluster.name], timeout: .seconds(300))
         }
         await refresh()
     }
 
     func delete(_ cluster: K8sCluster) async throws {
         try await withPending(cluster.name) {
-            try await cli.run(["k8s", "delete", "--name", cluster.name], timeout: .seconds(300))
+            try await cli.run([K8sCommands.plugin(), "delete", "--name", cluster.name], timeout: .seconds(300))
         }
         KubeconfigManager.removeKubeconfig(for: cluster.name)
         await refresh()
     }
 
     func loadImage(_ image: String, into cluster: K8sCluster, platform: String?) async throws {
-        var args = ["k8s", "load-image", "--name", cluster.name, image]
+        var args = [K8sCommands.plugin(), "load-image", "--name", cluster.name, image]
         if let platform, !platform.isEmpty { args.append(contentsOf: ["--platform", platform]) }
         try await withPending(cluster.name) {
             try await cli.run(args, timeout: .seconds(600))
@@ -149,7 +149,7 @@ final class K8sStore {
     /// the app-managed copy: this one is for the user's own `kubectl`.
     func exportKubeconfig(_ cluster: K8sCluster, to path: String) async throws {
         try await cli.run(
-            ["k8s", "write-config", "--name", cluster.name, "--kubeconfig", path],
+            [K8sCommands.plugin(), "write-config", "--name", cluster.name, "--kubeconfig", path],
             timeout: .seconds(60)
         )
     }

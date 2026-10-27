@@ -54,6 +54,14 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 `Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.
 
 - **The plugin has no `--format json`.** `K8sListParser` (in `Models/K8sModels.swift`) slices the fixed-width `k8s list` table on header-column offsets — splitting on whitespace loses `6144 MB` and mangles rows with blank trailing columns. Covered by `K8sListParserTests`.
+- **1.6.0 renamed the plugin `k8s` → `cluster`** (apple/container#2427), and
+  the node label value with it: `com.apple.container.plugin=cluster`. Every argv
+  goes through `K8sCommands.plugin()`, which looks for the `cluster` plugin
+  directory beside the resolved binary — what the CLI itself dispatches on — so
+  1.5 and 1.6 installs both work. The Containers-list filter hides nodes under
+  either value (`K8sCommands.nodeLabelValues`); missing one exposes a control
+  plane to deletion. On 1.6 a plain `k8s list` fails with "unknown command",
+  which `diagnose` used to report as an outdated CLI.
 - **1.5.0 removed `container k8s start`.** A stopped node is restarted by
   deleting the cluster and creating it again — there is no other way. The
   command is still in `K8sStore` because the app runs against whatever CLI is

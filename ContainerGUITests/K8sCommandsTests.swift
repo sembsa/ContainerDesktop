@@ -12,7 +12,7 @@ final class K8sCommandsTests: XCTestCase {
         nodeImage: String = "", cniManifest: String = "", removeOnStop: Bool = false
     ) -> [String] {
         K8sCommands.create(
-            name: name, cpus: cpus, memory: memory,
+            plugin: "k8s", name: name, cpus: cpus, memory: memory,
             nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop
         )
     }
@@ -55,5 +55,31 @@ final class K8sCommandsTests: XCTestCase {
     func testRemoveOnStopIsAValuelessFlag() {
         XCTAssertEqual(create(removeOnStop: true).last, "--rm")
         XCTAssertFalse(create(removeOnStop: false).contains("--rm"))
+    }
+
+    // MARK: - Which plugin name the install answers to
+
+    func testA16InstallAnswersToCluster() {
+        let plugin = K8sCommands.plugin(binary: "/usr/local/bin/container") {
+            $0 == "/usr/local/libexec/container/plugins/cluster"
+        }
+        XCTAssertEqual(plugin, "cluster")
+    }
+
+    func testAnOlderInstallKeepsK8s() {
+        XCTAssertEqual(K8sCommands.plugin(binary: "/usr/local/bin/container") { _ in false }, "k8s")
+    }
+
+    func testTheRootFollowsTheBinaryNotAFixedPrefix() {
+        // A Homebrew-style prefix must be looked up under its own libexec.
+        let plugin = K8sCommands.plugin(binary: "/opt/homebrew/bin/container") {
+            $0 == "/opt/homebrew/libexec/container-plugins/cluster"
+        }
+        XCTAssertEqual(plugin, "cluster")
+    }
+
+    func testNodesUnderEitherLabelAreRecognised() {
+        // Missing one would put a control plane in the Containers list.
+        XCTAssertEqual(K8sCommands.nodeLabelValues, ["k8s", "cluster"])
     }
 }

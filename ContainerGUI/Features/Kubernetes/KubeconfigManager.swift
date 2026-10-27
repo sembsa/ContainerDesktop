@@ -30,7 +30,7 @@ enum KubeconfigManager {
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         try? FileManager.default.removeItem(atPath: path)
         try await ContainerCLI.shared.run(
-            ["k8s", "write-config", "--name", cluster, "--kubeconfig", path],
+            [K8sCommands.plugin(), "write-config", "--name", cluster, "--kubeconfig", path],
             timeout: .seconds(60)
         )
         return ClusterKubeconfig(cluster: cluster, kubeconfigPath: path)
