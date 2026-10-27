@@ -34,9 +34,9 @@ enum K8sCommands {
     /// `container k8s create`.
     ///
     /// Every optional field is omitted rather than sent empty: a blank
-    /// `--cpus` is an error from the CLI, not a default. There is deliberately
-    /// no node-count option — the plugin provisions exactly one node carrying
-    /// both the control-plane and worker roles, and offers no way to add more.
+    /// `--cpus` is an error from the CLI, not a default. `workers` adds nodes
+    /// beside the control plane (1.6.0+); at 0 the flag is left out, which keeps
+    /// the argv valid on a CLI that predates it.
     static func create(
         plugin: String = plugin(),
         name: String,
@@ -44,7 +44,8 @@ enum K8sCommands {
         memory: String,
         nodeImage: String,
         cniManifest: String,
-        removeOnStop: Bool
+        removeOnStop: Bool,
+        workers: Int = 0
     ) -> [String] {
         var args = [plugin, "create", "--name", name]
         if !cpus.isEmpty { args.append(contentsOf: ["--cpus", cpus]) }
@@ -52,6 +53,7 @@ enum K8sCommands {
         if !nodeImage.isEmpty { args.append(contentsOf: ["--node-image", nodeImage]) }
         if !cniManifest.isEmpty { args.append(contentsOf: ["--cni", cniManifest]) }
         if removeOnStop { args.append("--rm") }
+        if workers > 0 { args.append(contentsOf: ["--workers", String(workers)]) }
         return args
     }
 }

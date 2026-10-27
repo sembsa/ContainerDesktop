@@ -13,9 +13,15 @@ struct CreateClusterSheet: View {
     @State private var nodeImage = ""
     @State private var cniManifest = ""
     @State private var removeOnStop = false
+    @State private var workers = 0
     @State private var isCreating = false
     @State private var finished = false
     @State private var output: [LogLine] = []
+
+    /// `--workers` arrived with multi-node clusters in 1.6.0.
+    private var supportsWorkers: Bool {
+        ContainerVersion.isAtLeast("1.6.0", model.system.status?.clientVersionNumber)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -39,6 +45,14 @@ struct CreateClusterSheet: View {
                     }
                     TextField("CPU (np. 4)", text: $cpus)
                     TextField("Pamięć (np. 4G)", text: $memory)
+                    if supportsWorkers {
+                        HStack(spacing: 6) {
+                            Stepper(value: $workers, in: 0...8) {
+                                Text(String(format: String(localized: "Węzły robocze: %d"), workers))
+                            }
+                            InfoTip(text: String(localized: "Dodatkowe węzły obok control plane. Każdy to osobna maszyna wirtualna z tym samym przydziałem CPU i pamięci, więc licz zasoby razy liczbę węzłów. Przy 0 klaster ma jeden węzeł, który jest jednocześnie control plane i workerem."))
+                        }
+                    }
                 } header: {
                     HStack(spacing: 5) {
                         Image(systemName: "gearshape.fill")
@@ -134,7 +148,8 @@ struct CreateClusterSheet: View {
             memory: memory,
             nodeImage: nodeImage,
             cniManifest: cniManifest,
-            removeOnStop: removeOnStop
+            removeOnStop: removeOnStop,
+            workers: supportsWorkers ? workers : 0
         )
         do {
             for try await line in stream {

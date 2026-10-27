@@ -967,3 +967,15 @@
 "To wydanie usunęło polecenie restartu klastra Kubernetes. Przycisk „Uruchom” znikał więc z błędem, który mówił o czymś zupełnie innym — teraz program tłumaczy, że zatrzymany klaster trzeba usunąć i utworzyć na nowo. Na starszym CLI przycisk działa jak dotąd." = "That release removed the command for restarting a Kubernetes cluster, so the \"Start\" button failed with a message about something else entirely. The app now explains that a stopped cluster has to be deleted and created anew. On an older CLI the button works as before.";
 "Tekst znów skaluje się z systemem" = "Text scales with the system again";
 "Kilkanaście napisów miało wpisany sztywny rozmiar i nie reagowało na powiększenie tekstu w ustawieniach systemowych. Teraz reagują. Najdrobniejsze plakietki urosły przy okazji o punkt — były poniżej tego, co macOS w ogóle przewiduje." = "A dozen or so strings had a fixed point size and ignored the text size set in System Settings. They no longer do. The smallest badges grew by a point along the way — they sat below what macOS offers at all.";
+"Brak migawek." = "No snapshots.";
+"Dodatkowe węzły obok control plane. Każdy to osobna maszyna wirtualna z tym samym przydziałem CPU i pamięci, więc licz zasoby razy liczbę węzłów. Przy 0 klaster ma jeden węzeł, który jest jednocześnie control plane i workerem." = "Extra nodes beside the control plane. Each is its own virtual machine with the same CPU and memory allocation, so count resources times the number of nodes. At 0 the cluster has a single node that is both control plane and worker.";
+"Historia" = "History";
+"Migawka zapisuje system plików kontenera — bez wolumenów, więc dane trzymane w wolumenie nie cofną się razem z nią. Kontener zapisany w biegu jest jak po wyrwaniu wtyczki: baza danych może mieć niedokończone zapisy." = "A snapshot saves the container's filesystem — not its volumes, so data kept in a volume does not roll back with it. A container saved while running is like one with its plug pulled: a database may have half-finished writes.";
+"Migawki: %@" = "Snapshots: %@";
+"Migawki…" = "Snapshots…";
+"Przywróć…" = "Restore…";
+"Usunąć migawkę?" = "Delete the snapshot?";
+"Usuń migawkę" = "Delete snapshot";
+"Węzły robocze: %d" = "Worker nodes: %d";
+"Zatrzymaj na czas migawki" = "Stop while snapshotting";
+"Zrób migawkę teraz" = "Take a snapshot now";
