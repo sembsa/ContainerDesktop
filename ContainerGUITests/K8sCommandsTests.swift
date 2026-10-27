@@ -9,11 +9,13 @@ final class K8sCommandsTests: XCTestCase {
 
     private func create(
         name: String = "k8s-dev", cpus: String = "", memory: String = "",
-        nodeImage: String = "", cniManifest: String = "", removeOnStop: Bool = false
+        nodeImage: String = "", cniManifest: String = "", removeOnStop: Bool = false,
+        workers: Int = 0
     ) -> [String] {
         K8sCommands.create(
             plugin: "k8s", name: name, cpus: cpus, memory: memory,
-            nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop
+            nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop,
+            workers: workers
         )
     }
 
@@ -55,6 +57,17 @@ final class K8sCommandsTests: XCTestCase {
     func testRemoveOnStopIsAValuelessFlag() {
         XCTAssertEqual(create(removeOnStop: true).last, "--rm")
         XCTAssertFalse(create(removeOnStop: false).contains("--rm"))
+    }
+
+    // MARK: - Workers
+
+    func testWorkersAreSentAsACount() {
+        XCTAssertEqual(Array(create(workers: 2).suffix(2)), ["--workers", "2"])
+    }
+
+    func testNoWorkersLeavesTheFlagOutForOlderCLIs() {
+        // A pre-1.6 CLI rejects an unknown `--workers` outright.
+        XCTAssertFalse(create(workers: 0).contains("--workers"))
     }
 
     // MARK: - Which plugin name the install answers to

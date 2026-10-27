@@ -319,3 +319,19 @@ enum RunCommandBuilder {
         args.append(contentsOf: [flag, value])
     }
 }
+
+extension RunConfiguration {
+    /// The same container on a snapshot's image.
+    ///
+    /// `container commit` writes the container's process into the image as its
+    /// entrypoint and command, so the snapshot already starts what was running.
+    /// Passing the recreated command again would hand it to that entrypoint as
+    /// arguments — `sleep sleep 600`, which exits at once.
+    func restoring(_ snapshot: String) -> RunConfiguration {
+        var copy = self
+        copy.image = snapshot
+        copy.command = ""
+        copy.entrypoint = ""
+        return copy
+    }
+}

@@ -16,6 +16,7 @@ struct ContainersView: View {
     @State private var showRunSheet = false
     @State private var showComposeSheet = false
     @State private var recreateTarget: ContainerInfo?
+    @State private var snapshotsTarget: ContainerInfo?
     @State private var confirmation: ContainerConfirmation?
     /// Cards by default — the table stays one click away for dense scanning.
     @AppStorage("containerListStyle") private var listStyle: ContainerListStyle = .cards
@@ -142,6 +143,10 @@ struct ContainersView: View {
             RunContainerSheet(recreating: container)
                 .environment(model)
         }
+        .sheet(item: $snapshotsTarget) { container in
+            ContainerSnapshotsSheet(container: container)
+                .environment(model)
+        }
         .itemConfirmationDialog(
             Text(confirmationTitle),
             item: $confirmation
@@ -214,6 +219,7 @@ struct ContainersView: View {
                 selection: $selection,
                 containers: filteredContainers,
                 onRecreate: { recreateTarget = $0 },
+                onSnapshots: { snapshotsTarget = $0 },
                 onRemove: { confirmation = .remove($0) },
                 onRemoveProject: { confirmation = .removeProject($0, $1) }
             )
@@ -454,6 +460,10 @@ struct ContainersView: View {
             recreateTarget = container
         }
         .disabled(isPending)
+        if ContainerVersion.isAtLeast("1.6.0", model.system.status?.clientVersionNumber) {
+            Button("Migawki…", systemImage: "camera.shutter.button") { snapshotsTarget = container }
+                .disabled(isPending)
+        }
         if model.system.containerAutostartMode == .selected {
             Divider()
             Toggle(

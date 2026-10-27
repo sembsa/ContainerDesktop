@@ -135,12 +135,14 @@ final class K8sStore {
         memory: String,
         nodeImage: String,
         cniManifest: String,
-        removeOnStop: Bool
+        removeOnStop: Bool,
+        workers: Int
     ) -> AsyncThrowingStream<String, Error> {
         ContainerCLI.shared.streamChecked(
             K8sCommands.create(
                 name: name, cpus: cpus, memory: memory,
-                nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop
+                nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop,
+                workers: workers
             )
         )
     }

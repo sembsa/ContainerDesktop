@@ -967,3 +967,15 @@
 "To wydanie usunęło polecenie restartu klastra Kubernetes. Przycisk „Uruchom” znikał więc z błędem, który mówił o czymś zupełnie innym — teraz program tłumaczy, że zatrzymany klaster trzeba usunąć i utworzyć na nowo. Na starszym CLI przycisk działa jak dotąd." = "To wydanie usunęło polecenie restartu klastra Kubernetes. Przycisk „Uruchom” znikał więc z błędem, który mówił o czymś zupełnie innym — teraz program tłumaczy, że zatrzymany klaster trzeba usunąć i utworzyć na nowo. Na starszym CLI przycisk działa jak dotąd.";
 "Tekst znów skaluje się z systemem" = "Tekst znów skaluje się z systemem";
 "Kilkanaście napisów miało wpisany sztywny rozmiar i nie reagowało na powiększenie tekstu w ustawieniach systemowych. Teraz reagują. Najdrobniejsze plakietki urosły przy okazji o punkt — były poniżej tego, co macOS w ogóle przewiduje." = "Kilkanaście napisów miało wpisany sztywny rozmiar i nie reagowało na powiększenie tekstu w ustawieniach systemowych. Teraz reagują. Najdrobniejsze plakietki urosły przy okazji o punkt — były poniżej tego, co macOS w ogóle przewiduje.";
+"Brak migawek." = "Brak migawek.";
+"Dodatkowe węzły obok control plane. Każdy to osobna maszyna wirtualna z tym samym przydziałem CPU i pamięci, więc licz zasoby razy liczbę węzłów. Przy 0 klaster ma jeden węzeł, który jest jednocześnie control plane i workerem." = "Dodatkowe węzły obok control plane. Każdy to osobna maszyna wirtualna z tym samym przydziałem CPU i pamięci, więc licz zasoby razy liczbę węzłów. Przy 0 klaster ma jeden węzeł, który jest jednocześnie control plane i workerem.";
+"Historia" = "Historia";
+"Migawka zapisuje system plików kontenera — bez wolumenów, więc dane trzymane w wolumenie nie cofną się razem z nią. Kontener zapisany w biegu jest jak po wyrwaniu wtyczki: baza danych może mieć niedokończone zapisy." = "Migawka zapisuje system plików kontenera — bez wolumenów, więc dane trzymane w wolumenie nie cofną się razem z nią. Kontener zapisany w biegu jest jak po wyrwaniu wtyczki: baza danych może mieć niedokończone zapisy.";
+"Migawki: %@" = "Migawki: %@";
+"Migawki…" = "Migawki…";
+"Przywróć…" = "Przywróć…";
+"Usunąć migawkę?" = "Usunąć migawkę?";
+"Usuń migawkę" = "Usuń migawkę";
+"Węzły robocze: %d" = "Węzły robocze: %d";
+"Zatrzymaj na czas migawki" = "Zatrzymaj na czas migawki";
+"Zrób migawkę teraz" = "Zrób migawkę teraz";

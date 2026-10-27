@@ -238,6 +238,25 @@ final class CommandBuilderTests: XCTestCase {
 
     // MARK: - Private helpers
 
+    // MARK: - Restoring a snapshot
+
+    func testRestoringLeavesTheProcessToTheSnapshot() {
+        // commit bakes the process into the image; repeating it as arguments
+        // runs `sleep sleep 600`.
+        var config = RunConfiguration()
+        config.image = "alpine"
+        config.name = "web"
+        config.command = "sleep 600"
+        config.entrypoint = "sleep"
+        config.environment = [.init(key: "MODE", value: "prod")]
+        let restored = config.restoring("localhost/snapshots/web:20260921-141320")
+        XCTAssertEqual(restored.image, "localhost/snapshots/web:20260921-141320")
+        XCTAssertEqual(restored.command, "")
+        XCTAssertEqual(restored.entrypoint, "")
+        XCTAssertEqual(restored.name, "web")
+        XCTAssertEqual(restored.environment.map(\.key), ["MODE"])
+    }
+
     private func assertPair(_ args: [String], _ flag: String, _ value: String, file: StaticString = #filePath, line: UInt = #line) {
         guard let index = args.firstIndex(of: flag) else {
             XCTFail("Brak flagi \(flag)", file: file, line: line)

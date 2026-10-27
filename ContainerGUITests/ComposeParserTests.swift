@@ -337,6 +337,34 @@ final class ComposeParserTests: XCTestCase {
         }
     }
 
+    func testServicesAnswerToTheirServiceNameAndTheirContainerName() throws {
+        let yaml = """
+        services:
+          db:
+            image: postgres
+          cache:
+            image: redis
+            container_name: redis-main
+        """
+        let project = try ComposeParser.parse(yaml, projectName: "shop")
+        let db = try XCTUnwrap(project.services.first { $0.name == "db" })
+        let cache = try XCTUnwrap(project.services.first { $0.name == "cache" })
+        // The service name is what compose files address (`db:5432`).
+        XCTAssertEqual(ComposeStore.hostNames(for: db, project: "shop"), ["db", "shop-db"])
+        XCTAssertEqual(ComposeStore.hostNames(for: cache, project: "shop"), ["cache", "redis-main"])
+    }
+
+    func testAContainerNamedLikeItsServiceIsNotAliasedTwice() throws {
+        let yaml = """
+        services:
+          db:
+            image: postgres
+            container_name: db
+        """
+        let db = try XCTUnwrap(try ComposeParser.parse(yaml, projectName: "shop").services.first)
+        XCTAssertEqual(ComposeStore.hostNames(for: db, project: "shop"), ["db"])
+    }
+
     func testHostAliasSubstitution() {
         XCTAssertEqual(
             ComposeStore.substituteHostAlias("host.containers.internal,1433", gateway: "192.168.65.1"),

@@ -195,6 +195,16 @@ final class ContainerStore {
         try await action()
     }
 
+    // MARK: - Snapshots
+
+    /// Snapshots the container (1.6.0+); see `ContainerSnapshots.take`.
+    func snapshot(_ container: ContainerInfo, stopFirst: Bool) async throws {
+        try await withPending(container.id) {
+            try await ContainerSnapshots.take(container.id, isRunning: container.isRunning, stopFirst: stopFirst)
+        }
+        await refresh()
+    }
+
     // MARK: - Lifecycle actions
 
     func start(_ container: ContainerInfo) async throws {

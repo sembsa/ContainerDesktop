@@ -15,6 +15,9 @@ struct RunContainerSheet: View {
     @State private var replaceExisting = true
 
     private let replacesContainerID: String?
+    /// Restoring a snapshot replaces the container, so its current state is
+    /// snapshotted first — that is what makes a restore undoable.
+    private var snapshotBeforeReplacing = false
 
     init(presetImage: String? = nil) {
         var initial = RunConfiguration()
@@ -23,7 +26,9 @@ struct RunContainerSheet: View {
         replacesContainerID = nil
     }
 
-    init(recreating container: ContainerInfo) {
+    /// `restoring` swaps in a snapshot's image and keeps the container's own
+    /// configuration — that is all a restore is.
+    init(recreating container: ContainerInfo, restoring snapshot: String? = nil) {
         let cfg = container.configuration
         var initial = RunConfiguration()
 
@@ -133,6 +138,8 @@ struct RunContainerSheet: View {
             initial.arch = arch
         }
 
+        if let snapshot { initial = initial.restoring(snapshot) }
+        snapshotBeforeReplacing = snapshot != nil
         _config = State(initialValue: initial)
         replacesContainerID = container.id
     }
@@ -562,6 +569,10 @@ struct RunContainerSheet: View {
         do {
             // Remove existing container first if requested
             if let replacesID = replacesContainerID, replaceExisting {
+                if snapshotBeforeReplacing {
+                    // Throws before anything is removed if the commit fails.
+                    try await ContainerSnapshots.preserveBeforeReplacing(replacesID)
+                }
                 try await ContainerCLI.shared.run(["rm", "--force", replacesID])
             }
 

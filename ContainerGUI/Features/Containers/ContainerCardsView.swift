@@ -14,6 +14,7 @@ struct ContainerCardsView: View {
     /// Already filtered by the search field in `ContainersView`.
     let containers: [ContainerInfo]
     let onRecreate: (ContainerInfo) -> Void
+    let onSnapshots: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
     let onRemoveProject: (String, [ContainerInfo]) -> Void
 
@@ -29,6 +30,7 @@ struct ContainerCardsView: View {
                             containers: group.containers,
                             selection: $selection,
                             onRecreate: onRecreate,
+                            onSnapshots: onSnapshots,
                             onRemove: onRemove,
                             onRemoveProject: onRemoveProject
                         )
@@ -38,6 +40,7 @@ struct ContainerCardsView: View {
                                 container: container,
                                 selection: $selection,
                                 onRecreate: onRecreate,
+                                onSnapshots: onSnapshots,
                                 onRemove: onRemove
                             )
                         }
@@ -109,6 +112,7 @@ struct ContainerCard: View {
     let container: ContainerInfo
     @Binding var selection: String?
     let onRecreate: (ContainerInfo) -> Void
+    let onSnapshots: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
 
     @State private var isHovering = false
@@ -140,7 +144,7 @@ struct ContainerCard: View {
         .onHover { isHovering = $0 }
         .animation(.smooth(duration: 0.18), value: isHovering)
         .animation(.smooth(duration: 0.18), value: isSelected)
-        .contextMenu { ContainerCardMenu(container: container, onRecreate: onRecreate, onRemove: onRemove) }
+        .contextMenu { ContainerCardMenu(container: container, onRecreate: onRecreate, onSnapshots: onSnapshots, onRemove: onRemove) }
         // Inert until the enclosing ScrollView is a swipe-actions container
         // (macOS 27); removal keeps its confirmation dialog either way.
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -253,7 +257,7 @@ struct ContainerCard: View {
                 onRemove(container)
             }
             Menu {
-                ContainerCardMenu(container: container, onRecreate: onRecreate, onRemove: onRemove)
+                ContainerCardMenu(container: container, onRecreate: onRecreate, onSnapshots: onSnapshots, onRemove: onRemove)
             } label: {
                 Image(systemName: "ellipsis")
                     .font(.system(size: 12, weight: .semibold))
@@ -388,6 +392,7 @@ struct ComposeProjectCard: View {
     let containers: [ContainerInfo]
     @Binding var selection: String?
     let onRecreate: (ContainerInfo) -> Void
+    let onSnapshots: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
     let onRemoveProject: (String, [ContainerInfo]) -> Void
 
@@ -404,6 +409,7 @@ struct ComposeProjectCard: View {
                         container: container,
                         selection: $selection,
                         onRecreate: onRecreate,
+                        onSnapshots: onSnapshots,
                         onRemove: onRemove
                     )
                     .padding(.leading, 14)
@@ -571,6 +577,7 @@ struct ContainerCardMenu: View {
 
     let container: ContainerInfo
     let onRecreate: (ContainerInfo) -> Void
+    let onSnapshots: (ContainerInfo) -> Void
     let onRemove: (ContainerInfo) -> Void
 
     private var store: ContainerStore { model.containers }
@@ -588,6 +595,9 @@ struct ContainerCardMenu: View {
         }
         Divider()
         Button("Zmień polecenie / konfigurację…", systemImage: "slider.horizontal.3") { onRecreate(container) }
+        if ContainerVersion.isAtLeast("1.6.0", model.system.status?.clientVersionNumber) {
+            Button("Migawki…", systemImage: "camera.shutter.button") { onSnapshots(container) }
+        }
         Button("Kopiuj identyfikator", systemImage: "doc.on.doc") {
             NSPasteboard.general.clearContents()
             NSPasteboard.general.setString(container.id, forType: .string)

@@ -143,6 +143,36 @@ pure path-splitting tests pass either way.
 filesystem TRIM that releases unused disk blocks. It reclaims space; it does
 not delete data.
 
+## Container 1.6: snapshots, compose names, live tests
+
+**Snapshots** (`ContainerSnapshots`) are `container commit` images named
+`localhost/snapshots/<container>:<UTC stamp>` — commit takes no labels, so the
+name carries whose and when. Three facts from commit's source, all proven live:
+it exports a *running* container in flight without pausing it (hence "stop for
+the snapshot"); it never includes volumes; and it **bakes the container's
+process into the image** as entrypoint+command. So a restore must clear the
+recreated command (`RunConfiguration.restoring`) — passing it again runs
+`sleep sleep 600`, which exits at once. Restoring snapshots the current state
+first (`preserveBeforeReplacing`) and aborts before `rm` if that fails.
+
+**Compose service names go into /etc/hosts, not DNS aliases.** The patch used
+to register only container names, so the `db:5432` compose files write never
+resolved; it now registers the service name too. 1.6's `--network …,alias=`
+looks like the fix and is not: a bare alias is rejected without a system DNS
+domain (`[dns] domain` in `~/.config/container/config.toml` plus
+`sudo container system dns create`), Apple documents bare names on custom
+networks as unsupported (apple/container#1809), and aliases are global — two
+projects with a `db` would collide.
+
+**`cluster create` writes `~/.kube/config` and switches its current context**
+unless `KUBECONFIG` is set, in which case it writes there; `delete` removes from
+the same file. The app does not set it, so creating a cluster from the app still
+edits the user's kubeconfig.
+
+**Live tests** (`*LiveTests`) run against the real service and skip unless
+`CD_LIVE=1`: `TEST_RUNNER_CD_LIVE=1 xcodebuild test … -only-testing:ContainerGUITests/ClusterLiveTests`.
+The cluster test sets `KUBECONFIG` to a temp file for exactly the reason above.
+
 ## Release notes in the app
 
 `WhatsNew` holds one entry per version; the sheet shows once the first time a

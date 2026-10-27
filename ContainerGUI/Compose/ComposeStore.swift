@@ -74,6 +74,7 @@ final class ComposeStore {
         // via the `host.containers.internal` alias (each network has its own
         // subnet, so the gateway IP differs per project).
         let gateway = await networkGateway(project.name)
+
         if let gateway {
             appendLog(prefix: nil, line: String(format: String(localized: "host.containers.internal → %@"), gateway))
         }
@@ -137,11 +138,14 @@ final class ComposeStore {
             }
         }
 
-        // container 1.0.0 does not resolve container names via its DNS (the
-        // hostname table registers bare names while DNS queries arrive as
-        // canonical FQDNs with a trailing dot), so cross-service hostnames
-        // are wired up via /etc/hosts after each service starts.
-        var hostEntries: [(name: String, ip: String)] = []
+        // Containers do not find each other by name on a network created with
+        // `network create`. 1.6 can, but only after a system-wide DNS domain
+        // (config.toml plus `sudo container system dns create`), and Apple
+        // documents bare names on custom networks as still unsupported
+        // (apple/container#1809). Its aliases are also global, so two projects
+        // each with a `db` would collide. So names go into /etc/hosts after
+        // each service starts.
+        var hostEntries: [(names: String, ip: String, container: String)] = []
 
         // 3. Run regular services in dependency order (detached).
         for service in regularServices {
@@ -171,7 +175,8 @@ final class ComposeStore {
                 }
                 setPhase(.running, for: service.name)
                 await wireUpHosts(
-                    newService: resolvedName,
+                    container: resolvedName,
+                    names: Self.hostNames(for: service, project: project.name),
                     entries: &hostEntries
                 )
             } catch let error as CLIError {
@@ -279,29 +284,35 @@ final class ComposeStore {
     /// Workaround for missing container-name DNS in container 1.0.0:
     /// after a service starts, exchange /etc/hosts entries between it and the
     /// previously started services of this project.
-    private func wireUpHosts(newService: String, entries: inout [(name: String, ip: String)]) async {
-        guard let ip = await containerIPv4(newService) else {
-            appendLog(prefix: newService, line: String(localized: "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts"))
+    private func wireUpHosts(
+        container: String,
+        names: [String],
+        entries: inout [(names: String, ip: String, container: String)]
+    ) async {
+        guard let ip = await containerIPv4(container) else {
+            appendLog(prefix: container, line: String(localized: "nie udało się ustalić adresu IP — pomijam wpisy /etc/hosts"))
             return
         }
+        // One hosts line can carry several names: `10.0.0.4 db shop-db`.
+        let line = names.joined(separator: " ")
 
         // Older services learn about the new one…
         for entry in entries {
             _ = try? await cli.run([
-                "exec", "--user", "root", entry.name, "sh", "-c",
-                "echo '\(ip) \(newService)' >> /etc/hosts",
+                "exec", "--user", "root", entry.container, "sh", "-c",
+                "echo '\(ip) \(line)' >> /etc/hosts",
             ])
         }
         // …and the new one learns about all the older services.
         if !entries.isEmpty {
-            let lines = entries.map { "echo '\($0.ip) \($0.name)' >> /etc/hosts" }.joined(separator: "; ")
-            _ = try? await cli.run(["exec", "--user", "root", newService, "sh", "-c", lines])
+            let lines = entries.map { "echo '\($0.ip) \($0.names)' >> /etc/hosts" }.joined(separator: "; ")
+            _ = try? await cli.run(["exec", "--user", "root", container, "sh", "-c", lines])
         }
 
-        entries.append((name: newService, ip: ip))
+        entries.append((names: line, ip: ip, container: container))
         appendLog(
             prefix: nil,
-            line: String(format: String(localized: "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)"), newService, ip)
+            line: String(format: String(localized: "%@ → %@ (wpis /etc/hosts — obejście braku DNS nazw)"), line, ip)
         )
     }
 
@@ -331,6 +342,14 @@ final class ComposeStore {
 
     /// Replaces the `host.containers.internal` alias with the project
     /// network's gateway IP (the Mac as seen from inside the containers).
+    /// The names another service can reach this one by: the service name, which
+    /// is what compose files write (`db:5432`), and the container name, the only
+    /// one this patch used to register.
+    nonisolated static func hostNames(for service: ComposeService, project: String) -> [String] {
+        let container = service.resolvedName(project: project)
+        return container == service.name ? [service.name] : [service.name, container]
+    }
+
     nonisolated static func substituteHostAlias(_ value: String, gateway: String?) -> String {
         guard let gateway, value.contains("host.containers.internal") else { return value }
         return value.replacingOccurrences(of: "host.containers.internal", with: gateway)

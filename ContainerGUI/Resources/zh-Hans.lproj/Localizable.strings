@@ -967,3 +967,15 @@
 "To wydanie usunęło polecenie restartu klastra Kubernetes. Przycisk „Uruchom” znikał więc z błędem, który mówił o czymś zupełnie innym — teraz program tłumaczy, że zatrzymany klaster trzeba usunąć i utworzyć na nowo. Na starszym CLI przycisk działa jak dotąd." = "该版本移除了重启 Kubernetes 集群的命令，因此「启动」按钮会报出一个完全无关的错误。现在应用会说明：已停止的集群需要删除后重新创建。在较旧的 CLI 上，按钮照常可用。";
 "Tekst znów skaluje się z systemem" = "文字重新跟随系统缩放";
 "Kilkanaście napisów miało wpisany sztywny rozmiar i nie reagowało na powiększenie tekstu w ustawieniach systemowych. Teraz reagują. Najdrobniejsze plakietki urosły przy okazji o punkt — były poniżej tego, co macOS w ogóle przewiduje." = "十几处文字此前使用固定字号，不响应系统设置中的文字大小。现在它们会响应了。最小的标签因此增大了一点 — 它们原本小于 macOS 所提供的最小字号。";
+"Brak migawek." = "暂无快照。";
+"Dodatkowe węzły obok control plane. Każdy to osobna maszyna wirtualna z tym samym przydziałem CPU i pamięci, więc licz zasoby razy liczbę węzłów. Przy 0 klaster ma jeden węzeł, który jest jednocześnie control plane i workerem." = "控制平面之外的额外节点。每个节点都是一台独立的虚拟机，分配相同的 CPU 和内存，因此资源需按节点数量成倍计算。为 0 时，集群只有一个节点，同时担任控制平面和工作节点。";
+"Historia" = "历史";
+"Migawka zapisuje system plików kontenera — bez wolumenów, więc dane trzymane w wolumenie nie cofną się razem z nią. Kontener zapisany w biegu jest jak po wyrwaniu wtyczki: baza danych może mieć niedokończone zapisy." = "快照保存的是容器的文件系统，不包括卷，因此卷中的数据不会随快照回滚。在运行中保存的容器就像被突然拔掉电源：数据库可能有未完成的写入。";
+"Migawki: %@" = "快照：%@";
+"Migawki…" = "快照…";
+"Przywróć…" = "恢复…";
+"Usunąć migawkę?" = "删除此快照？";
+"Usuń migawkę" = "删除快照";
+"Węzły robocze: %d" = "工作节点：%d";
+"Zatrzymaj na czas migawki" = "快照期间停止容器";
+"Zrób migawkę teraz" = "立即创建快照";
