@@ -14,6 +14,7 @@ struct CreateClusterSheet: View {
     @State private var cniManifest = ""
     @State private var removeOnStop = false
     @State private var workers = 0
+    @State private var sharedImageStore = false
     @State private var isCreating = false
     @State private var finished = false
     @State private var output: [LogLine] = []
@@ -21,6 +22,11 @@ struct CreateClusterSheet: View {
     /// `--workers` arrived with multi-node clusters in 1.6.0.
     private var supportsWorkers: Bool {
         ContainerVersion.isAtLeast("1.6.0", model.system.status?.clientVersionNumber)
+    }
+
+    /// Per-worker sizing and the shared image store arrived in 1.7.0.
+    private var isCLI17: Bool {
+        ContainerVersion.isAtLeast(K8sCommands.perClusterListVersion, model.system.status?.clientVersionNumber)
     }
 
     var body: some View {
@@ -73,6 +79,12 @@ struct CreateClusterSheet: View {
                         InfoTip(text: String(localized: "Ścieżka do manifestu YAML z wtyczką sieciową, zastosowanego po starcie klastra — np. Cilium. Pozostaw puste, aby użyć domyślnej sieci."))
                     }
                     Toggle("Usuń klaster po zatrzymaniu (--rm)", isOn: $removeOnStop)
+                    if isCLI17 {
+                        HStack(spacing: 6) {
+                            Toggle("Współdzielony magazyn obrazów", isOn: $sharedImageStore)
+                            InfoTip(text: String(localized: "Węzły pobierają obrazy z lokalnego magazynu container, więc obraz zbudowany przez container build od razu działa w klastrze. Zastępuje dawne „Wczytaj obraz do klastra”."))
+                        }
+                    }
                 } header: {
                     HStack(spacing: 5) {
                         Image(systemName: "slider.horizontal.3")
@@ -149,7 +161,9 @@ struct CreateClusterSheet: View {
             nodeImage: nodeImage,
             cniManifest: cniManifest,
             removeOnStop: removeOnStop,
-            workers: supportsWorkers ? workers : 0
+            workers: supportsWorkers ? workers : 0,
+            sizeWorkers: isCLI17,
+            sharedImageStore: isCLI17 && sharedImageStore
         )
         do {
             for try await line in stream {

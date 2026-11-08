@@ -987,3 +987,6 @@
 "Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera." = "Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera.";
 "Zgodność z container 1.6" = "Zgodność z container 1.6";
 "Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów." = "Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów.";
+
+"Współdzielony magazyn obrazów" = "Współdzielony magazyn obrazów";
+"Węzły pobierają obrazy z lokalnego magazynu container, więc obraz zbudowany przez container build od razu działa w klastrze. Zastępuje dawne „Wczytaj obraz do klastra”." = "Węzły pobierają obrazy z lokalnego magazynu container, więc obraz zbudowany przez container build od razu działa w klastrze. Zastępuje dawne „Wczytaj obraz do klastra”.";

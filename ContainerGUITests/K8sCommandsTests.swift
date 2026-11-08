@@ -70,6 +70,31 @@ final class K8sCommandsTests: XCTestCase {
         XCTAssertFalse(create(workers: 0).contains("--workers"))
     }
 
+    func testOn17WorkersGetTheSameSizeAsTheControlPlane() {
+        let args = K8sCommands.create(
+            plugin: "cluster", name: "dev", cpus: "4", memory: "4G", nodeImage: "",
+            cniManifest: "", removeOnStop: false, workers: 2, sizeWorkers: true
+        )
+        XCTAssertEqual(Array(args.suffix(2)), ["--workers", "count=2,cpus=4,memory=4G"])
+    }
+
+    func testSizedWorkersOmitBlankResources() {
+        let args = K8sCommands.create(
+            plugin: "cluster", name: "dev", cpus: "", memory: "", nodeImage: "",
+            cniManifest: "", removeOnStop: false, workers: 1, sizeWorkers: true
+        )
+        XCTAssertEqual(Array(args.suffix(2)), ["--workers", "count=1"])
+    }
+
+    func testSharedImageStoreIsAValuelessFlag() {
+        let on = K8sCommands.create(
+            plugin: "cluster", name: "dev", cpus: "", memory: "", nodeImage: "",
+            cniManifest: "", removeOnStop: false, sharedImageStore: true
+        )
+        XCTAssertEqual(on.last, "--shared-image-store")
+        XCTAssertFalse(create().contains("--shared-image-store"))
+    }
+
     // MARK: - Which plugin name the install answers to
 
     func testA16InstallAnswersToCluster() {

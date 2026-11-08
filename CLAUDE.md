@@ -62,6 +62,14 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
   either value (`K8sCommands.nodeLabelValues`); missing one exposes a control
   plane to deletion. On 1.6 a plain `k8s list` fails with "unknown command",
   which `diagnose` used to report as an outdated CLI.
+- **1.7.0 made `cluster list` one row per cluster** (`NAME NODES K8S VERSION
+  STATE`), which `K8sListParser` rejects — the section silently showed "no
+  clusters". `K8sStore` asks for `list --nodes` (same per-node header as before)
+  and falls back to plain `list` when an older CLI says "Unknown option". 1.7.0
+  also removed `load-image` (menu item hidden from 1.7; `--shared-image-store`
+  on create replaces it), dropped `stop`, and sizes a bare `--workers N` at 1/4
+  of the host — so on 1.7 the app sends `count=N,cpus=C,memory=M` with the
+  control plane's values. `list --format json` exists now too; not used yet.
 - **1.5.0 removed `container k8s start`.** A stopped node is restarted by
   deleting the cluster and creating it again — there is no other way. The
   command is still in `K8sStore` because the app runs against whatever CLI is

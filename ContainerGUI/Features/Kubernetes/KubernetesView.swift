@@ -191,10 +191,12 @@ struct KubernetesView: View {
         .help("Przejdź do Helm dla tego klastra")
 
         Menu {
-            Button("Wczytaj obraz do klastra…", systemImage: "square.and.arrow.down") {
-                loadImageTarget = cluster
+            if !ContainerVersion.isAtLeast(K8sCommands.perClusterListVersion, model.system.status?.clientVersionNumber) {
+                Button("Wczytaj obraz do klastra…", systemImage: "square.and.arrow.down") {
+                    loadImageTarget = cluster
+                }
+                .disabled(!cluster.isRunning)
             }
-            .disabled(!cluster.isRunning)
             Button("Zapisz kubeconfig…", systemImage: "doc.badge.gearshape") {
                 exportKubeconfig(cluster)
             }
