@@ -31,12 +31,23 @@ enum K8sCommands {
     /// Containers list where its control plane can be deleted.
     static let nodeLabelValues: Set<String> = ["k8s", "cluster"]
 
+    /// 1.7.0 changed `list` to one row per cluster and `load-image` was removed
+    /// in the same release (apple/container#2451, #2437).
+    static let perClusterListVersion = "1.7.0"
+
     /// `container k8s create`.
     ///
     /// Every optional field is omitted rather than sent empty: a blank
     /// `--cpus` is an error from the CLI, not a default. `workers` adds nodes
     /// beside the control plane (1.6.0+); at 0 the flag is left out, which keeps
     /// the argv valid on a CLI that predates it.
+    ///
+    /// 1.7.0 stopped sizing workers like the control plane: `--cpus`/`--memory`
+    /// now cover the control plane only and a bare count gets 1/4 of the host.
+    /// `sizeWorkers` passes the same CPU and memory per worker
+    /// (`count=N,cpus=C,memory=M`), which keeps "every node gets this much" true.
+    /// `sharedImageStore` (1.7.0+) lets nodes pull from the local image store —
+    /// the replacement for the removed `load-image`.
     static func create(
         plugin: String = plugin(),
         name: String,
@@ -45,7 +56,9 @@ enum K8sCommands {
         nodeImage: String,
         cniManifest: String,
         removeOnStop: Bool,
-        workers: Int = 0
+        workers: Int = 0,
+        sizeWorkers: Bool = false,
+        sharedImageStore: Bool = false
     ) -> [String] {
         var args = [plugin, "create", "--name", name]
         if !cpus.isEmpty { args.append(contentsOf: ["--cpus", cpus]) }
@@ -53,7 +66,13 @@ enum K8sCommands {
         if !nodeImage.isEmpty { args.append(contentsOf: ["--node-image", nodeImage]) }
         if !cniManifest.isEmpty { args.append(contentsOf: ["--cni", cniManifest]) }
         if removeOnStop { args.append("--rm") }
-        if workers > 0 { args.append(contentsOf: ["--workers", String(workers)]) }
+        if workers > 0 {
+            var spec = sizeWorkers ? "count=\(workers)" : String(workers)
+            if sizeWorkers, !cpus.isEmpty { spec += ",cpus=\(cpus)" }
+            if sizeWorkers, !memory.isEmpty { spec += ",memory=\(memory)" }
+            args.append(contentsOf: ["--workers", spec])
+        }
+        if sharedImageStore { args.append("--shared-image-store") }
         return args
     }
 }

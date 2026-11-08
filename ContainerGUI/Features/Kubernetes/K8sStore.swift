@@ -32,13 +32,28 @@ final class K8sStore {
 
     func refresh() async {
         do {
-            let output = try await cli.run([K8sCommands.plugin(), "list"], timeout: .seconds(30))
+            let output = try await listNodes()
             clusters = K8sCluster.group(K8sListParser.parse(output))
             availability = .available
             error = nil
         } catch {
             clusters = []
             await diagnose(error)
+        }
+    }
+
+    /// The per-node table `K8sListParser` reads. 1.7.0 made plain `list` one row
+    /// per cluster (NAME NODES K8S VERSION STATE), which the parser rejects and
+    /// the section showed as "no clusters"; `--nodes` brings the old table back.
+    /// An older CLI rejects the flag, so fall back rather than track versions.
+    private func listNodes() async throws -> String {
+        let plugin = K8sCommands.plugin()
+        do {
+            return try await cli.run([plugin, "list", "--nodes"], timeout: .seconds(30))
+        } catch {
+            let message = (error as? LocalizedError)?.errorDescription ?? "\(error)"
+            guard message.lowercased().contains("unknown option") else { throw error }
+            return try await cli.run([plugin, "list"], timeout: .seconds(30))
         }
     }
 
@@ -119,6 +134,8 @@ final class K8sStore {
         await refresh()
     }
 
+    /// Only offered before 1.7.0, which removed `load-image`
+    /// (`K8sCommands.perClusterListVersion`).
     func loadImage(_ image: String, into cluster: K8sCluster, platform: String?) async throws {
         var args = [K8sCommands.plugin(), "load-image", "--name", cluster.name, image]
         if let platform, !platform.isEmpty { args.append(contentsOf: ["--platform", platform]) }
@@ -136,13 +153,15 @@ final class K8sStore {
         nodeImage: String,
         cniManifest: String,
         removeOnStop: Bool,
-        workers: Int
+        workers: Int,
+        sizeWorkers: Bool,
+        sharedImageStore: Bool
     ) -> AsyncThrowingStream<String, Error> {
         ContainerCLI.shared.streamChecked(
             K8sCommands.create(
                 name: name, cpus: cpus, memory: memory,
                 nodeImage: nodeImage, cniManifest: cniManifest, removeOnStop: removeOnStop,
-                workers: workers
+                workers: workers, sizeWorkers: sizeWorkers, sharedImageStore: sharedImageStore
             )
         )
     }

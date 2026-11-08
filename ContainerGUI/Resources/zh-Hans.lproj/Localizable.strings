@@ -987,3 +987,6 @@
 "Zmienione: usługa jest teraz osiągalna pod swoją nazwą z pliku compose — adres w stylu db:5432 po prostu działa. Wcześniej działała tylko pełna nazwa kontenera." = "变更：现在可以通过 compose 文件中的服务名访问服务，像 db:5432 这样的地址可以直接使用。此前只有完整的容器名称可用。";
 "Zgodność z container 1.6" = "兼容 container 1.6";
 "Zmienione: container 1.6 przemianował polecenie Kubernetes na „cluster”. Sekcja Kubernetes znów działa zamiast prosić o nowszą wersję, a węzły klastra nie pojawiają się na liście kontenerów." = "变更：container 1.6 将 Kubernetes 命令更名为“cluster”。Kubernetes 页面恢复正常，不再提示需要更新版本，集群节点也不会出现在容器列表中。";
+
+"Współdzielony magazyn obrazów" = "共享镜像存储";
+"Węzły pobierają obrazy z lokalnego magazynu container, więc obraz zbudowany przez container build od razu działa w klastrze. Zastępuje dawne „Wczytaj obraz do klastra”." = "节点从本地 container 镜像存储拉取镜像，因此用 container build 构建的镜像可直接在集群中使用。取代原来的“将镜像载入集群”。";

@@ -3,6 +3,30 @@ import XCTest
 /// The `container k8s` plugin has no `--format json`, so the GUI reads its
 /// fixed-width table. These cases are captured from CLI 1.2.2.
 final class K8sListParserTests: XCTestCase {
+    /// `cluster list --nodes` on 1.7.1, captured live.
+    func testParses17NodesTable() {
+        let output = """
+        CLUSTER  NODE           ROLE           STATE    CPUS  MEMORY  ADDR          PORTS
+        cd17     cd17           control-plane  running  2     2 GB    192.168.67.2  6445->6443
+        cd17     cd17-worker-1  worker         running  2     2 GB    192.168.67.3
+        """
+        let clusters = K8sCluster.group(K8sListParser.parse(output))
+        XCTAssertEqual(clusters.map(\.name), ["cd17"])
+        XCTAssertEqual(clusters.first?.nodes.count, 2)
+        XCTAssertEqual(clusters.first?.controlPlane?.apiServerHostPort, 6445)
+        XCTAssertEqual(clusters.first?.nodes.last?.memory, "2 GB")
+    }
+
+    /// Plain `cluster list` on 1.7 is one row per cluster — not a node table.
+    /// Parsing nothing here is why `K8sStore` asks for `--nodes`.
+    func testThe17PerClusterTableIsNotANodeTable() {
+        let output = """
+        NAME  NODES  K8S VERSION  STATE
+        cd17  2      v1.35.5      running
+        """
+        XCTAssertTrue(K8sListParser.parse(output).isEmpty)
+    }
+
     func testParsesSingleNodeCluster() {
         let output = """
         CLUSTER   NODE      ROLE           STATE    CPUS  MEMORY   ADDR          PORTS
