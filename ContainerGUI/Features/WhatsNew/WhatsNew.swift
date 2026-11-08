@@ -37,6 +37,26 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.11.0",
+            items: [
+                Item(
+                    symbol: "square.stack.3d.down.right",
+                    title: String(localized: "Współdzielony magazyn obrazów"),
+                    detail: String(localized: "Nowe: przy tworzeniu klastra Kubernetes węzły mogą korzystać z lokalnego magazynu obrazów — obraz zbudowany przez container build od razu działa w klastrze (wymaga container 1.7). Zastępuje „Wczytaj obraz do klastra”, które container 1.7 usunął.")
+                ),
+                Item(
+                    symbol: "checkmark.seal",
+                    title: String(localized: "Zgodność z container 1.7"),
+                    detail: String(localized: "Zmienione: w container 1.7 sekcja Kubernetes pokazywała pusto, bo lista klastrów zmieniła format — teraz znów widać klastry i ich węzły. Węzły robocze dostają te same CPU i pamięć co control plane, jak wcześniej.")
+                ),
+                Item(
+                    symbol: "cpu",
+                    title: String(localized: "Użycie CPU od pierwszego odczytu"),
+                    detail: String(localized: "Zmienione: z container 1.7 miernik CPU kontenera pokazuje wartość od razu, zamiast czekać na drugi pomiar.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.10.0",
             items: [
                 Item(

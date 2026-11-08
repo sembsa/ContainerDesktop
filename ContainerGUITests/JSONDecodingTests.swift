@@ -230,4 +230,12 @@ final class JSONDecodingTests: XCTestCase {
         let status = try decoder.decode(SystemStatus.self, from: json)
         XCTAssertEqual(status.serviceState, .running)
     }
+
+    /// `container stats --format json` on 1.7.1, and the same without the 1.7 field.
+    func testStatsSampleReadsCPUUtilizationWhenPresent() throws {
+        let new = #"[{"blockReadBytes":1679360,"blockWriteBytes":0,"cpuUsageUsec":11660531,"cpuUtilization":2.0004153297179847,"id":"s","memoryLimitBytes":1073741824,"memoryUsageBytes":2617344,"networkRxBytes":12744,"networkTxBytes":602,"numProcesses":3}]"#
+        XCTAssertEqual(try decoder.decode([StatsSample].self, from: Data(new.utf8)).first?.cpuUtilization ?? 0, 2.0, accuracy: 0.01)
+        let old = #"[{"cpuUsageUsec":1768,"id":"s","numProcesses":1}]"#
+        XCTAssertNil(try decoder.decode([StatsSample].self, from: Data(old.utf8)).first?.cpuUtilization)
+    }
 }

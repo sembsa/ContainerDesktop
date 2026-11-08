@@ -97,7 +97,11 @@ final class ContainerStore {
                 memoryLimitBytes: sample.memoryLimitBytes,
                 processCount: sample.numProcesses
             )
-            if let previous = previousSamples[sample.id],
+            // 1.7.0 reports the rate itself, measured over its own interval —
+            // so even a container's first sample gets a value.
+            if let cores = sample.cpuUtilization {
+                usage.cpuPercent = cores * 100
+            } else if let previous = previousSamples[sample.id],
                let current = sample.cpuUsageUsec,
                let earlier = previous.sample.cpuUsageUsec {
                 let elapsed = now.timeIntervalSince(previous.at)

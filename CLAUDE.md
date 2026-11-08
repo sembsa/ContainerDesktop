@@ -69,7 +69,9 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
   also removed `load-image` (menu item hidden from 1.7; `--shared-image-store`
   on create replaces it), dropped `stop`, and sizes a bare `--workers N` at 1/4
   of the host — so on 1.7 the app sends `count=N,cpus=C,memory=M` with the
-  control plane's values. `list --format json` exists now too; not used yet.
+  control plane's values. `list --format json` exists now too; not used yet. `stats --format json`
+  gained `cpuUtilization` (cores, 1.0 = one core) in 1.7; `ContainerStore`
+  prefers it over its own two-sample delta, so the first reading has a value.
 - **1.5.0 removed `container k8s start`.** A stopped node is restarted by
   deleting the cluster and creating it again — there is no other way. The
   command is still in `K8sStore` because the app runs against whatever CLI is
