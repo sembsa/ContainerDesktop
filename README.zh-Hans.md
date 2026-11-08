@@ -126,7 +126,7 @@ SwiftUI 视图（按功能划分）  →  @Observable stores  →  ContainerCLI 
 
 ## 支持
 
-Container Desktop 免费。如果它为你节省了时间，欢迎[在 Ko-fi 上请我喝杯咖啡](https://ko-fi.com/sembsa) ☕
+Container Desktop 免费。如果它为你节省了时间，欢迎[通过 GitHub Sponsors 赞助](https://github.com/sponsors/sembsa)或[在 Ko-fi 上请我喝杯咖啡](https://ko-fi.com/sembsa) ☕
 
 ## 许可证
 

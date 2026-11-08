@@ -126,7 +126,7 @@ Widoki SwiftUI (per sekcja)  →  @Observable stores  →  ContainerCLI (actor) 
 
 ## Wsparcie
 
-Container Desktop jest darmowy. Jeśli oszczędza Ci czas, możesz [postawić mi kawę na Ko-fi](https://ko-fi.com/sembsa) ☕
+Container Desktop jest darmowy. Jeśli oszczędza Ci czas, możesz [wesprzeć go przez GitHub Sponsors](https://github.com/sponsors/sembsa) albo [postawić mi kawę na Ko-fi](https://ko-fi.com/sembsa) ☕
 
 ## Licencja
 
