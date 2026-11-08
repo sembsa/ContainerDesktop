@@ -120,6 +120,22 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            Section {
+                Link(destination: AppDocs.support) {
+                    Label("Postaw kawę na Ko-fi", systemImage: "cup.and.saucer.fill")
+                }
+            } header: {
+                HStack(spacing: 5) {
+                    Image(systemName: "heart.fill")
+                        .foregroundStyle(Color.pink.gradient)
+                    Text("Wspomóż projekt")
+                }
+            } footer: {
+                Text("Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
         .frame(width: 460)

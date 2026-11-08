@@ -60,6 +60,10 @@ struct ContainerGUIApp: App {
                 Button("Zgłoś problem…") {
                     NSWorkspace.shared.open(URL(string: "https://github.com/sembsa/ContainerDesktop/issues")!)
                 }
+                Divider()
+                Button("Wspomóż projekt…") {
+                    NSWorkspace.shared.open(AppDocs.support)
+                }
             }
         }
 

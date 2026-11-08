@@ -997,3 +997,8 @@
 "Zmienione: w container 1.7 sekcja Kubernetes pokazywała pusto, bo lista klastrów zmieniła format — teraz znów widać klastry i ich węzły. Węzły robocze dostają te same CPU i pamięć co control plane, jak wcześniej." = "变更：在 container 1.7 中，由于集群列表格式变化，Kubernetes 部分显示为空——现在集群及其节点重新显示。工作节点与控制平面获得相同的 CPU 和内存，与之前一致。";
 "Użycie CPU od pierwszego odczytu" = "首次读取即显示 CPU 使用率";
 "Zmienione: z container 1.7 miernik CPU kontenera pokazuje wartość od razu, zamiast czekać na drugi pomiar." = "变更：使用 container 1.7 时，容器的 CPU 指标会立即显示数值，无需等待第二次测量。";
+
+"Wspomóż projekt…" = "支持本项目…";
+"Wspomóż projekt" = "支持本项目";
+"Postaw kawę na Ko-fi" = "在 Ko-fi 上请我喝杯咖啡";
+"Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop 免费，并将一直免费。如果它为你节省了时间，欢迎支持它的开发。";
