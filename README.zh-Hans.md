@@ -124,6 +124,10 @@ SwiftUI 视图（按功能划分）  →  @Observable stores  →  ContainerCLI 
 - `ContainerGUI/Features/*` —— 每个分区一个 store 加对应视图
 - 应用运行在 App Sandbox 之外（因为它需要启动外部 CLI），所以采用直接分发（DMG），而不是 Mac App Store
 
+## 支持
+
+Container Desktop 免费。如果它为你节省了时间，欢迎[在 Ko-fi 上请我喝杯咖啡](https://ko-fi.com/sembsa) ☕
+
 ## 许可证
 
 [MIT](LICENSE)

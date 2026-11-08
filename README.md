@@ -142,6 +142,10 @@ SwiftUI views (per feature)  →  @Observable stores  →  ContainerCLI (actor) 
 - `ContainerGUI/Features/*` — one store + views per section
 - App runs outside the App Sandbox (it spawns an external CLI), so distribution is direct (DMG), not the Mac App Store
 
+## Support
+
+Container Desktop is free. If it saves you time, you can [buy me a coffee on Ko-fi](https://ko-fi.com/sembsa) ☕
+
 ## License
 
 [MIT](LICENSE)

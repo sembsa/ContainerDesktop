@@ -997,3 +997,8 @@
 "Zmienione: w container 1.7 sekcja Kubernetes pokazywała pusto, bo lista klastrów zmieniła format — teraz znów widać klastry i ich węzły. Węzły robocze dostają te same CPU i pamięć co control plane, jak wcześniej." = "Changed: with container 1.7 the Kubernetes section came up empty because the cluster list changed format — clusters and their nodes show again. Worker nodes get the same CPU and memory as the control plane, as before.";
 "Użycie CPU od pierwszego odczytu" = "CPU usage from the first reading";
 "Zmienione: z container 1.7 miernik CPU kontenera pokazuje wartość od razu, zamiast czekać na drugi pomiar." = "Changed: with container 1.7 a container's CPU meter shows a value right away instead of waiting for a second measurement.";
+
+"Wspomóż projekt…" = "Support the Project…";
+"Wspomóż projekt" = "Support the project";
+"Postaw kawę na Ko-fi" = "Buy me a coffee on Ko-fi";
+"Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop is free and will stay that way. If it saves you time, you can support its development.";

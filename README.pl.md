@@ -124,6 +124,10 @@ Widoki SwiftUI (per sekcja)  →  @Observable stores  →  ContainerCLI (actor) 
 - `ContainerGUI/Features/*` — store + widoki dla każdej sekcji
 - Aplikacja działa poza App Sandbox (uruchamia zewnętrzne CLI), więc dystrybucja jest bezpośrednia (DMG), nie przez Mac App Store
 
+## Wsparcie
+
+Container Desktop jest darmowy. Jeśli oszczędza Ci czas, możesz [postawić mi kawę na Ko-fi](https://ko-fi.com/sembsa) ☕
+
 ## Licencja
 
 [MIT](LICENSE)
