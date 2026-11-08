@@ -37,6 +37,16 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.11.1",
+            items: [
+                Item(
+                    symbol: "heart.fill",
+                    title: String(localized: "Wspomóż projekt"),
+                    detail: String(localized: "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien.")
+                )
+            ]
+        ),
+        Entry(
             version: "0.11.0",
             items: [
                 Item(
