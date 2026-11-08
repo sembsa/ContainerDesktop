@@ -990,3 +990,10 @@
 
 "Współdzielony magazyn obrazów" = "Shared image store";
 "Węzły pobierają obrazy z lokalnego magazynu container, więc obraz zbudowany przez container build od razu działa w klastrze. Zastępuje dawne „Wczytaj obraz do klastra”." = "Nodes pull images from the local container image store, so an image built with container build works in the cluster right away. Replaces the former “Load image into cluster”.";
+
+"Współdzielony magazyn obrazów" = "Shared image store";
+"Nowe: przy tworzeniu klastra Kubernetes węzły mogą korzystać z lokalnego magazynu obrazów — obraz zbudowany przez container build od razu działa w klastrze (wymaga container 1.7). Zastępuje „Wczytaj obraz do klastra”, które container 1.7 usunął." = "New: when creating a Kubernetes cluster, nodes can use the local image store — an image built with container build works in the cluster right away (requires container 1.7). Replaces “Load image into cluster”, which container 1.7 removed.";
+"Zgodność z container 1.7" = "Compatible with container 1.7";
+"Zmienione: w container 1.7 sekcja Kubernetes pokazywała pusto, bo lista klastrów zmieniła format — teraz znów widać klastry i ich węzły. Węzły robocze dostają te same CPU i pamięć co control plane, jak wcześniej." = "Changed: with container 1.7 the Kubernetes section came up empty because the cluster list changed format — clusters and their nodes show again. Worker nodes get the same CPU and memory as the control plane, as before.";
+"Użycie CPU od pierwszego odczytu" = "CPU usage from the first reading";
+"Zmienione: z container 1.7 miernik CPU kontenera pokazuje wartość od razu, zamiast czekać na drugi pomiar." = "Changed: with container 1.7 a container's CPU meter shows a value right away instead of waiting for a second measurement.";
