@@ -125,6 +125,9 @@ struct SettingsView: View {
                 Link(destination: AppDocs.support) {
                     Label("Postaw kawę na Ko-fi", systemImage: "cup.and.saucer.fill")
                 }
+                Link(destination: AppDocs.sponsors) {
+                    Label("Sponsoruj na GitHubie", systemImage: "heart.fill")
+                }
             } header: {
                 HStack(spacing: 5) {
                     Image(systemName: "heart.fill")
