@@ -8,6 +8,9 @@ struct SidebarView: View {
     /// Machines sat under "Konfiguracja", which they are not: a machine is
     /// something you run things inside, like a container.
     private let environments: [AppModel.Section] = [.machines]
+    /// QEMU machines get a group of their own: they are new, and they are not
+    /// run by the container service like everything above them.
+    private let virtualization: [AppModel.Section] = [.virtualMachines]
     private let secondary: [AppModel.Section] = [.registries, .system]
 
     var body: some View {
@@ -26,6 +29,11 @@ struct SidebarView: View {
             }
             Section("Środowiska") {
                 ForEach(environments) { section in
+                    sidebarRow(section)
+                }
+            }
+            Section("Wirtualizacja") {
+                ForEach(virtualization) { section in
                     sidebarRow(section)
                 }
             }
@@ -56,6 +64,15 @@ struct SidebarView: View {
                     Text("\(model.containers.runningCount)")
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
+                }
+                if section == .virtualMachines {
+                    Text("Nowość")
+                        .font(.caption2.weight(.bold))
+                        .fixedSize()
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(section.tint.opacity(0.2), in: Capsule())
+                        .foregroundStyle(section.tint)
                 }
                 if section == .kubernetes, !model.kubernetes.clusters.isEmpty {
                     Text("\(model.kubernetes.clusters.count)")

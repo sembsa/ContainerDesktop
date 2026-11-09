@@ -4,7 +4,7 @@ import Observation
 @MainActor @Observable
 final class AppModel {
     enum Section: String, CaseIterable, Identifiable {
-        case containers, images, volumes, networks, kubernetes, workloads, helm, registries, machines, system
+        case containers, images, volumes, networks, kubernetes, workloads, helm, registries, machines, virtualMachines, system
 
         var id: String { rawValue }
 
@@ -19,6 +19,7 @@ final class AppModel {
             case .helm: String(localized: "Helm")
             case .registries: String(localized: "Rejestry")
             case .machines: String(localized: "Maszyny")
+            case .virtualMachines: String(localized: "Wirtualne maszyny")
             case .system: String(localized: "System")
             }
         }
@@ -34,6 +35,7 @@ final class AppModel {
             case .helm: "shippingbox.fill"
             case .registries: "key"
             case .machines: "desktopcomputer"
+            case .virtualMachines: "pc"
             case .system: "gearshape"
             }
         }
@@ -49,6 +51,7 @@ final class AppModel {
             case .helm: .mint
             case .registries: .pink
             case .machines: .indigo
+            case .virtualMachines: .brown
             case .system: .gray
             }
         }
@@ -69,6 +72,7 @@ final class AppModel {
     let workloads = WorkloadStore()
     let helm = HelmStore()
     let compose = ComposeStore()
+    let virtualMachines = VirtualMachineStore()
 
     private var pollTask: Task<Void, Never>?
     var pollInterval: TimeInterval = 3
@@ -103,6 +107,9 @@ final class AppModel {
     }
 
     func refreshCurrent() async {
+        // QEMU machines do not go through the container service, so a stopped
+        // service must not blank their section.
+        if selection == .virtualMachines { virtualMachines.refresh() }
         if system.serviceState == .unknown { await system.refreshState() }
         guard system.serviceState.isRunning else {
             containers.publishWidgetSnapshot(serviceRunning: false)
@@ -125,6 +132,7 @@ final class AppModel {
         case .networks: await networks.refresh()
         case .registries: await registries.refresh()
         case .machines: await machines.refresh()
+        case .virtualMachines: break // refreshed above, service or not
         case .kubernetes: await kubernetes.refresh()
         // Objects are read on demand: one kubectl process per kind, and a
         // cluster holds enough of them that a three-second tick across seven
@@ -178,6 +186,7 @@ final class AppModel {
         helm.clearTarget()
         system.diskUsage = nil
         system.builderRunning = false
+        // virtualMachines stays: QEMU machines run without the container service.
     }
 
     func present(_ error: Error) {

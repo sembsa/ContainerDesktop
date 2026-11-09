@@ -5,7 +5,6 @@ struct MachinesView: View {
     @State private var selection: MachineInfo.ID?
     @State private var showCreate = false
     @State private var pendingDelete: MachineInfo?
-    @State private var virtualMachines = VirtualMachineStore()
 
     private var store: MachineStore { model.machines }
 
@@ -41,22 +40,13 @@ struct MachinesView: View {
                 }
             }
         }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if !virtualMachines.items.isEmpty { VirtualMachinesSection(store: virtualMachines) }
-        }
         .navigationTitle("Maszyny")
-        .task {
-            virtualMachines.refresh()
-            await store.refresh()
-        }
+        .task { await store.refresh() }
         .toolbar {
             ToolbarItemGroup {
                 Button { showCreate = true } label: { Label("Utwórz", systemImage: "plus") }
                     .disabled(!model.system.serviceState.isRunning)
-                Button {
-                    virtualMachines.refresh()
-                    Task { await store.refresh() }
-                } label: { Label("Odśwież", systemImage: "arrow.clockwise") }
+                Button { Task { await store.refresh() } } label: { Label("Odśwież", systemImage: "arrow.clockwise") }
             }
         }
         .sheet(isPresented: $showCreate) { MachineCreateSheet().environment(model) }
