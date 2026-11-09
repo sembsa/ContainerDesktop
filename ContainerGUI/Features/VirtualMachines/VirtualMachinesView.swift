@@ -4,16 +4,13 @@ import SwiftUI
 /// Full virtual machines run by QEMU: a grid of cards, one machine in detail
 /// in the inspector, and the way into its screen.
 struct VirtualMachinesView: View {
-    /// Opens the Linux installer. The section's owner wires it; until then the
-    /// menu item stays disabled.
-    var onCreateLinux: (() -> Void)?
-
     @Environment(AppModel.self) private var model
     @Environment(\.openWindow) private var openWindow
     @State private var selection: VirtualMachine.ID?
     @State private var cloneSource: VirtualMachine?
     @State private var cloneName = ""
     @State private var showInstall = false
+    @State private var showLinuxInstall = false
     @State private var settingsFor: VirtualMachine?
     @State private var pendingDelete: PendingDelete?
     @State private var thumbnails: [VirtualMachine.ID: CGImage] = [:]
@@ -35,7 +32,7 @@ struct VirtualMachinesView: View {
     var body: some View {
         Group {
             if store.items.isEmpty {
-                VirtualMachinesEmptyState { showInstall = true }
+                VirtualMachinesEmptyState(onCreate: { showInstall = true }, onCreateLinux: { showLinuxInstall = true })
             } else {
                 grid
             }
@@ -66,13 +63,18 @@ struct VirtualMachinesView: View {
                 selection = vm.id
             }
         }
+        .sheet(isPresented: $showLinuxInstall) {
+            LinuxInstallSheet { vm in
+                store.refresh()
+                selection = vm.id
+            }
+        }
         .sheet(item: $settingsFor) { VMSettingsSheet(vm: $0) }
         .toolbar {
             ToolbarItemGroup {
                 Menu {
                     Button("Windows 11…", systemImage: "pc") { showInstall = true }
-                    Button("Ubuntu Linux…", systemImage: "desktopcomputer") { onCreateLinux?() }
-                        .disabled(onCreateLinux == nil)
+                    Button("Ubuntu Linux…", systemImage: "desktopcomputer") { showLinuxInstall = true }
                 } label: {
                     Label("Utwórz maszynę…", systemImage: "plus")
                 }
@@ -334,6 +336,7 @@ struct VirtualMachineCard: View {
 /// What the section is for, before there is anything in it.
 struct VirtualMachinesEmptyState: View {
     let onCreate: () -> Void
+    let onCreateLinux: () -> Void
     private let tint = AppModel.Section.virtualMachines.tint
     private var qemuInstalled: Bool { FileManager.default.isExecutableFile(atPath: QEMULauncher.qemu) }
 
@@ -374,10 +377,14 @@ struct VirtualMachinesEmptyState: View {
                 .frame(maxWidth: 640)
 
                 VStack(spacing: 8) {
-                    Button("Utwórz maszynę Windows…", systemImage: "plus", action: onCreate)
-                        .buttonStyle(.glassProminent)
-                        .controlSize(.large)
-                        .disabled(!qemuInstalled)
+                    HStack {
+                        Button("Utwórz maszynę Windows…", systemImage: "pc", action: onCreate)
+                            .buttonStyle(.glassProminent)
+                        Button("Utwórz maszynę Ubuntu…", systemImage: "desktopcomputer", action: onCreateLinux)
+                            .buttonStyle(.glass)
+                    }
+                    .controlSize(.large)
+                    .disabled(!qemuInstalled)
                     if !qemuInstalled {
                         Text("Wymaga QEMU — zainstaluj je poleceniem brew install qemu.")
                             .font(.caption)

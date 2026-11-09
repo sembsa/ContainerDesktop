@@ -1173,3 +1173,6 @@
 "Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about half a minute. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
 "Nie udało się pobrać obrazu Ubuntu: %@" = "Couldn't download the Ubuntu image: %@";
 "suma kontrolna się nie zgadza" = "the checksum does not match";
+
+/* VM empty state */
+"Utwórz maszynę Ubuntu…" = "Create Ubuntu Machine…";

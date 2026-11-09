@@ -1173,3 +1173,6 @@
 "Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
 "Nie udało się pobrać obrazu Ubuntu: %@" = "Nie udało się pobrać obrazu Ubuntu: %@";
 "suma kontrolna się nie zgadza" = "suma kontrolna się nie zgadza";
+
+/* VM empty state */
+"Utwórz maszynę Ubuntu…" = "Utwórz maszynę Ubuntu…";
