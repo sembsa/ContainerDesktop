@@ -41,12 +41,15 @@ enum WindowsQEMUArguments {
     /// One more than the disk's (`QEMULauncher` gives the NVMe disk `bootindex=1`).
     static let windowsISOBootIndex = 2
 
-    /// Getting past "Press any key to boot from CD": send this QMP command every
-    /// `interval` from launch until `duration` has passed. Keep the window short —
-    /// Setup's progress screen appears ~25 s in with **Cancel focused**, and an
-    /// Enter there aborts the install. 15 s covered the prompt with room to spare.
+    /// Getting past "Press any key to boot from CD": press `qcode` every
+    /// `interval` from launch until `duration` has passed.
+    ///
+    /// Not Enter. Setup's progress screen comes up with **Cancel focused**, and on
+    /// a warm host it arrived inside the 15 s window: an Enter landed on Cancel
+    /// and left the install parked at "Czy na pewno chcesz wyjść?". The down
+    /// arrow is a key the firmware prompt accepts and that activates no button.
     struct BootKeypress: Sendable, Equatable {
-        var qmp = #"{"execute":"send-key","arguments":{"keys":[{"type":"qcode","data":"ret"}]}}"#
+        var qcode = "down"
         var interval: Duration = .milliseconds(500)
         var duration: Duration = .seconds(15)
     }

@@ -99,16 +99,15 @@ enum WindowsInstaller {
         }
     }
 
-    /// "Press any key to boot from CD or DVD" waits ~5 s. Enter every half
-    /// second for 15 s gets past it; longer would land on Setup's progress
-    /// screen, where Cancel has the focus.
+    /// "Press any key to boot from CD or DVD" waits ~5 s; see `BootKeypress`
+    /// for why the key is not Enter.
     private static func pressThroughBootPrompt(_ dir: URL) async {
         let plan = WindowsQEMUArguments.bootKeypress
         let qmp = QMPClient.shared(for: dir)
         let clock = ContinuousClock()
         let end = clock.now + plan.duration
         while clock.now < end {
-            try? await qmp.sendKey("ret")
+            try? await qmp.sendKey(plan.qcode)
             try? await Task.sleep(for: plan.interval)
         }
     }

@@ -32,9 +32,23 @@ struct SidebarView: View {
                     sidebarRow(section)
                 }
             }
-            Section("Wirtualizacja") {
+            // The badge sits on the group header: beside the row title it
+            // truncated "Wirtualne maszyny" at the default sidebar width.
+            Section {
                 ForEach(virtualization) { section in
                     sidebarRow(section)
+                }
+            } header: {
+                HStack(spacing: 6) {
+                    Text("Wirtualizacja")
+                    Text("Nowość")
+                        .font(.caption2.weight(.bold))
+                        .textCase(nil)
+                        .fixedSize()
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(AppModel.Section.virtualMachines.tint.opacity(0.2), in: Capsule())
+                        .foregroundStyle(AppModel.Section.virtualMachines.tint)
                 }
             }
             Section("Orkiestracja") {
@@ -64,14 +78,6 @@ struct SidebarView: View {
                     Text("\(model.containers.runningCount)")
                         .font(.caption.monospacedDigit())
                         .foregroundStyle(.secondary)
-                }
-                if section == .virtualMachines {
-                    // An icon, not a word: "Nowość" beside the title truncated it to
-                    // "Wirtualne masz…" at the default sidebar width.
-                    Image(systemName: "sparkles")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.yellow)
-                        .iconHelp(String(localized: "Nowość"))
                 }
                 if section == .kubernetes, !model.kubernetes.clusters.isEmpty {
                     Text("\(model.kubernetes.clusters.count)")
