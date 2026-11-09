@@ -1158,3 +1158,18 @@
 "Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu.";
 "Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu.";
 "Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "Rozdzielczość można zmienić po zakończeniu instalacji systemu.";
+/* Linux VMs */
+"Pulpit (GNOME)" = "Pulpit (GNOME)";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach.";
+"Konto w systemie Linux" = "Konto w systemie Linux";
+"Język systemu" = "Język systemu";
+"Klawiatura" = "Klawiatura";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków.";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…";
+"Przygotowanie dysku…" = "Przygotowanie dysku…";
+"Uruchamianie maszyny…" = "Uruchamianie maszyny…";
+"Konfiguracja Ubuntu trwa" = "Konfiguracja Ubuntu trwa";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "Nie udało się pobrać obrazu Ubuntu: %@";
+"suma kontrolna się nie zgadza" = "suma kontrolna się nie zgadza";

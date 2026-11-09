@@ -118,27 +118,32 @@ enum WindowsInstaller {
     /// `installing` is therefore done: detach the install media and switch to
     /// the display whose driver Setup staged. Returns the updated machine, or nil
     /// if there was nothing to do.
+    ///
+    /// Linux installs (`LinuxInstaller`) end the same way and need the same
+    /// steps: their seed CD is the only extra drive, and they already run on virtio-gpu.
     @discardableResult
-    static func finishIfNeeded(_ vm: VirtualMachine) -> VirtualMachine? {
-        let dir = vm.directory
+    static func finishIfNeeded(_ vm: VirtualMachine, in directory: URL? = nil) -> VirtualMachine? {
+        let dir = directory ?? vm.directory
         guard vm.installing, !VMEngine.isRunning(dir) else { return nil }
         var vm = vm
         vm.installing = false
         vm.extraDrives = []
         vm.display = .virtioGPU
         guard (try? vm.save(to: dir)) != nil else { return nil }
+        // Both hold the user's password in plain text.
         try? FileManager.default.removeItem(at: dir.appending(path: "setup.iso"))
+        try? FileManager.default.removeItem(at: dir.appending(path: "seed.iso"))  // LinuxInstaller.seedFile
         return vm
     }
 
     // MARK: - Pieces
 
-    static func uniqueID(for name: String, in root: URL = VirtualMachineStore.directory) -> String {
+    static func uniqueID(for name: String, in root: URL = VirtualMachineStore.directory, fallback: String = "windows") -> String {
         let slug = name.lowercased()
             .folding(options: .diacriticInsensitive, locale: nil)
             .map { $0.isLetter || $0.isNumber ? String($0) : "-" }.joined()
             .split(separator: "-").joined(separator: "-")
-        let base = String((slug.isEmpty ? "windows" : slug).prefix(24))
+        let base = String((slug.isEmpty ? fallback : slug).prefix(24))
         var id = base, n = 2
         while FileManager.default.fileExists(atPath: root.appending(path: id).path) {
             id = "\(base)-\(n)"; n += 1
@@ -152,18 +157,35 @@ enum WindowsInstaller {
         if let size = (try? FileManager.default.attributesOfItem(atPath: target.path))?[.size] as? Int64, size == virtioSize {
             return target
         }
-        try FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
         await progress(.downloadingDrivers(0))
-        let observer = DownloadProgress { fraction in Task { await progress(.downloadingDrivers(fraction)) } }
-        let (temp, response) = try await URLSession.shared.download(from: virtioURL, delegate: observer)
+        do {
+            try await download(virtioURL, to: target, expectedSize: virtioSize) { await progress(.downloadingDrivers($0)) }
+        } catch let failure as DownloadFailure {
+            throw Failure.driversDownload(failure.detail)
+        }
+        return target
+    }
+
+    struct DownloadFailure: Error { var detail: String }
+
+    /// Downloads `url` into the cache as `target`, which appears only once the
+    /// file is complete — so a file that exists there is a whole one.
+    /// `verify` sees the temporary file before it is moved into place.
+    static func download(_ url: URL, to target: URL, expectedSize: Int64,
+                         verify: @Sendable (URL) async throws -> Void = { _ in },
+                         progress: @escaping @Sendable (Double) async -> Void) async throws {
+        try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+        let observer = DownloadProgress(expectedSize: expectedSize) { fraction in Task { await progress(fraction) } }
+        let (temp, response) = try await URLSession.shared.download(from: url, delegate: observer)
+        defer { try? FileManager.default.removeItem(at: temp) }
         guard (response as? HTTPURLResponse)?.statusCode == 200 else {
-            throw Failure.driversDownload("HTTP \((response as? HTTPURLResponse)?.statusCode ?? 0)")
+            throw DownloadFailure(detail: "HTTP \((response as? HTTPURLResponse)?.statusCode ?? 0)")
         }
         let size = (try? FileManager.default.attributesOfItem(atPath: temp.path))?[.size] as? Int64
-        guard size == virtioSize else { throw Failure.driversDownload(String(localized: "niepełny plik")) }
+        guard size == expectedSize else { throw DownloadFailure(detail: String(localized: "niepełny plik")) }
+        try await verify(temp)
         try? FileManager.default.removeItem(at: target)
         try FileManager.default.moveItem(at: temp, to: target)
-        return target
     }
 }
 
@@ -171,13 +193,17 @@ enum WindowsInstaller {
 /// the task delegate's write callbacks.
 private final class DownloadProgress: NSObject, URLSessionDownloadDelegate, @unchecked Sendable {
     private let report: @Sendable (Double) -> Void
+    private let expectedSize: Int64
     private var lastReported = -1.0
 
-    init(_ report: @escaping @Sendable (Double) -> Void) { self.report = report }
+    init(expectedSize: Int64, _ report: @escaping @Sendable (Double) -> Void) {
+        self.expectedSize = expectedSize
+        self.report = report
+    }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64,
                     totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        let expected = totalBytesExpectedToWrite > 0 ? totalBytesExpectedToWrite : WindowsInstaller.virtioSize
+        let expected = totalBytesExpectedToWrite > 0 ? totalBytesExpectedToWrite : expectedSize
         let fraction = Double(totalBytesWritten) / Double(expected)
         // One update per percent is plenty for a progress bar.
         guard fraction - lastReported >= 0.01 else { return }

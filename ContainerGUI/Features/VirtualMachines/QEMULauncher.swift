@@ -100,7 +100,8 @@ enum QEMULauncher {
             "-name", escape(vm.id),
             "-M", "virt", "-accel", "hvf", "-cpu", "host",
             "-smp", "\(vm.cpus)", "-m", "\(vm.memoryMiB)M",
-            "-rtc", "base=localtime",
+            // Windows keeps the RTC in local time, Linux in UTC.
+            "-rtc", vm.isWindows ? "base=localtime" : "base=utc",
             "-drive", "if=pflash,format=raw,readonly=on,file=\(escape(firmwareCode))",
             "-drive", "if=pflash,format=raw,file=\(file("vars.fd"))",
             "-device", vm.display == .virtioGPU ? virtioGPU(vm.resolution, screen: screen) : "ramfb",
@@ -115,9 +116,9 @@ enum QEMULauncher {
         for (index, drive) in vm.extraDrives.enumerated() {
             let id = "x\(index)"
             var options = "file=\(file(drive.path)),if=none,id=\(id)"
-            if drive.cdrom { options += ",media=cdrom" }
+            if drive.cdrom && !drive.virtio { options += ",media=cdrom" }
             if drive.readOnly { options += ",readonly=on" }
-            var device = "usb-storage,drive=\(id),removable=on"
+            var device = drive.virtio ? "virtio-blk-pci,drive=\(id)" : "usb-storage,drive=\(id),removable=on"
             if let boot = drive.bootIndex { device += ",bootindex=\(boot)" }
             args += ["-drive", options, "-device", device]
         }

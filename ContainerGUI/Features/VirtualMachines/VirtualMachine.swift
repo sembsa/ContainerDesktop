@@ -9,7 +9,7 @@ import Observation
 /// Every field but `name` has a default, so a `vm.json` from before a field
 /// existed still reads.
 struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
-    /// An additional drive attached over USB — an installer ISO or a driver disc.
+    /// An additional drive — an installer ISO, a driver disc, a cloud-init seed.
     struct ExtraDrive: Hashable, Codable, Sendable {
         /// Absolute, or relative to the machine's directory.
         var path: String
@@ -19,12 +19,17 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         /// QEMU boot order. ArmVirt UEFI only connects devices that have one, so
         /// an installer ISO without it is never booted.
         var bootIndex: Int?
+        /// A virtio-blk disk instead of USB. USB storage enumerates too late
+        /// for early-boot probes: cloud-init's ds-identify had already looked
+        /// for its seed, found nothing and disabled itself (observed).
+        var virtio = false
 
-        init(path: String, readOnly: Bool = true, cdrom: Bool = true, bootIndex: Int? = nil) {
+        init(path: String, readOnly: Bool = true, cdrom: Bool = true, bootIndex: Int? = nil, virtio: Bool = false) {
             self.path = path
             self.readOnly = readOnly
             self.cdrom = cdrom
             self.bootIndex = bootIndex
+            self.virtio = virtio
         }
 
         init(from decoder: Decoder) throws {
@@ -33,6 +38,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
             readOnly = try c.decodeIfPresent(Bool.self, forKey: .readOnly) ?? true
             cdrom = try c.decodeIfPresent(Bool.self, forKey: .cdrom) ?? true
             bootIndex = try c.decodeIfPresent(Int.self, forKey: .bootIndex)
+            virtio = try c.decodeIfPresent(Bool.self, forKey: .virtio) ?? false
         }
     }
 
@@ -57,7 +63,8 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     /// `ramfb` works with no driver at all; `virtio-gpu` needs viogpudo in the
     /// guest and takes `resolution`. Windows installs start on ramfb and switch.
     var display: Display = .ramfb
-    /// Set while Windows Setup runs; finishing the install clears it.
+    /// Set while Windows Setup or a Linux first boot (cloud-init) runs;
+    /// finishing the install clears it.
     var installing = false
     /// Opt-in for the `vm_*` MCP tools: off unless the user switches it on.
     var agentControl = false
