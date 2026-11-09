@@ -145,8 +145,10 @@ enum ContainerTools {
             }
             return processResult(try await cli.runRaw(argv, timeout: .seconds(600)))
         },
-        MCPTool(name: "container_start", description: "Start a stopped container.", schema: idSchema) { args in
-            try await cli.run(["start", try args.requiredString("id")], timeout: .seconds(120))
+        MCPTool(name: "container_start", description: "Start a stopped container. Refuses Kubernetes cluster nodes (a stopped cluster is recreated, not restarted).", schema: idSchema) { args in
+            let id = try args.requiredString("id")
+            try await refuseClusterNode(id)
+            try await cli.run(["start", id], timeout: .seconds(120))
             return .text("started")
         },
         MCPTool(name: "container_stop", description: "Stop a running container. Refuses Kubernetes cluster nodes.", schema: idSchema) { args in
