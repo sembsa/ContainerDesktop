@@ -290,6 +290,9 @@ enum VMTools {
 
     /// The .cmd prologue: no echoed prompt lines, and the console code page set to
     /// UTF-8 so cmd reads the rest of the (UTF-8) script — and writes its output — as UTF-8.
+    /// Verified on Polish Windows 11 (OEMCP 852): without it, `echo x> zażółć.txt` from a
+    /// UTF-8 script creates `za┼╝├│┼é─ç.txt`; with it, `zażółć.txt`. `echo` alone round-trips
+    /// either way (bytes in, same bytes out), so it proves nothing.
     static func windowsScript(_ command: String) -> String {
         "@echo off\r\nchcp 65001 >nul\r\n" + command
     }
