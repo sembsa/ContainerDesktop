@@ -2,7 +2,7 @@
 
 [English](README.md) | **Polski** | [简体中文](README.zh-Hans.md)
 
-Natywna aplikacja macOS w stylu Docker Desktop dla CLI [`container`](https://github.com/apple/container) od Apple — zarządzaj kontenerami, obrazami, wolumenami, sieciami i maszynami z szybkiego interfejsu SwiftUI zamiast z terminala.
+Natywna aplikacja macOS w stylu Docker Desktop dla CLI [`container`](https://github.com/apple/container) od Apple — zarządzaj kontenerami, obrazami, wolumenami, sieciami i maszynami z szybkiego interfejsu SwiftUI zamiast z terminala. Uruchamia też wirtualne maszyny Windows i Linux (eksperymentalnie), a agenci AI mogą nią sterować przez MCP.
 
 Container Desktop nie reimplementuje logiki kontenerów: każda akcja wywołuje oficjalne CLI `container` i parsuje jego wyjście JSON, więc to, co widzisz, jest zawsze dokładnie tym, co powiedziałoby CLI.
 
@@ -50,6 +50,20 @@ Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
 - **Dynamiczny edytor values** budowany z `values.yaml` samego chartu: generowany formularz z kontrolkami dobranymi do typu, podpowiedziami wyciągniętymi z komentarzy w pliku, filtrem kluczy i zakładką surowego YAML-a trzymaną w synchronizacji. Do `-f` trafiają wyłącznie klucze, które faktycznie zmieniłeś, więc domyślne wartości nadal wędrują razem z aktualizacjami chartu. **Sprawdź (dry-run)** renderuje wdrożenie na klastrze, pokazując błędy szablonów i niezgodności z `values.schema.json` zanim cokolwiek zostanie zastosowane
 - Każde polecenie helm jest przypięte do wybranego klastra własnym plikiem kubeconfig aplikacji — **Twój `~/.kube/config` nigdy nie jest odczytywany ani zmieniany**, więc akcja z GUI nie sięgnie klastra produkcyjnego
 
+### Wirtualne maszyny (eksperymentalne)
+> **Beta, w trakcie prac.** Wymaga [QEMU](https://www.qemu.org) (`brew install qemu`). Rzeczy mogą się zmieniać między wersjami.
+
+- Pełne maszyny **Windows 11 ARM64** i **Ubuntu 24.04** w QEMU z Hypervisor.framework Apple, we własnej zakładce *Wirtualne maszyny*. Działają niezależnie od aplikacji i pracują dalej po jej zamknięciu.
+- **Windows instaluje się sam** z Twojego ISO (do pobrania [u Microsoftu](https://www.microsoft.com/software-download/windows11arm64)): bez pytań i klikania, ok. 12 minut do zalogowanego pulpitu. **Ubuntu** startuje z oficjalnego obrazu chmurowego z cloud-init: ok. 30 s wersja serwerowa, ok. 3 minuty z pulpitem GNOME.
+- **Podgląd na żywo** w osobnym oknie, przez wbudowanego klienta VNC: mysz, klawiatura (Cmd to klawisz Windows, prawy Option to AltGr), Ctrl+Alt+Del i inne skróty, których nie da się wysłać z klawiatury Maca, zrzut ekranu do schowka oraz **rozdzielczość dopasowana do okna**.
+- Karty z miniaturami ekranu, ustawienia maszyny (CPU, pamięć, rozdzielczość), migawki, klony i usuwanie.
+- Windows na ARM64 dostaje naszą własną kompilację QEMU guest agenta z VSS. virtio-win ma go tylko dla x86/x64, więc źródła i skrypt budowania są w [`scripts/qemu-ga-windows-arm64`](scripts/qemu-ga-windows-arm64).
+
+### Agenci AI (MCP)
+- Aplikacja zawiera **serwer MCP** (`cd-mcp`, wewnątrz paczki aplikacji). Claude Code, Codex, Cursor i inni agenci mogą przeglądać, uruchamiać, zatrzymywać i sprawdzać kontenery oraz zarządzać obrazami, wolumenami, sieciami i maszynami. *Ustawienia → Agenci AI → Dodaj do Claude Code* rejestruje serwer, a dla innych klientów możesz skopiować konfigurację JSON.
+- Agent może też **sterować wirtualną maszyną**: zrzut ekranu, klik, pisanie, klawisze, komendy, kopiowanie plików i migawki. Działa to tylko w maszynach, w których włączysz *Pozwól agentowi AI sterować tą maszyną*; domyślnie jest wyłączone.
+- Agent dostaje mniej więcej Twoje uprawnienia do usługi `container`. Pozwalaj na to tylko agentom, którym ufasz.
+
 ### Widżet na pulpit
 - **Widżet WidgetKit** w trzech rozmiarach: licznik działających ze stanem usługi (mały), żywa lista z użyciem CPU per kontener (średni) i całość pogrupowana po projektach Compose (duży).
 - Rozszerzenie widżetu zawsze działa w sandboksie i nie może uruchamiać CLI `container`, więc aplikacja po każdym odświeżeniu zapisuje snapshot, a widżet go czyta — dzięki temu widżet pokazuje ostatni znany stan także wtedy, gdy aplikacja jest zamknięta, i podaje, jak stary jest ten odczyt.
@@ -71,6 +85,7 @@ Logi z kolorowaniem poziomów i pełny terminal w środku kontenera:
 - macOS 26 (Tahoe) na Apple Silicon
 - Zainstalowane CLI [`container`](https://github.com/apple/container) (domyślnie `/usr/local/bin/container`; własną ścieżkę można wskazać w Ustawieniach aplikacji)
 - Opcjonalnie: [`helm`](https://helm.sh) dla sekcji Helm (`brew install helm`) oraz `container` 1.2.1+ dla lokalnych klastrów Kubernetes
+- Opcjonalnie: [QEMU](https://www.qemu.org) dla wirtualnych maszyn (`brew install qemu`)
 
 ## Instalacja
 
@@ -122,6 +137,8 @@ Widoki SwiftUI (per sekcja)  →  @Observable stores  →  ContainerCLI (actor) 
 - `ContainerGUI/CLI` — wykonywanie procesów z timeoutami i watchdogiem, builder argv z tokenizerem w stylu shella, strumieniowy czytnik linii
 - `ContainerGUI/Models` — modele `Codable` odwzorowane na realne wyjście JSON CLI
 - `ContainerGUI/Features/*` — store + widoki dla każdej sekcji
+- `ContainerGUI/Features/VirtualMachines` i `ContainerGUI/Common/RFB`: silnik QEMU (klienci QMP i guest agenta, launcher, instalatory) oraz natywny klient RFB/VNC
+- `ContainerDesktopMCP`: serwer MCP (stdio), kompilowany z tych samych źródeł CLI i silnika co aplikacja
 - Aplikacja działa poza App Sandbox (uruchamia zewnętrzne CLI), więc dystrybucja jest bezpośrednia (DMG), nie przez Mac App Store
 
 ## Wsparcie

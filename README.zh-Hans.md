@@ -2,7 +2,7 @@
 
 [English](README.md) | [Polski](README.pl.md) | **简体中文**
 
-一款原生 macOS 应用，为 Apple 的 [`container`](https://github.com/apple/container) CLI 提供 Docker Desktop 风格的图形界面 —— 在快速的 SwiftUI 界面中管理容器、镜像、卷、网络和虚拟机，而不必回到终端。
+一款原生 macOS 应用，为 Apple 的 [`container`](https://github.com/apple/container) CLI 提供 Docker Desktop 风格的图形界面 —— 在快速的 SwiftUI 界面中管理容器、镜像、卷、网络和虚拟机，而不必回到终端。它还能运行 Windows 和 Linux 虚拟机（实验性），AI 代理也可以通过 MCP 操作它。
 
 Container Desktop 不重新实现任何容器逻辑：每个操作都会调用官方 `container` CLI 并解析它的 JSON 输出，因此你看到的内容始终与 CLI 所报告的完全一致。
 
@@ -50,6 +50,20 @@ Container Desktop 不重新实现任何容器逻辑：每个操作都会调用�
 - **动态 values 编辑器**，由 chart 自身的 `values.yaml` 生成：表单控件按类型自动匹配，帮助文本取自文件中的注释，支持键筛选，并有与之保持同步的原始 YAML 标签页。只有你真正修改过的键才会进入 `-f`，因此 chart 的默认值仍会随 chart 升级而更新。**检查（dry run）**会先在集群上渲染发布，在应用任何更改之前暴露模板错误和违反 `values.schema.json` 的值
 - 每条 helm 命令都通过应用自管理的 kubeconfig 锁定到所选集群——**绝不读取或修改你的 `~/.kube/config`**，因此 GUI 操作无法触及生产集群
 
+### 虚拟机（实验性）
+> **测试版，仍在开发中。** 需要 [QEMU](https://www.qemu.org)（`brew install qemu`）。各版本之间可能会有变化。
+
+- 在 QEMU 中借助 Apple Hypervisor 框架运行完整的 **Windows 11 ARM64** 和 **Ubuntu 24.04** 虚拟机，位于独立的“虚拟机”分区。它们独立于应用运行，退出应用后仍继续运行。
+- **Windows 可全自动安装**：使用你自己的 ISO（可从 [Microsoft](https://www.microsoft.com/software-download/windows11arm64) 下载），无需任何提问或点击，约 12 分钟进入已登录的桌面。**Ubuntu** 基于官方云镜像和 cloud-init：服务器版约 30 秒，带 GNOME 桌面约 3 分钟。
+- 在独立窗口中**实时预览**（内置 VNC 客户端）：鼠标、键盘（Cmd 对应 Windows 键，右 Option 对应 AltGr），Ctrl+Alt+Del 以及 Mac 键盘无法发送的其他快捷键，截屏到剪贴板，并且**分辨率随窗口调整**。
+- 带屏幕缩略图的卡片、每台虚拟机的设置（CPU、内存、分辨率）、快照、链接克隆和删除。
+- ARM64 版 Windows 使用我们自己编译的 QEMU guest agent（支持 VSS）。virtio-win 只提供 x86/x64 版本，源码和构建脚本位于 [`scripts/qemu-ga-windows-arm64`](scripts/qemu-ga-windows-arm64)。
+
+### AI 代理（MCP）
+- 应用内置 **MCP 服务器**（`cd-mcp`，位于应用包内）。Claude Code、Codex、Cursor 等代理可以列出、运行、停止和检查容器，并管理镜像、卷、网络和机器。在“设置 → AI 代理 → 添加到 Claude Code”中即可注册，其他客户端可复制 JSON 配置。
+- 代理还能**操作虚拟机**：截屏、点击、输入、按键、执行命令、复制文件和快照。仅限你开启了“允许 AI 代理控制此虚拟机”的机器，该选项默认关闭。
+- 代理获得的权限大致相当于你本人对容器服务的权限。只允许你信任的代理使用。
+
 ### 桌面微件
 - **WidgetKit 微件**，三种尺寸：运行数量与服务状态（小）、带每容器 CPU 的实时列表（中）、按 Compose 项目分组的全部内容（大）。
 - 微件扩展始终运行在沙盒中，无法执行 `container` CLI，因此应用在每次刷新后写入快照，微件仅读取它——这也意味着应用关闭时微件仍显示最后已知状态，并会标明该数据的时间。
@@ -71,6 +85,7 @@ Container Desktop 不重新实现任何容器逻辑：每个操作都会调用�
 - Apple Silicon 上的 macOS 26 (Tahoe)
 - 已安装 [`container`](https://github.com/apple/container) CLI（默认路径 `/usr/local/bin/container`；可在应用设置中指定自定义路径）
 - 可选：Helm 部分需要 [`helm`](https://helm.sh)（`brew install helm`）；本地 Kubernetes 集群需要 `container` 1.2.1+
+- 可选：虚拟机需要 [QEMU](https://www.qemu.org)（`brew install qemu`）
 
 ## 安装
 
@@ -122,6 +137,8 @@ SwiftUI 视图（按功能划分）  →  @Observable stores  →  ContainerCLI 
 - `ContainerGUI/CLI` —— 带超时与看门狗的进程执行、带 shell 风格分词器的 argv 构造器、流式行读取器
 - `ContainerGUI/Models` —— 映射到真实 CLI JSON 输出的 `Codable` 模型
 - `ContainerGUI/Features/*` —— 每个分区一个 store 加对应视图
+- `ContainerGUI/Features/VirtualMachines` 与 `ContainerGUI/Common/RFB`：QEMU 引擎（QMP 与 guest agent 客户端、启动器、安装器）以及原生 RFB/VNC 客户端
+- `ContainerDesktopMCP`：stdio MCP 服务器，与应用共用 CLI 和引擎源码编译
 - 应用运行在 App Sandbox 之外（因为它需要启动外部 CLI），所以采用直接分发（DMG），而不是 Mac App Store
 
 ## 支持
