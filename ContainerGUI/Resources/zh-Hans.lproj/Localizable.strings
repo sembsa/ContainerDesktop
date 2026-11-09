@@ -1130,3 +1130,19 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "允许 AI 代理控制此虚拟机";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "开启后，MCP 服务器的 vm_* 工具可以查看此虚拟机的屏幕、点击、输入、在其中运行命令、复制文件并恢复快照。未开启时这些工具会拒绝执行。";
+
+/* Linux VMs */
+"Pulpit (GNOME)" = "桌面（GNOME）";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS，来自官方云镜像（600 MB，只下载一次）。不带桌面约半分钟即可就绪，带桌面约 3 分钟。";
+"Konto w systemie Linux" = "Linux 账户";
+"Język systemu" = "系统语言";
+"Klawiatura" = "键盘";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "用户名：小写字母、数字、- 和 _，最多 32 个字符。";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "正在下载 Ubuntu 镜像（600 MB，仅一次）…";
+"Przygotowanie dysku…" = "正在准备磁盘…";
+"Uruchamianie maszyny…" = "正在启动虚拟机…";
+"Konfiguracja Ubuntu trwa" = "正在配置 Ubuntu";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "安装桌面约需 3 分钟。完成后虚拟机会自动关机——之后点击“启动”即可。你可以关闭此窗口，甚至退出应用。";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "约需半分钟。完成后虚拟机会自动关机——之后点击“启动”即可。你可以关闭此窗口，甚至退出应用。";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "无法下载 Ubuntu 镜像：%@";
+"suma kontrolna się nie zgadza" = "校验和不匹配";

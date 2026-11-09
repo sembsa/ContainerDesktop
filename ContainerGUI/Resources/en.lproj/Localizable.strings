@@ -1130,3 +1130,19 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "Allow the AI agent to control this machine";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "The MCP server's vm_* tools can then see this machine's screen, click, type, run commands in it, copy files and restore snapshots. Without this permission they refuse.";
+
+/* Linux VMs */
+"Pulpit (GNOME)" = "Desktop (GNOME)";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS from the official cloud image (600 MB, downloaded once). Without a desktop the machine is ready in half a minute, with one in about 3 minutes.";
+"Konto w systemie Linux" = "Linux account";
+"Język systemu" = "System language";
+"Klawiatura" = "Keyboard";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "Username: lowercase letters, digits, - and _, up to 32 characters.";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "Downloading the Ubuntu image (600 MB, once)…";
+"Przygotowanie dysku…" = "Preparing the disk…";
+"Uruchamianie maszyny…" = "Starting the machine…";
+"Konfiguracja Ubuntu trwa" = "Ubuntu Is Being Set Up";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Installing the desktop takes about 3 minutes. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about half a minute. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "Couldn't download the Ubuntu image: %@";
+"suma kontrolna się nie zgadza" = "the checksum does not match";

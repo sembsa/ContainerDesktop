@@ -19,12 +19,17 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         /// QEMU boot order. ArmVirt UEFI only connects devices that have one, so
         /// an installer ISO without it is never booted.
         var bootIndex: Int?
+        /// A virtio-blk disk instead of USB. USB storage enumerates too late
+        /// for early-boot probes: cloud-init's ds-identify had already looked
+        /// for its seed, found nothing and disabled itself (observed).
+        var virtio = false
 
-        init(path: String, readOnly: Bool = true, cdrom: Bool = true, bootIndex: Int? = nil) {
+        init(path: String, readOnly: Bool = true, cdrom: Bool = true, bootIndex: Int? = nil, virtio: Bool = false) {
             self.path = path
             self.readOnly = readOnly
             self.cdrom = cdrom
             self.bootIndex = bootIndex
+            self.virtio = virtio
         }
 
         init(from decoder: Decoder) throws {
@@ -33,6 +38,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
             readOnly = try c.decodeIfPresent(Bool.self, forKey: .readOnly) ?? true
             cdrom = try c.decodeIfPresent(Bool.self, forKey: .cdrom) ?? true
             bootIndex = try c.decodeIfPresent(Int.self, forKey: .bootIndex)
+            virtio = try c.decodeIfPresent(Bool.self, forKey: .virtio) ?? false
         }
     }
 

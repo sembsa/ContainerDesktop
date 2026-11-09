@@ -56,6 +56,16 @@ final class VirtualMachineEngineTests: XCTestCase {
         XCTAssertTrue(paths.qmp.hasPrefix("/"))
     }
 
+    func testLinuxGetsAUTCClockAndItsSeedOverVirtio() {
+        var vm = VirtualMachine(name: "Ubuntu", os: "linux",
+                                extraDrives: [.init(path: "seed.iso", cdrom: false, virtio: true)])
+        vm.id = "ubuntu"
+        let joined = QEMULauncher.arguments(for: vm, paths: QEMULauncher.paths(for: spikeDir), vncDisplay: 7)
+            .joined(separator: " ")
+        XCTAssertTrue(joined.contains("-rtc base=utc"))
+        XCTAssertTrue(joined.contains("file=\(spikeDir.path)/seed.iso,if=none,id=x0,readonly=on -device virtio-blk-pci,drive=x0 "))
+    }
+
     func testCommasInPathsAreDoubled() {
         var vm = VirtualMachine(name: "x", disk: "a,b.qcow2")
         vm.id = "x"

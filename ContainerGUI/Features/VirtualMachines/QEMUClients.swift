@@ -281,6 +281,25 @@ actor QGAClient {
         return ExecResult(exitCode: result.exitCode, stdout: result.stdout + stdout, stderr: result.stderr + stderr)
     }
 
+    /// Runs a shell script on Linux, again without quoting anything: `mktemp`
+    /// makes a file only root can touch, the script goes into it, `/bin/sh` runs it.
+    func runShell(_ script: String, timeout: Duration = .seconds(300)) async throws -> ExecResult {
+        let made = try await exec("/bin/mktemp", ["/tmp/cd-XXXXXXXX.sh"], timeout: .seconds(30))
+        let path = made.output.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard made.exitCode == 0, path.hasPrefix("/tmp/cd-") else {
+            throw QEMUSocket.Failure.protocolError("mktemp: \(made.errorOutput)")
+        }
+        do {
+            try await writeFile(path, Data(script.utf8))
+            let result = try await exec("/bin/sh", [path], timeout: timeout)
+            _ = try? await exec("/bin/rm", ["-f", path], timeout: .seconds(30))
+            return result
+        } catch {
+            _ = try? await exec("/bin/rm", ["-f", path], timeout: .seconds(30))
+            throw error
+        }
+    }
+
     func readFile(_ path: String) async throws -> Data {
         let handle = try await open(path, mode: "rb")
         var contents = Data()

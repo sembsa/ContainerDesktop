@@ -58,6 +58,15 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 - `CLIError` text is Polish without a strings table, so `MCPServer.describe` renders errors in English for agents.
 - Settings → "Agenci AI (MCP)" runs `claude mcp add --scope user …`; never run that from tests — it edits the user's real Claude Code config.
 
+### Linux VMs (QEMU)
+
+`Features/VirtualMachines/Provisioning/Linux*` builds an Ubuntu 24.04 machine from the pinned ARM64 cloud image (SHA-256 checked, cached in `vms/../cache`, APFS-cloned per machine — no backing file on the cache) plus a cloud-init `cidata` seed. cloud-init ends with `power_state: poweroff`, so "done" is QEMU exiting, exactly as for Windows (`finishIfNeeded`).
+
+- **The seed must be virtio-blk, not USB** (`ExtraDrive.virtio`). USB storage enumerates after cloud-init's ds-identify has looked, so it disables itself and the machine boots unconfigured, with no network.
+- Linux keeps the RTC in UTC: the launcher passes `base=localtime` only for Windows.
+- With the desktop, NetworkManager takes the NIC, and networkd's wait-online held boot (and gdm) for 2 minutes until the seed disabled it.
+- GNOME (Wayland) on virtio-gpu follows a VNC `SetDesktopSize` (type 251, with `-308` advertised): QEMU answers status 4 "forwarded", then the guest re-modes to the exact size. `RFBClient` does not send it yet.
+
 ### Kubernetes and Helm
 
 `Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.
