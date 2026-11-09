@@ -1004,3 +1004,13 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop is free and will stay that way. If it saves you time, you can support its development.";
 "Sponsoruj na GitHubie" = "Sponsor on GitHub";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "New: you can support the app's development via Ko-fi or GitHub Sponsors from the Help menu and Settings. The app is free and will stay that way — no reminders, no pop-ups.";
+
+/* MCP server */
+"Agenci AI (MCP)" = "AI agents (MCP)";
+"Ścieżka pomocnika" = "Helper path";
+"Dodaj do Claude Code" = "Add to Claude Code";
+"Kopiuj konfigurację" = "Copy configuration";
+"Skopiowano konfigurację do schowka." = "Configuration copied to the clipboard.";
+"Dodano do Claude Code." = "Added to Claude Code.";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "The claude command was not found. Install Claude Code or use “Copy configuration”.";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "AI agents (Claude Code, Codex, Cursor…) can manage containers, images, volumes, networks and machines through the MCP server built into the app. It works without the app window open.";

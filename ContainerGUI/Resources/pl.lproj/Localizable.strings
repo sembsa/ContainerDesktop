@@ -1004,3 +1004,13 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój.";
 "Sponsoruj na GitHubie" = "Sponsoruj na GitHubie";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien.";
+
+/* MCP server */
+"Agenci AI (MCP)" = "Agenci AI (MCP)";
+"Ścieżka pomocnika" = "Ścieżka pomocnika";
+"Dodaj do Claude Code" = "Dodaj do Claude Code";
+"Kopiuj konfigurację" = "Kopiuj konfigurację";
+"Skopiowano konfigurację do schowka." = "Skopiowano konfigurację do schowka.";
+"Dodano do Claude Code." = "Dodano do Claude Code.";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”.";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu.";
