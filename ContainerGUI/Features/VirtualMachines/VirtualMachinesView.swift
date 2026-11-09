@@ -118,7 +118,7 @@ struct VirtualMachinesView: View {
                     .onTapGesture { selection = vm.id }
                 }
             }
-            .padding(20)
+            .padding(Padding.card)
         }
         .contentShape(Rectangle())
         .onTapGesture { selection = nil }
@@ -280,7 +280,7 @@ struct VirtualMachineCard: View {
                     ProgressView().controlSize(.small)
                     Text("Instalacja trwa…").font(.callout.weight(.medium))
                 }
-                .padding(.horizontal, 14).padding(.vertical, 10)
+                .padding(Padding.card)
                 .glassEffect(in: RoundedRectangle(cornerRadius: Radius.card))
             }
         }
@@ -288,7 +288,6 @@ struct VirtualMachineCard: View {
         .aspectRatio(16 / 10, contentMode: .fit)
         .background(.black.opacity(0.85))
         .clipShape(UnevenRoundedRectangle(topLeadingRadius: Radius.panel, topTrailingRadius: Radius.panel))
-        .onTapGesture(count: 2) { if vm.isRunning { actions.preview() } }
     }
 
     private var buttons: some View {
