@@ -2,8 +2,9 @@ import Foundation
 
 /// Builds the small "CDSETUP" CD that turns a stock Windows 11 ARM64 ISO into a
 /// hands-off install: `autounattend.xml` (Setup finds it on any removable drive),
-/// `cd-setup.cmd` (run once at first logon) and our own qemu-ga package with
-/// `install.cmd`. The Windows ISO itself is never modified.
+/// `cd-setup.cmd` (run once at first logon), our own qemu-ga package with
+/// `install.cmd`, and the display helper (`WindowsDisplayHelper`). The Windows
+/// ISO itself is never modified.
 ///
 /// What the guest ends up with: a local administrator who logs on automatically,
 /// the virtio NetKVM / vioserial / viogpudo drivers, the QEMU-GA service with VSS,
@@ -148,6 +149,8 @@ enum WindowsSetupMedia {
         for %%i in (NetKVM\w11\ARM64\netkvm.inf vioserial\w11\ARM64\vioser.inf viogpudo\w11\ARM64\viogpudo.inf) do pnputil /add-driver %V%\%%i /install >> %LOG% 2>&1
         call "%~dp0install.cmd" >> %LOG% 2>&1
         echo qemu-ga=%errorlevel% >> %LOG%
+        powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0\#(WindowsDisplayHelper.installerFile)" >> %LOG% 2>&1
+        echo display-helper=%errorlevel% >> %LOG%
         powercfg /change monitor-timeout-ac 0
         powercfg /change standby-timeout-ac 0
         powercfg /hibernate off
@@ -213,6 +216,9 @@ enum WindowsSetupMedia {
         try setupScript().write(to: stage.appending(path: "cd-setup.cmd"), atomically: true, encoding: .utf8)
         let install = try String(contentsOf: guestTools.appending(path: "install.cmd"), encoding: .utf8)
         try crlf(install).write(to: stage.appending(path: "install.cmd"), atomically: true, encoding: .utf8)
+        for name in [WindowsDisplayHelper.helperFile, WindowsDisplayHelper.installerFile] {
+            try fm.copyItem(at: guestTools.appending(path: name), to: stage.appending(path: name))
+        }
 
         guard let zip = try fm.contentsOfDirectory(at: guestTools, includingPropertiesForKeys: nil)
             .first(where: { $0.lastPathComponent.hasPrefix("qemu-ga-") && $0.pathExtension == "zip" }) else {

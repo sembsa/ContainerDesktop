@@ -70,6 +70,30 @@ final class RFBTests: XCTestCase {
         XCTAssertEqual(RFB.pointerEvent(buttons: 1, x: 298, y: 447), [5, 1, 0x01, 0x2a, 0x01, 0xbf])
     }
 
+    /// RFC 6143 §7.5.7 + the community ExtendedDesktopSize spec: type 251,
+    /// padding, size, one screen (id 0 at 0,0 covering everything, flags 0).
+    func testSetDesktopSizeMessage() {
+        XCTAssertEqual(RFB.setDesktopSize(width: 1600, height: 1000), [
+            251, 0, 0x06, 0x40, 0x03, 0xe8, 1, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0x06, 0x40, 0x03, 0xe8, 0, 0, 0, 0,
+        ])
+    }
+
+    func testExtendedDesktopSizeIsAnnouncedAndItsScreenListConsumed() {
+        // -308 big-endian, or QEMU never accepts SetDesktopSize.
+        XCTAssertTrue(hex(RFB.setEncodings).contains("fffffecc"))
+        XCTAssertEqual(RFB.extendedDesktopSizeTrailer([2, 0, 0, 0]), 32)
+        XCTAssertEqual(RFB.extendedDesktopSizeTrailer([0, 0, 0, 0]), 0)
+    }
+
+    func testDesktopSizeFittingAWindow() {
+        XCTAssertTrue(RFB.desktopSize(fitting: CGSize(width: 1601.7, height: 1003)) == (1600, 1000))
+        // Width to 16: viogpudo turns a 1720-wide mode into a 1728-wide framebuffer.
+        XCTAssertTrue(RFB.desktopSize(fitting: CGSize(width: 1723, height: 970)) == (1712, 968))
+        XCTAssertTrue(RFB.desktopSize(fitting: CGSize(width: 640, height: 400)) == (800, 600))
+        XCTAssertTrue(RFB.desktopSize(fitting: CGSize(width: 5120, height: 2880)) == (3840, 2400))
+    }
+
     func testVirtualMachineDirectoryScanSkipsFoldersWithoutDescription() throws {
         let root = FileManager.default.temporaryDirectory.appending(path: UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }

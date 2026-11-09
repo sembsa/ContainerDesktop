@@ -47,6 +47,32 @@ final class WindowsSetupMediaTests: XCTestCase {
         XCTAssertTrue(s.contains(#"viogpudo\w11\ARM64\viogpudo.inf"#))
     }
 
+    func testSetupScriptInstallsTheDisplayHelperFromTheCD() {
+        XCTAssertTrue(WindowsSetupMedia.setupScript().contains(
+            #"-File "%~dp0display-helper-install.ps1""#))
+    }
+
+    /// The helper reads what the host writes, and the installer copies the
+    /// file the host checks for — three files that have to agree.
+    func testDisplayHelperAgreesWithTheHost() throws {
+        let tools = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+            .appending(path: "ContainerGUI/Resources/GuestTools")
+        let helper = try String(contentsOf: tools.appending(path: WindowsDisplayHelper.helperFile), encoding: .utf8)
+        let installer = try String(contentsOf: tools.appending(path: WindowsDisplayHelper.installerFile), encoding: .utf8)
+        XCTAssertTrue(WindowsDisplayHelper.requestPath.hasSuffix(#"\display-request.txt"#))
+        XCTAssertTrue(helper.contains(#"Path.Combine(dir, "display-request.txt")"#))
+        XCTAssertTrue(helper.contains(#"Regex.Match(text, @"^(\d+)x(\d+)")"#))
+        // Add-Type -OutputType WindowsApplication needs an entry point.
+        XCTAssertTrue(helper.contains("public static void Main()"))
+        XCTAssertEqual(WindowsDisplayHelper.requestText(width: 1600, height: 1000, id: "a1"), "1600x1000 a1")
+        XCTAssertTrue(installer.contains("$dst = '\(WindowsDisplayHelper.guestDirectory)'"))
+        XCTAssertTrue(installer.contains("'\(WindowsDisplayHelper.helperFile)'"))
+        // The installer prints this last; install(on:) treats its absence as failure.
+        XCTAssertTrue(installer.hasSuffix("\"installed\"\n"))
+        XCTAssertEqual(WindowsDisplayHelper.installCommand,
+                       #"powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File C:\Windows\Temp\display-helper-install.ps1"#)
+    }
+
     /// The real resources, through ditto and hdiutil.
     func testBuildISOFromTheRepoResources() async throws {
         let tools = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()

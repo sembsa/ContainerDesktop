@@ -7,7 +7,8 @@ import CoreGraphics
 /// with canned bytes — `RFBClient` does the talking.
 ///
 /// Only what a localhost viewer needs: Raw and CopyRect pixels plus the
-/// DesktopSize pseudo-encoding (Windows changes resolution mid-session). No
+/// DesktopSize pseudo-encodings (Windows changes resolution mid-session, and
+/// the viewer can ask for a new one with `setDesktopSize`). No
 /// compression, because the server is on the same machine.
 enum RFB {
 
@@ -17,6 +18,9 @@ enum RFB {
         case raw = 0
         case copyRect = 1
         case desktopSize = -223
+        /// Like `desktopSize`, plus a reason and status, and the server accepts
+        /// `setDesktopSize` from a client that announces it.
+        case extendedDesktopSize = -308
     }
 
     /// VNC authentication: DES-encrypt the 16-byte challenge with the password as
@@ -47,7 +51,7 @@ enum RFB {
         [0, 0, 0, 0] + [32, 24, 0, 1] + be16(255) + be16(255) + be16(255) + [16, 8, 0] + [0, 0, 0]
 
     static let setEncodings: [UInt8] = {
-        let encodings: [Encoding] = [.copyRect, .raw, .desktopSize]
+        let encodings: [Encoding] = [.copyRect, .raw, .extendedDesktopSize, .desktopSize]
         return [2, 0] + be16(encodings.count) + encodings.flatMap { be32(UInt32(bitPattern: $0.rawValue)) }
     }()
 
@@ -63,6 +67,25 @@ enum RFB {
     static func pointerEvent(buttons: UInt8, x: Int, y: Int) -> [UInt8] {
         [5, buttons] + be16(max(0, x)) + be16(max(0, y))
     }
+
+    /// SetDesktopSize (type 251) with a single screen covering the whole area —
+    /// QEMU has one display per VNC server, id 0.
+    static func setDesktopSize(width: Int, height: Int) -> [UInt8] {
+        [251, 0] + be16(width) + be16(height) + [1, 0] + be32(0) + be16(0) + be16(0) + be16(width) + be16(height) + be32(0)
+    }
+
+    /// The guest screen size for a viewer of `size` points: rounded down so the
+    /// image fits, the width to 16 (viogpudo pads 1720 to a 1728-wide
+    /// framebuffer, a black strip at the edge) and the height to 8, then kept
+    /// to sizes a guest can be expected to take.
+    static func desktopSize(fitting size: CGSize) -> (width: Int, height: Int) {
+        let w = Int(size.width) / 16 * 16, h = Int(size.height) / 8 * 8
+        return (min(max(w, 800), 3840), min(max(h, 600), 2400))
+    }
+
+    /// Bytes that follow an ExtendedDesktopSize rectangle, given its first
+    /// four: a screen count, three bytes of padding, then 16 bytes per screen.
+    static func extendedDesktopSizeTrailer(_ head: [UInt8]) -> Int { Int(head[0]) * 16 }
 
     static func be16(_ v: Int) -> [UInt8] { [UInt8(v >> 8 & 0xff), UInt8(v & 0xff)] }
     static func be32(_ v: UInt32) -> [UInt8] {

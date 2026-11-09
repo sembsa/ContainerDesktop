@@ -45,6 +45,10 @@ final class VMPreviewSession {
         view.window?.makeFirstResponder(view)
     }
 
+    func setDesktopSize(width: Int, height: Int) {
+        client?.setDesktopSize(width: width, height: height)
+    }
+
     func unavailable(_ reason: String) {
         disconnect()
         status = .disconnected(reason)
@@ -71,10 +75,23 @@ struct VMPreviewWindow: View {
     @State private var notice: String?
     @State private var failure: String?
 
+    /// Live resize: per machine, off by default where the agent drives it,
+    /// because the agent's coordinates assume the boot resolution.
+    @State private var fitsWindow = false
+    @State private var viewSize: CGSize = .zero
+    @State private var resize: Task<Void, Never>?
+    /// Windows only: nil until the display helper has been checked this session.
+    @State private var helperReady: Bool?
+
     private var connected: Bool { session.status == .connected }
 
     var body: some View {
         RFBDisplay(view: session.view)
+            .onGeometryChange(for: CGSize.self) { $0.size } action: { size in
+                viewSize = size
+                scheduleFit()
+            }
+            .onChange(of: session.status) { if connected { scheduleFit() } }
             .overlay { overlay }
             .overlay(alignment: .top) { noticeBanner }
             .frame(minWidth: 640, minHeight: 400)
@@ -121,6 +138,16 @@ struct VMPreviewWindow: View {
                 : String(localized: "Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie"))
             .disabled(!connected)
 
+            Button { setFitsWindow(!fitsWindow) } label: {
+                Label("Dopasuj rozdzielczość do okna", systemImage: fitsWindow
+                    ? "arrow.up.left.and.arrow.down.right.rectangle.fill"
+                    : "arrow.up.left.and.arrow.down.right.rectangle")
+            }
+            .iconHelp(fitsWindow
+                ? String(localized: "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800")
+                : String(localized: "Dopasuj rozdzielczość maszyny do rozmiaru okna"))
+            .disabled(!connected)
+
             Button { copyScreenshot() } label: { Label("Kopiuj zrzut ekranu", systemImage: "camera.viewfinder") }
                 .iconHelp(String(localized: "Kopiuj zrzut ekranu maszyny do schowka"))
                 .disabled(!connected)
@@ -139,6 +166,56 @@ struct VMPreviewWindow: View {
             } label: { Label("Zasilanie", systemImage: "power") }
                 .iconHelp(String(localized: "Zasilanie i migawki"))
                 .disabled(!connected || busy != nil)
+        }
+    }
+
+    // MARK: - Live resize
+
+    private var fitsWindowKey: String { "vmPreview.fitsWindow.\(vmID)" }
+
+    private func setFitsWindow(_ on: Bool) {
+        fitsWindow = on
+        UserDefaults.standard.set(on, forKey: fitsWindowKey)
+        if on {
+            scheduleFit()
+        } else {
+            resize?.cancel()
+            let size = QEMULauncher.virtioGPUSize
+            Task { await resizeGuest(width: size.width, height: size.height) }
+        }
+        session.view.window?.makeFirstResponder(session.view)
+    }
+
+    /// Waits for the window to settle: every switch blanks the guest's screen for a moment.
+    private func scheduleFit() {
+        guard fitsWindow, connected, viewSize != .zero else { return }
+        resize?.cancel()
+        resize = Task {
+            try? await Task.sleep(for: .milliseconds(600))
+            guard !Task.isCancelled else { return }
+            let size = RFB.desktopSize(fitting: viewSize)
+            await resizeGuest(width: size.width, height: size.height)
+        }
+    }
+
+    /// QEMU passes `SetDesktopSize` to the guest; Linux follows it on its own,
+    /// Windows needs the display helper told as well (`WindowsDisplayHelper`).
+    private func resizeGuest(width: Int, height: Int) async {
+        guard let vm, connected, CGSize(width: width, height: height) != session.screenSize else { return }
+        session.setDesktopSize(width: width, height: height)
+        // ramfb (Windows Setup) has a fixed size and no agent yet.
+        guard vm.isWindows, vm.display == .virtioGPU, helperReady != false else { return }
+        do {
+            if helperReady == nil {
+                try await WindowsDisplayHelper.ensureInstalled(on: vm.directory)
+                helperReady = true
+            }
+            try await WindowsDisplayHelper.request(width: width, height: height, on: vm.directory)
+        } catch {
+            // Usually no guest agent; one notice, then the window stops asking.
+            helperReady = false
+            let reason = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
+            show(String(format: String(localized: "Nie udało się dopasować rozdzielczości: %@"), reason))
         }
     }
 
@@ -253,6 +330,7 @@ struct VMPreviewWindow: View {
             session.unavailable(String(localized: "Maszyna nie jest uruchomiona."))
             return
         }
+        fitsWindow = UserDefaults.standard.object(forKey: fitsWindowKey) as? Bool ?? !vm.agentControl
         session.connect(to: vm)
     }
 }

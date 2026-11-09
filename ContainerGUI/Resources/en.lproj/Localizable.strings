@@ -1130,3 +1130,9 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "Allow the AI agent to control this machine";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "The MCP server's vm_* tools can then see this machine's screen, click, type, run commands in it, copy files and restore snapshots. Without this permission they refuse.";
+
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "Fit Resolution to Window";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Make the machine's resolution follow the window size";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Stop fitting — return to the fixed 1280×800 resolution";
+"Nie udało się dopasować rozdzielczości: %@" = "Could not fit the resolution: %@";

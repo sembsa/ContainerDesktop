@@ -82,6 +82,9 @@ enum QEMULauncher {
         value.replacingOccurrences(of: ",", with: ",,")
     }
 
+    /// The guest's boot resolution, and the one the vm_* agent tools expect.
+    static let virtioGPUSize = (width: 1280, height: 800)
+
     /// The full argument list (without the executable).
     ///
     /// Against `start.sh`: no `-daemonize` (it forks after the Hypervisor
@@ -101,7 +104,8 @@ enum QEMULauncher {
             "-rtc", "base=localtime",
             "-drive", "if=pflash,format=raw,readonly=on,file=\(escape(firmwareCode))",
             "-drive", "if=pflash,format=raw,file=\(file("vars.fd"))",
-            "-device", vm.display == .virtioGPU ? "virtio-gpu-pci,xres=1280,yres=800" : "ramfb",
+            "-device", vm.display == .virtioGPU
+                ? "virtio-gpu-pci,xres=\(virtioGPUSize.width),yres=\(virtioGPUSize.height)" : "ramfb",
             "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
             // During Windows Setup the disk ignores the guest's flushes: Setup
             // flushes constantly, QEMU turns each into F_FULLFSYNC on macOS, and
