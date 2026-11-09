@@ -1127,3 +1127,6 @@
 "Uruchamianie instalatora Windows…" = "Starting Windows Setup…";
 "Instalacja Windows trwa" = "Windows Is Installing";
 "Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about 20 minutes and needs no clicks. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "Allow the AI agent to control this machine";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "The MCP server's vm_* tools can then see this machine's screen, click, type, run commands in it, copy files and restore snapshots. Without this permission they refuse.";

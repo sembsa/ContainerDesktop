@@ -338,6 +338,16 @@ struct VirtualMachineDetailView: View {
 
     private var overviewCard: some View {
         card(title: "Przegląd", symbol: "info.circle") {
+            HStack(spacing: 4) {
+                Toggle("Pozwól agentowi AI sterować tą maszyną", isOn: Binding(
+                    get: { vm.agentControl },
+                    set: { on in Task { await perform { try setAgentControl(on) } } }
+                ))
+                .toggleStyle(.switch)
+                .controlSize(.small)
+                .disabled(isBusy)
+                InfoTip(text: String(localized: "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają."))
+            }
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
                 infoRow(String(localized: "System"), vm.isWindows ? "Windows" : "Linux")
                 infoRow(String(localized: "Procesory"), "\(vm.cpus)")
@@ -367,6 +377,13 @@ struct VirtualMachineDetailView: View {
                 .controlSize(.small)
                 .disabled(vm.isRunning || isBusy)
         }
+    }
+
+    /// Re-read first: the launcher rewrites vm.json on every start (VNC port), so `vm` may be stale.
+    private func setAgentControl(_ on: Bool) throws {
+        var current = VirtualMachineStore.load(vm.directory) ?? vm
+        current.agentControl = on
+        try current.save(to: vm.directory)
     }
 
     private func infoRow(_ label: String, _ value: String) -> some View {

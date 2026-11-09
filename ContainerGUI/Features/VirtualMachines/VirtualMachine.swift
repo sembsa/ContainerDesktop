@@ -59,6 +59,8 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     var display: Display = .ramfb
     /// Set while Windows Setup runs; finishing the install clears it.
     var installing = false
+    /// Opt-in for the `vm_*` MCP tools: off unless the user switches it on.
+    var agentControl = false
     var isRunning = false
 
     enum Display: String, Codable, Sendable {
@@ -67,7 +69,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, display, installing
+        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, display, installing, agentControl
     }
 
     init(name: String, os: String = "windows", cpus: Int = 4, memoryMiB: Int = 8192,
@@ -97,6 +99,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         backingMachine = try c.decodeIfPresent(String.self, forKey: .backingMachine)
         display = try c.decodeIfPresent(Display.self, forKey: .display) ?? .ramfb
         installing = try c.decodeIfPresent(Bool.self, forKey: .installing) ?? false
+        agentControl = try c.decodeIfPresent(Bool.self, forKey: .agentControl) ?? false
     }
 
     var isWindows: Bool { os.lowercased() == "windows" }
