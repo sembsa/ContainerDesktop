@@ -1130,3 +1130,20 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "Allow the AI agent to control this machine";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "The MCP server's vm_* tools can then see this machine's screen, click, type, run commands in it, copy files and restore snapshots. Without this permission they refuse.";
+
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "Fit to the Mac's Screen";
+"Rozdzielczość" = "Resolution";
+"Zapisz i uruchom ponownie" = "Save and Restart";
+"Ustawienia maszyny" = "Machine Settings";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "Delete Machine";
+"Instalacja trwa…" = "Installing…";
+"%lld CPU" = "%lld CPU";
+"Więcej" = "More";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "“%@” will be gone for good — its disk and all its snapshots with it. This frees %@.";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "The clone “%@” is built on this machine's disk. Delete the clone first.";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "The machine is running — processors, memory and resolution change once it restarts.";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "Processors, memory and resolution change the next time the machine starts.";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "The resolution can be changed once the system has finished installing.";

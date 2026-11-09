@@ -55,13 +55,26 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     /// That machine must not run again, or the clone's disk stops making sense.
     var backingMachine: String?
     /// `ramfb` works with no driver at all; `virtio-gpu` needs viogpudo in the
-    /// guest and gives 1280×800. Windows installs start on ramfb and switch.
+    /// guest and takes `resolution`. Windows installs start on ramfb and switch.
     var display: Display = .ramfb
     /// Set while Windows Setup runs; finishing the install clears it.
     var installing = false
     /// Opt-in for the `vm_*` MCP tools: off unless the user switches it on.
     var agentControl = false
+    /// The virtio-gpu screen: "1920x1200", or "fit" for the Mac's main screen
+    /// as it is at start time. Ignored on ramfb.
+    var resolution = VirtualMachine.defaultResolution
     var isRunning = false
+
+    static let defaultResolution = "1280x800"
+    static let resolutions = ["1280x800", "1600x1000", "1920x1200", "2560x1600", "fit"]
+
+    /// "1920×1200", or the localized "fit to the Mac's screen".
+    static func resolutionTitle(_ resolution: String) -> String {
+        resolution == "fit"
+            ? String(localized: "Dopasuj do ekranu Maca")
+            : resolution.replacingOccurrences(of: "x", with: "×")
+    }
 
     enum Display: String, Codable, Sendable {
         case ramfb
@@ -69,7 +82,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     }
 
     private enum CodingKeys: String, CodingKey {
-        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, display, installing, agentControl
+        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, display, installing, agentControl, resolution
     }
 
     init(name: String, os: String = "windows", cpus: Int = 4, memoryMiB: Int = 8192,
@@ -100,6 +113,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         display = try c.decodeIfPresent(Display.self, forKey: .display) ?? .ramfb
         installing = try c.decodeIfPresent(Bool.self, forKey: .installing) ?? false
         agentControl = try c.decodeIfPresent(Bool.self, forKey: .agentControl) ?? false
+        resolution = try c.decodeIfPresent(String.self, forKey: .resolution) ?? Self.defaultResolution
     }
 
     var isWindows: Bool { os.lowercased() == "windows" }
@@ -132,6 +146,14 @@ final class VirtualMachineStore {
 
     func refresh() {
         items = Self.scan(Self.directory)
+    }
+
+    /// Changes vm.json as it is on disk: the launcher rewrites the VNC port and
+    /// password on every start, so the copy in `items` may be stale.
+    nonisolated static func update(_ dir: URL, _ change: (inout VirtualMachine) -> Void) throws {
+        guard var vm = load(dir) else { throw CocoaError(.fileReadNoSuchFile) }
+        change(&vm)
+        try vm.save(to: dir)
     }
 
     /// Runs an engine call with the machine marked busy, then rescans.
