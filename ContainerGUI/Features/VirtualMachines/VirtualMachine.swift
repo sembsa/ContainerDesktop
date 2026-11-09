@@ -9,7 +9,7 @@ import Observation
 /// Every field but `name` has a default, so a `vm.json` from before a field
 /// existed still reads.
 struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
-    /// An additional drive attached over USB — an installer ISO or a driver disc.
+    /// An additional drive — an installer ISO, a driver disc, a cloud-init seed.
     struct ExtraDrive: Hashable, Codable, Sendable {
         /// Absolute, or relative to the machine's directory.
         var path: String
@@ -63,7 +63,8 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     /// `ramfb` works with no driver at all; `virtio-gpu` needs viogpudo in the
     /// guest and gives 1280×800. Windows installs start on ramfb and switch.
     var display: Display = .ramfb
-    /// Set while Windows Setup runs; finishing the install clears it.
+    /// Set while Windows Setup or a Linux first boot (cloud-init) runs;
+    /// finishing the install clears it.
     var installing = false
     /// Opt-in for the `vm_*` MCP tools: off unless the user switches it on.
     var agentControl = false
