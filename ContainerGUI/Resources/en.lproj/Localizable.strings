@@ -1176,3 +1176,8 @@
 
 /* VM empty state */
 "Utwórz maszynę Ubuntu…" = "Create Ubuntu Machine…";
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "Fit Resolution to Window";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Make the machine's resolution follow the window size";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Stop fitting — return to the fixed 1280×800 resolution";
+"Nie udało się dopasować rozdzielczości: %@" = "Could not fit the resolution: %@";

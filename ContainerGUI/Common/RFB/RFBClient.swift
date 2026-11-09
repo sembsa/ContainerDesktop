@@ -74,6 +74,12 @@ actor RFBClient {
         send(RFB.pointerEvent(buttons: buttons, x: x, y: y))
     }
 
+    /// Asks the server for a new screen size. The guest decides whether to follow;
+    /// if it does, the change comes back as an ordinary resize.
+    nonisolated func setDesktopSize(width: Int, height: Int) {
+        send(RFB.setDesktopSize(width: width, height: height))
+    }
+
     nonisolated private func send(_ bytes: [UInt8]) {
         connection.send(content: Data(bytes), completion: .idempotent)
     }
@@ -160,6 +166,14 @@ actor RFBClient {
             case .desktopSize:
                 framebuffer.resize(width: w, height: h)
                 continuation.yield(.connected(width: w, height: h, name: serverName))
+            case .extendedDesktopSize:
+                // x is the reason, y the status of our request; w×h is the size
+                // either way, so a refused request changes nothing.
+                _ = try await read(RFB.extendedDesktopSizeTrailer(try await read(4)))
+                if w != framebuffer.width || h != framebuffer.height {
+                    framebuffer.resize(width: w, height: h)
+                    continuation.yield(.connected(width: w, height: h, name: serverName))
+                }
             case nil:
                 throw Failure.protocolError(String(localized: "Serwer VNC użył nieobsługiwanego kodowania."))
             }

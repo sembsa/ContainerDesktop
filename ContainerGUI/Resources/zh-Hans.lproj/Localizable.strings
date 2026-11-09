@@ -1176,3 +1176,8 @@
 
 /* VM empty state */
 "Utwórz maszynę Ubuntu…" = "创建 Ubuntu 虚拟机…";
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "分辨率适应窗口";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "让虚拟机的分辨率跟随窗口大小";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "停止适应 — 恢复固定的 1280×800 分辨率";
+"Nie udało się dopasować rozdzielczości: %@" = "无法调整分辨率：%@";
