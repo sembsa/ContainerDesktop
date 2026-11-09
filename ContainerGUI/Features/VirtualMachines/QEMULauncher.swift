@@ -103,7 +103,11 @@ enum QEMULauncher {
             "-drive", "if=pflash,format=raw,file=\(file("vars.fd"))",
             "-device", vm.display == .virtioGPU ? "virtio-gpu-pci,xres=1280,yres=800" : "ramfb",
             "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
-            "-drive", "file=\(file(vm.disk)),format=qcow2,if=none,id=d0,node-name=\(diskNode)",
+            // During Windows Setup the disk ignores the guest's flushes: Setup
+            // flushes constantly, QEMU turns each into F_FULLFSYNC on macOS, and
+            // a crash mid-install means installing again anyway.
+            "-drive", "file=\(file(vm.disk)),format=qcow2,if=none,id=d0,node-name=\(diskNode)"
+                + (vm.installing ? ",cache=unsafe" : ""),
             "-device", "nvme,drive=d0,serial=cd0,bootindex=1",
         ]
         for (index, drive) in vm.extraDrives.enumerated() {

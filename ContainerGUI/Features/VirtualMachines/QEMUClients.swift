@@ -264,13 +264,21 @@ actor QGAClient {
     /// script is written to a file and `cmd.exe /c <file>` runs it. Quoting
     /// through `cmd /c "…"` is not reliable — glib re-quotes the arguments and
     /// `copy` reads `+` as concatenation.
+    ///
+    /// Output goes through files that cmd itself opens, not the agent's pipes:
+    /// with our ARM64 agent a program cmd starts (whoami, PowerShell, tasklist)
+    /// writes nothing into the captured pipe — only cmd's built-ins (echo, ver,
+    /// dir) did, which is why it went unnoticed. A redirect made by cmd reaches
+    /// every program it runs.
     func runScript(_ script: String, timeout: Duration = .seconds(300)) async throws -> ExecResult {
-        let path = "C:\\Windows\\Temp\\cd-\(UUID().uuidString.prefix(8)).cmd"
+        let base = "C:\\Windows\\Temp\\cd-\(UUID().uuidString.prefix(8))"
         let body = script.replacingOccurrences(of: "\r\n", with: "\n").replacingOccurrences(of: "\n", with: "\r\n")
-        try await writeFile(path, Data(body.utf8))
-        let result = try await exec("cmd.exe", ["/c", path], timeout: timeout)
-        _ = try? await exec("cmd.exe", ["/c", "del", "/q", path], timeout: .seconds(30))
-        return result
+        try await writeFile(base + ".cmd", Data(body.utf8))
+        let result = try await exec("cmd.exe", ["/c", "\(base).cmd > \(base).out 2> \(base).err"], timeout: timeout)
+        let stdout = (try? await readFile(base + ".out")) ?? Data()
+        let stderr = (try? await readFile(base + ".err")) ?? Data()
+        _ = try? await exec("cmd.exe", ["/c", "del /q \(base).cmd \(base).out \(base).err"], timeout: .seconds(30))
+        return ExecResult(exitCode: result.exitCode, stdout: result.stdout + stdout, stderr: result.stderr + stderr)
     }
 
     func readFile(_ path: String) async throws -> Data {

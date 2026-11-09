@@ -48,7 +48,9 @@ final class WindowsInstallLiveTests: XCTestCase {
 
         let video = try await agent.runScript(
             "powershell -NoProfile -Command \"(Get-CimInstance Win32_VideoController | Select-Object -First 1 | ForEach-Object { '{0}x{1}' -f $_.CurrentHorizontalResolution, $_.CurrentVerticalResolution })\"")
-        let whoami = try await agent.exec("cmd.exe", ["/c", "whoami"])
+        // Through runScript: the agent captures only cmd's own output, not that
+        // of programs cmd starts — see QGAClient.runScript.
+        let whoami = try await agent.runScript("@echo off\nquery user")
         print("LIVE-INSTALL: screen \(video.output.trimmingCharacters(in: .whitespacesAndNewlines)), user \(whoami.output.trimmingCharacters(in: .whitespacesAndNewlines))")
         XCTAssertTrue(video.output.contains("1280x800"))
         XCTAssertTrue(whoami.output.lowercased().contains("tester"))
