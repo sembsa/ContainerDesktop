@@ -1019,3 +1019,12 @@
 "Maszyna nie jest uruchomiona." = "虚拟机未运行。";
 "Maszyny wirtualne" = "虚拟机";
 "Podgląd" = "预览";
+/* MCP server */
+"Agenci AI (MCP)" = "AI 智能体（MCP）";
+"Ścieżka pomocnika" = "辅助程序路径";
+"Dodaj do Claude Code" = "添加到 Claude Code";
+"Kopiuj konfigurację" = "复制配置";
+"Skopiowano konfigurację do schowka." = "配置已复制到剪贴板。";
+"Dodano do Claude Code." = "已添加到 Claude Code。";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "未找到 claude 命令。请安装 Claude Code，或使用“复制配置”。";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "AI 智能体（Claude Code、Codex、Cursor…）可以通过应用内置的 MCP 服务器管理容器、镜像、卷、网络和机器。无需打开应用窗口即可使用。";

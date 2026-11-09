@@ -1019,3 +1019,12 @@
 "Maszyna nie jest uruchomiona." = "Maszyna nie jest uruchomiona.";
 "Maszyny wirtualne" = "Maszyny wirtualne";
 "Podgląd" = "Podgląd";
+/* MCP server */
+"Agenci AI (MCP)" = "Agenci AI (MCP)";
+"Ścieżka pomocnika" = "Ścieżka pomocnika";
+"Dodaj do Claude Code" = "Dodaj do Claude Code";
+"Kopiuj konfigurację" = "Kopiuj konfigurację";
+"Skopiowano konfigurację do schowka." = "Skopiowano konfigurację do schowka.";
+"Dodano do Claude Code." = "Dodano do Claude Code.";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”.";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu.";
