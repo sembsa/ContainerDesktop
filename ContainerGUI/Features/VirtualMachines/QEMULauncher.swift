@@ -185,6 +185,11 @@ enum QEMULauncher {
         var allSignals = sigset_t()
         sigfillset(&allSignals)
         posix_spawnattr_setsigdefault(&attributes, &allSignals)
+        // A VM is interactive work whoever starts it. Without this QEMU takes the
+        // spawning thread's QoS. A Windows install spawned from the XCTest runner
+        // crawled at half speed with its vCPUs idle in WFI — throttling was the
+        // suspect, not proven; another VM was busy at the same time.
+        posix_spawnattr_set_qos_class_np(&attributes, QOS_CLASS_USER_INITIATED)
 
         let argv = ([qemu] + arguments).map { strdup($0) } + [nil]
         defer { argv.forEach { free($0) } }
