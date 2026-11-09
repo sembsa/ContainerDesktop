@@ -212,6 +212,8 @@ targets:
       - path: ContainerGUI/Features/VirtualMachines/VMEngine.swift
       - path: ContainerGUI/Common/RFB/RFBProtocol.swift
       - path: ContainerGUI/Common/RFB/RFBKeys.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/WindowsSetupMedia.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/WindowsQEMUArguments.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift
