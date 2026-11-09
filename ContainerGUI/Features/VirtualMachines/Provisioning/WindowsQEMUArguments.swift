@@ -23,8 +23,6 @@ import Foundation
 /// - **The install run ends by itself.** `cd-setup.cmd` powers the guest off, so
 ///   QEMU exiting means: done. Then drop the extra drives and switch the display.
 enum WindowsQEMUArguments {
-    enum Run { case install, normal }
-
     struct Media: Sendable, Equatable {
         var windowsISO: URL
         /// The CDSETUP ISO from `WindowsSetupMedia.buildISO`.
@@ -36,21 +34,12 @@ enum WindowsQEMUArguments {
     /// `vm.json` `extraDrives` for the install run. The Windows ISO is first and
     /// needs `windowsISOBootIndex` on its `usb-storage` device.
     static func installDrives(_ media: Media) -> [VirtualMachine.ExtraDrive] {
-        [media.windowsISO, media.setupISO, media.virtioISO].map { VirtualMachine.ExtraDrive(path: $0.path) }
+        [VirtualMachine.ExtraDrive(path: media.windowsISO.path, bootIndex: windowsISOBootIndex)]
+            + [media.setupISO, media.virtioISO].map { VirtualMachine.ExtraDrive(path: $0.path) }
     }
 
     /// One more than the disk's (`QEMULauncher` gives the NVMe disk `bootindex=1`).
     static let windowsISOBootIndex = 2
-
-    /// Replaces the launcher's `-device ramfb`.
-    static func display(_ run: Run) -> [String] {
-        switch run {
-        case .install: ["-device", "ramfb"]
-        // xres/yres are the mode viogpudo reports as preferred; 1280×800 is
-        // QEMU's default too, spelled out so nobody wonders.
-        case .normal: ["-device", "virtio-gpu-pci,xres=1280,yres=800"]
-        }
-    }
 
     /// Getting past "Press any key to boot from CD": send this QMP command every
     /// `interval` from launch until `duration` has passed. Keep the window short —

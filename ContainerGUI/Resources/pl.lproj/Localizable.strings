@@ -1059,7 +1059,6 @@
 "Migawki" = "Migawki";
 "Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem.";
 "Utwórz maszynę Windows…" = "Utwórz maszynę Windows…";
-"Kreator instalacji pojawi się w jednej z najbliższych wersji." = "Kreator instalacji pojawi się w jednej z najbliższych wersji.";
 "Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "Wymaga QEMU — zainstaluj je poleceniem brew install qemu.";
 "Nowa migawka" = "Nowa migawka";
 "Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu.";
@@ -1103,3 +1102,28 @@
 "Zasilanie" = "Zasilanie";
 "Zasilanie i migawki" = "Zasilanie i migawki";
 "Zrzut ekranu skopiowany" = "Zrzut ekranu skopiowany";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "Nie udało się pobrać sterowników virtio-win: %@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu";
+"niepełny plik" = "niepełny plik";
+"Obraz ISO" = "Obraz ISO";
+"Nie wybrano" = "Nie wybrano";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "Pobierz Windows 11 ARM64 ze strony Microsoftu";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu.";
+"Konto w systemie Windows" = "Konto w systemie Windows";
+"Hasło" = "Hasło";
+"Wylosuj nowe hasło" = "Wylosuj nowe hasło";
+"Procesory: %lld" = "Procesory: %lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB.";
+"Utwórz i zainstaluj" = "Utwórz i zainstaluj";
+"Podaj nazwę." = "Podaj nazwę.";
+"Wybierz obraz ISO." = "Wybierz obraz ISO.";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >.";
+"Podaj hasło." = "Podaj hasło.";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "Pobieranie sterowników virtio-win (877 MB, jednorazowo)…";
+"Przygotowanie nośnika instalacyjnego…" = "Przygotowanie nośnika instalacyjnego…";
+"Uruchamianie instalatora Windows…" = "Uruchamianie instalatora Windows…";
+"Instalacja Windows trwa" = "Instalacja Windows trwa";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";

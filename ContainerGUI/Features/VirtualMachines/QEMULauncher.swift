@@ -101,7 +101,8 @@ enum QEMULauncher {
             "-rtc", "base=localtime",
             "-drive", "if=pflash,format=raw,readonly=on,file=\(escape(firmwareCode))",
             "-drive", "if=pflash,format=raw,file=\(file("vars.fd"))",
-            "-device", "ramfb", "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
+            "-device", vm.display == .virtioGPU ? "virtio-gpu-pci,xres=1280,yres=800" : "ramfb",
+            "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
             "-drive", "file=\(file(vm.disk)),format=qcow2,if=none,id=d0,node-name=\(diskNode)",
             "-device", "nvme,drive=d0,serial=cd0,bootindex=1",
         ]
@@ -110,7 +111,9 @@ enum QEMULauncher {
             var options = "file=\(file(drive.path)),if=none,id=\(id)"
             if drive.cdrom { options += ",media=cdrom" }
             if drive.readOnly { options += ",readonly=on" }
-            args += ["-drive", options, "-device", "usb-storage,drive=\(id),removable=on"]
+            var device = "usb-storage,drive=\(id),removable=on"
+            if let boot = drive.bootIndex { device += ",bootindex=\(boot)" }
+            args += ["-drive", options, "-device", device]
         }
         args += [
             "-netdev", "user,id=n0", "-device", "virtio-net-pci,netdev=n0",

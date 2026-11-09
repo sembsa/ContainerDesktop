@@ -1059,7 +1059,6 @@
 "Migawki" = "Snapshots";
 "Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "Save the state before an experiment and go back to it in one click.";
 "Utwórz maszynę Windows…" = "Create Windows Machine…";
-"Kreator instalacji pojawi się w jednej z najbliższych wersji." = "The setup assistant is coming in an upcoming version.";
 "Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "Requires QEMU — install it with brew install qemu.";
 "Nowa migawka" = "New Snapshot";
 "Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "The machine is running, so the snapshot also saves its memory — it will pause for a few seconds.";
@@ -1103,3 +1102,28 @@
 "Zasilanie" = "Power";
 "Zasilanie i migawki" = "Power and snapshots";
 "Zrzut ekranu skopiowany" = "Screenshot copied";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "Couldn't download the virtio-win drivers: %@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "QEMU's UEFI firmware is missing. Install QEMU: brew install qemu";
+"niepełny plik" = "incomplete file";
+"Obraz ISO" = "ISO Image";
+"Nie wybrano" = "None selected";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "Download Windows 11 ARM64 from Microsoft";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "Choose “Windows 11 (multi-edition ISO for Arm64)”. The Pro edition is installed, in the image's language.";
+"Konto w systemie Windows" = "Windows Account";
+"Hasło" = "Password";
+"Wylosuj nowe hasło" = "Generate a new password";
+"Procesory: %lld" = "Processors: %lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "The disk grows as data is written — a fresh Windows takes about 20 GB.";
+"Utwórz i zainstaluj" = "Create and Install";
+"Podaj nazwę." = "Enter a name.";
+"Wybierz obraz ISO." = "Choose an ISO image.";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "User name: up to 20 characters, without \" / \\ [ ] : ; | = , + * ? < >.";
+"Podaj hasło." = "Enter a password.";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "Downloading the virtio-win drivers (877 MB, once)…";
+"Przygotowanie nośnika instalacyjnego…" = "Preparing the setup media…";
+"Uruchamianie instalatora Windows…" = "Starting Windows Setup…";
+"Instalacja Windows trwa" = "Windows Is Installing";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about 20 minutes and needs no clicks. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";

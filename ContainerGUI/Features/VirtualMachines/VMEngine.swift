@@ -264,7 +264,7 @@ enum VMEngine {
     }
 
     @discardableResult
-    private static func qemuImg(_ arguments: [String]) async throws -> String {
+    static func qemuImg(_ arguments: [String]) async throws -> String {
         guard FileManager.default.isExecutableFile(atPath: QEMULauncher.qemuImg) else {
             throw QEMULauncher.Failure.qemuMissing
         }

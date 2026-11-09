@@ -9,6 +9,7 @@ struct VirtualMachinesView: View {
     @State private var selection: VirtualMachine.ID?
     @State private var cloneSource: VirtualMachine?
     @State private var cloneName = ""
+    @State private var showInstall = false
 
     private var store: VirtualMachineStore { model.virtualMachines }
 
@@ -19,7 +20,7 @@ struct VirtualMachinesView: View {
     var body: some View {
         Group {
             if store.items.isEmpty {
-                VirtualMachinesEmptyState()
+                VirtualMachinesEmptyState { showInstall = true }
             } else {
                 GeometryReader { geo in
                     VSplitView {
@@ -36,11 +37,25 @@ struct VirtualMachinesView: View {
         }
         .navigationTitle("Wirtualne maszyny")
         .task {
-            store.refresh()
+            store.refreshFinishingInstalls()
             if selection == nil { selection = store.items.first?.id }
+            // QEMU runs outside the app, so its state is polled: a machine that
+            // finished installing or was shut down from inside shows up here.
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(5))
+                store.refreshFinishingInstalls()
+            }
+        }
+        .sheet(isPresented: $showInstall) {
+            WindowsInstallSheet { vm in
+                store.refresh()
+                selection = vm.id
+            }
         }
         .toolbar {
             ToolbarItemGroup {
+                Button { showInstall = true } label: { Label("Utwórz maszynę Windows…", systemImage: "plus") }
+                    .disabled(!FileManager.default.isExecutableFile(atPath: QEMULauncher.qemu))
                 Button { store.refresh() } label: { Label("Odśwież", systemImage: "arrow.clockwise") }
             }
         }
@@ -123,6 +138,7 @@ struct VirtualMachinesView: View {
 
 /// What the section is for, before there is anything in it.
 struct VirtualMachinesEmptyState: View {
+    let onCreate: () -> Void
     private let tint = AppModel.Section.virtualMachines.tint
     private var qemuInstalled: Bool { FileManager.default.isExecutableFile(atPath: QEMULauncher.qemu) }
 
@@ -163,15 +179,15 @@ struct VirtualMachinesEmptyState: View {
                 .frame(maxWidth: 640)
 
                 VStack(spacing: 8) {
-                    Button("Utwórz maszynę Windows…", systemImage: "plus") {}
+                    Button("Utwórz maszynę Windows…", systemImage: "plus", action: onCreate)
                         .buttonStyle(.glassProminent)
                         .controlSize(.large)
-                        .disabled(true)
-                    Text(qemuInstalled
-                         ? String(localized: "Kreator instalacji pojawi się w jednej z najbliższych wersji.")
-                         : String(localized: "Wymaga QEMU — zainstaluj je poleceniem brew install qemu."))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .disabled(!qemuInstalled)
+                    if !qemuInstalled {
+                        Text("Wymaga QEMU — zainstaluj je poleceniem brew install qemu.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
             }
             .padding(40)

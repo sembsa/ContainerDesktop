@@ -16,11 +16,15 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         var readOnly = true
         /// A removable CD-ROM (`media=cdrom`) rather than a plain USB disk.
         var cdrom = true
+        /// QEMU boot order. ArmVirt UEFI only connects devices that have one, so
+        /// an installer ISO without it is never booted.
+        var bootIndex: Int?
 
-        init(path: String, readOnly: Bool = true, cdrom: Bool = true) {
+        init(path: String, readOnly: Bool = true, cdrom: Bool = true, bootIndex: Int? = nil) {
             self.path = path
             self.readOnly = readOnly
             self.cdrom = cdrom
+            self.bootIndex = bootIndex
         }
 
         init(from decoder: Decoder) throws {
@@ -28,6 +32,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
             path = try c.decode(String.self, forKey: .path)
             readOnly = try c.decodeIfPresent(Bool.self, forKey: .readOnly) ?? true
             cdrom = try c.decodeIfPresent(Bool.self, forKey: .cdrom) ?? true
+            bootIndex = try c.decodeIfPresent(Int.self, forKey: .bootIndex)
         }
     }
 
@@ -49,10 +54,20 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     /// Set on a linked clone: the machine whose disk this one's is layered on.
     /// That machine must not run again, or the clone's disk stops making sense.
     var backingMachine: String?
+    /// `ramfb` works with no driver at all; `virtio-gpu` needs viogpudo in the
+    /// guest and gives 1280×800. Windows installs start on ramfb and switch.
+    var display: Display = .ramfb
+    /// Set while Windows Setup runs; finishing the install clears it.
+    var installing = false
     var isRunning = false
 
+    enum Display: String, Codable, Sendable {
+        case ramfb
+        case virtioGPU = "virtio-gpu"
+    }
+
     private enum CodingKeys: String, CodingKey {
-        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine
+        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, display, installing
     }
 
     init(name: String, os: String = "windows", cpus: Int = 4, memoryMiB: Int = 8192,
@@ -80,6 +95,8 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         vncPort = try c.decodeIfPresent(UInt16.self, forKey: .vncPort) ?? vncPort
         vncPassword = try c.decodeIfPresent(String.self, forKey: .vncPassword) ?? ""
         backingMachine = try c.decodeIfPresent(String.self, forKey: .backingMachine)
+        display = try c.decodeIfPresent(Display.self, forKey: .display) ?? .ramfb
+        installing = try c.decodeIfPresent(Bool.self, forKey: .installing) ?? false
     }
 
     var isWindows: Bool { os.lowercased() == "windows" }

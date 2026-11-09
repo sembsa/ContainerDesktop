@@ -59,6 +59,11 @@ actor QMPClient {
         try await call { _ = try $0.execute("change-vnc-password", ["password": password]) }
     }
 
+    /// Presses and releases one key on the guest's keyboard, by QEMU qcode ("ret", "esc", …).
+    func sendKey(_ qcode: String) async throws {
+        try await call { _ = try $0.execute("send-key", ["keys": [["type": "qcode", "data": qcode]]]) }
+    }
+
     /// An HMP command through QMP, returning what the monitor would print.
     func hmp(_ commandLine: String) async throws -> String {
         try await call {

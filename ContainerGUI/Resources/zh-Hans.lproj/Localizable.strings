@@ -1059,7 +1059,6 @@
 "Migawki" = "快照";
 "Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "在实验前保存状态,一键即可恢复。";
 "Utwórz maszynę Windows…" = "创建 Windows 虚拟机…";
-"Kreator instalacji pojawi się w jednej z najbliższych wersji." = "安装向导将在后续版本中推出。";
 "Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "需要 QEMU——请使用 brew install qemu 安装。";
 "Nowa migawka" = "新建快照";
 "Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "虚拟机正在运行,因此快照也会保存其内存——虚拟机将暂停几秒钟。";
@@ -1103,3 +1102,28 @@
 "Zasilanie" = "电源";
 "Zasilanie i migawki" = "电源和快照";
 "Zrzut ekranu skopiowany" = "截屏已拷贝";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "无法下载 virtio-win 驱动程序：%@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "缺少 QEMU 的 UEFI 固件。请安装 QEMU：brew install qemu";
+"niepełny plik" = "文件不完整";
+"Obraz ISO" = "ISO 映像";
+"Nie wybrano" = "未选择";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "从 Microsoft 下载 Windows 11 ARM64";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "选择“Windows 11 (multi-edition ISO for Arm64)”。将安装专业版，语言与映像一致。";
+"Konto w systemie Windows" = "Windows 帐户";
+"Hasło" = "密码";
+"Wylosuj nowe hasło" = "生成新密码";
+"Procesory: %lld" = "处理器：%lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "磁盘随写入增长 — 全新的 Windows 约占 20 GB。";
+"Utwórz i zainstaluj" = "创建并安装";
+"Podaj nazwę." = "请输入名称。";
+"Wybierz obraz ISO." = "请选择 ISO 映像。";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "用户名：最多 20 个字符，不能包含 \" / \\ [ ] : ; | = , + * ? < >。";
+"Podaj hasło." = "请输入密码。";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "正在下载 virtio-win 驱动程序（877 MB，仅一次）…";
+"Przygotowanie nośnika instalacyjnego…" = "正在准备安装介质…";
+"Uruchamianie instalatora Windows…" = "正在启动 Windows 安装程序…";
+"Instalacja Windows trwa" = "正在安装 Windows";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "大约需要 20 分钟，无需任何点击。完成后虚拟机会自动关机 — 届时请点击“启动”。你可以关闭此窗口，甚至退出应用。";

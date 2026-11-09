@@ -66,8 +66,17 @@ final class WindowsSetupMediaTests: XCTestCase {
         XCTAssertEqual(drives.map(\.path), ["/i/win.iso", "/i/cd.iso", "/i/virtio.iso"])
         XCTAssertTrue(drives.allSatisfy { $0.cdrom && $0.readOnly })
         // The launcher's disk is bootindex=1; the ISO has to come after it.
-        let disk = QEMULauncher.arguments(for: VirtualMachine(name: "w"), paths: QEMULauncher.paths(for: URL(fileURLWithPath: "/v/w")), vncDisplay: 1)
-        XCTAssertTrue(disk.contains("nvme,drive=d0,serial=cd0,bootindex=\(WindowsQEMUArguments.windowsISOBootIndex - 1)"))
-        XCTAssertEqual(WindowsQEMUArguments.display(.normal), ["-device", "virtio-gpu-pci,xres=1280,yres=800"])
+        var vm = VirtualMachine(name: "w", extraDrives: drives)
+        let paths = QEMULauncher.paths(for: URL(fileURLWithPath: "/v/w"))
+        let install = QEMULauncher.arguments(for: vm, paths: paths, vncDisplay: 1)
+        XCTAssertTrue(install.contains("nvme,drive=d0,serial=cd0,bootindex=1"))
+        XCTAssertTrue(install.contains("usb-storage,drive=x0,removable=on,bootindex=2"))
+        XCTAssertTrue(install.contains("usb-storage,drive=x1,removable=on"))
+        XCTAssertTrue(install.contains("ramfb"))
+        // Never both: Windows would get two screens and VNC shows the first.
+        vm.display = .virtioGPU
+        let normal = QEMULauncher.arguments(for: vm, paths: paths, vncDisplay: 1)
+        XCTAssertTrue(normal.contains("virtio-gpu-pci,xres=1280,yres=800"))
+        XCTAssertFalse(normal.contains("ramfb"))
     }
 }
