@@ -1004,3 +1004,18 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój.";
 "Sponsoruj na GitHubie" = "Sponsoruj na GitHubie";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien.";
+
+/* Virtual machines and the VNC preview */
+"Serwer VNC zamknął połączenie." = "Serwer VNC zamknął połączenie.";
+"Błędne hasło VNC." = "Błędne hasło VNC.";
+"Serwer VNC wymaga nieobsługiwanego uwierzytelniania." = "Serwer VNC wymaga nieobsługiwanego uwierzytelniania.";
+"To nie jest serwer VNC." = "To nie jest serwer VNC.";
+"Serwer VNC wysłał nieznany komunikat." = "Serwer VNC wysłał nieznany komunikat.";
+"Serwer VNC użył nieobsługiwanego kodowania." = "Serwer VNC użył nieobsługiwanego kodowania.";
+"Podgląd maszyny" = "Podgląd maszyny";
+"Łączenie…" = "Łączenie…";
+"Rozłączono" = "Rozłączono";
+"Nie znaleziono maszyny." = "Nie znaleziono maszyny.";
+"Maszyna nie jest uruchomiona." = "Maszyna nie jest uruchomiona.";
+"Maszyny wirtualne" = "Maszyny wirtualne";
+"Podgląd" = "Podgląd";

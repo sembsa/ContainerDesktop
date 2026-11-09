@@ -167,6 +167,9 @@ targets:
       - path: ContainerGUI/Features/Machines/MachineCommands.swift
       - path: ContainerGUI/Features/Machines/MachineTemplate.swift
       - path: ContainerGUI/Features/Machines/MachineDesktop.swift
+      - path: ContainerGUI/Features/Machines/VM/VirtualMachineStore.swift
+      - path: ContainerGUI/Common/RFB/RFBProtocol.swift
+      - path: ContainerGUI/Common/RFB/RFBKeys.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift

@@ -1004,3 +1004,18 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop 免费，并将一直免费。如果它为你节省了时间，欢迎支持它的开发。";
 "Sponsoruj na GitHubie" = "在 GitHub 上赞助";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "新增：可以在“帮助”菜单和设置中通过 Ko-fi 或 GitHub Sponsors 支持本程序的开发。程序免费，并将一直免费——没有提醒，也没有弹窗。";
+
+/* Virtual machines and the VNC preview */
+"Serwer VNC zamknął połączenie." = "VNC 服务器关闭了连接。";
+"Błędne hasło VNC." = "VNC 密码错误。";
+"Serwer VNC wymaga nieobsługiwanego uwierzytelniania." = "VNC 服务器要求不受支持的身份验证方式。";
+"To nie jest serwer VNC." = "这不是 VNC 服务器。";
+"Serwer VNC wysłał nieznany komunikat." = "VNC 服务器发送了未知消息。";
+"Serwer VNC użył nieobsługiwanego kodowania." = "VNC 服务器使用了不受支持的编码。";
+"Podgląd maszyny" = "虚拟机预览";
+"Łączenie…" = "正在连接…";
+"Rozłączono" = "已断开连接";
+"Nie znaleziono maszyny." = "未找到虚拟机。";
+"Maszyna nie jest uruchomiona." = "虚拟机未运行。";
+"Maszyny wirtualne" = "虚拟机";
+"Podgląd" = "预览";
