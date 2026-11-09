@@ -1130,3 +1130,15 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "Pozwól agentowi AI sterować tą maszyną";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają.";
+
+/* Settings tabs */
+"Agenci AI" = "Agenci AI";
+"Aktualizacje" = "Aktualizacje";
+"Wsparcie" = "Wsparcie";
+"Wersja" = "Wersja";
+"Folder maszyn" = "Folder maszyn";
+"Pamięć podręczna sterowników" = "Pamięć podręczna sterowników";
+"Nie można wyczyścić w trakcie instalacji Windows." = "Nie można wyczyścić w trakcie instalacji Windows.";
+"Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie.";
+"Wyczyścić pamięć podręczną sterowników?" = "Wyczyścić pamięć podręczną sterowników?";
+"Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows.";

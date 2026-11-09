@@ -1130,3 +1130,15 @@
 /* MCP VM tools */
 "Pozwól agentowi AI sterować tą maszyną" = "允许 AI 代理控制此虚拟机";
 "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "开启后，MCP 服务器的 vm_* 工具可以查看此虚拟机的屏幕、点击、输入、在其中运行命令、复制文件并恢复快照。未开启时这些工具会拒绝执行。";
+
+/* Settings tabs */
+"Agenci AI" = "AI 智能体";
+"Aktualizacje" = "更新";
+"Wsparcie" = "支持";
+"Wersja" = "版本";
+"Folder maszyn" = "虚拟机文件夹";
+"Pamięć podręczna sterowników" = "驱动程序缓存";
+"Nie można wyczyścić w trakcie instalacji Windows." = "Windows 安装期间无法清除。";
+"Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "virtio-win 驱动程序映像，只下载一次，供每次 Windows 安装使用。清除后会重新下载。";
+"Wyczyścić pamięć podręczną sterowników?" = "清除驱动程序缓存？";
+"Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "下次安装 Windows 时将重新下载 virtio-win 驱动程序映像。";

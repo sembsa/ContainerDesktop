@@ -96,7 +96,7 @@ struct ContainerGUIApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView()
+            SettingsView(updater: updaterController.updater)
                 .environment(model)
         }
     }
