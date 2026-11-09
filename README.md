@@ -2,7 +2,7 @@
 
 **English** | [Polski](README.pl.md) | [简体中文](README.zh-Hans.md)
 
-A native, Docker Desktop-style macOS app for Apple's [`container`](https://github.com/apple/container) CLI — manage containers, images, volumes, networks and machines from a fast SwiftUI interface instead of the terminal.
+A native, Docker Desktop-style macOS app for Apple's [`container`](https://github.com/apple/container) CLI — manage containers, images, volumes, networks and machines from a fast SwiftUI interface instead of the terminal. It also runs Windows and Linux virtual machines (experimental), and AI agents can drive it over MCP.
 
 Container Desktop does not reimplement any container logic: every action shells out to the official `container` CLI and parses its JSON output, so what you see is always exactly what the CLI would tell you.
 
@@ -50,6 +50,20 @@ Logs with severity colouring, and a full terminal inside the container:
 - **Dynamic values editor** built from the chart's own `values.yaml`: a generated form with type-aware controls, help text harvested from the file's comments, a key filter, and a raw-YAML tab that stays in sync. Only the keys you actually change end up in `-f`, so chart defaults keep moving with chart upgrades. **Check (dry run)** renders the release on the cluster first, surfacing template errors and `values.schema.json` violations before anything is applied
 - Every helm command is pinned to the selected cluster with an app-managed kubeconfig — **your `~/.kube/config` is never read or modified**, so a GUI action cannot reach a production cluster
 
+### Virtual machines (experimental)
+> **Beta, work in progress.** Needs [QEMU](https://www.qemu.org) (`brew install qemu`). Things may change between versions.
+
+- Full **Windows 11 ARM64** and **Ubuntu 24.04** machines in QEMU with Apple's Hypervisor framework, in their own *Virtual Machines* section. They run detached, so they keep going when the app quits.
+- **Windows installs itself** from your own ISO (download it from [Microsoft](https://www.microsoft.com/software-download/windows11arm64)): no questions and no clicks, about 12 minutes to a logged-in desktop. **Ubuntu** starts from the official cloud image with cloud-init: about 30 s for a server, about 3 minutes with the GNOME desktop.
+- **Live preview** in its own window, through a built-in VNC client: mouse, keyboard (Cmd is the Windows key, right Option is AltGr), Ctrl+Alt+Del and other shortcuts a Mac keyboard can't send, a screenshot to the clipboard, and **a resolution that follows the window**.
+- Cards with screen thumbnails, per-machine settings (CPU, memory, resolution), snapshots, linked clones and delete.
+- Windows on ARM64 gets our own build of the QEMU guest agent, with VSS. virtio-win ships it for x86/x64 only, so the source and build script are in [`scripts/qemu-ga-windows-arm64`](scripts/qemu-ga-windows-arm64).
+
+### AI agents (MCP)
+- The app ships an **MCP server** (`cd-mcp`, inside the app bundle). Claude Code, Codex, Cursor and other agents can list, run, stop and inspect containers, and manage images, volumes, networks and machines. *Settings → AI Agents → Add to Claude Code* registers it, or copy the JSON config for any other client.
+- An agent can also **drive a virtual machine**: screenshot, click, type, keys, run commands, copy files and snapshots. This only works on machines where you turned on *Allow an AI agent to control this machine*, which is off by default.
+- An agent gets roughly your own reach over the container service. Allow it only for agents you trust.
+
 ### Desktop widget
 - A **WidgetKit widget** in three sizes: running count with service health (small), a live list with CPU per container (medium), and everything grouped by Compose project (large).
 - A widget extension is always sandboxed and cannot run the `container` CLI, so the app writes a snapshot after each refresh and the widget reads it — which also means the widget keeps showing the last known state while the app is closed, and says how old it is.
@@ -71,6 +85,7 @@ Logs with severity colouring, and a full terminal inside the container:
 - macOS 26 (Tahoe) on Apple Silicon
 - [`container`](https://github.com/apple/container) CLI installed (default: `/usr/local/bin/container`; a custom path can be set in app Settings)
 - Optional: [`helm`](https://helm.sh) for the Helm section (`brew install helm`), and `container` 1.2.1+ for local Kubernetes clusters
+- Optional: [QEMU](https://www.qemu.org) for virtual machines (`brew install qemu`)
 
 ## Installation
 
@@ -140,6 +155,8 @@ SwiftUI views (per feature)  →  @Observable stores  →  ContainerCLI (actor) 
 - `ContainerGUI/CLI` — process execution with timeouts and watchdog, argv builder with a shell-style tokenizer, streaming line reader
 - `ContainerGUI/Models` — `Codable` models mapped to real CLI JSON output
 - `ContainerGUI/Features/*` — one store + views per section
+- `ContainerGUI/Features/VirtualMachines` and `ContainerGUI/Common/RFB`: the QEMU engine (QMP and guest-agent clients, launcher, installers) and a native RFB/VNC client
+- `ContainerDesktopMCP`: the stdio MCP server, compiled from the app's own CLI and engine sources
 - App runs outside the App Sandbox (it spawns an external CLI), so distribution is direct (DMG), not the Mac App Store
 
 ## Support
