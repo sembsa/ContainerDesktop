@@ -44,8 +44,8 @@ schemes:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "0.11.1"
-    CURRENT_PROJECT_VERSION: "21"
+    MARKETING_VERSION: "0.20.0"
+    CURRENT_PROJECT_VERSION: "22"
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Manual
     CODE_SIGN_IDENTITY: "-"
@@ -73,6 +73,15 @@ targets:
       - target: ContainerGUIWidget
         embed: true
         codeSign: true
+      # The MCP server for AI agents, at Contents/Helpers/cd-mcp. An executable,
+      # so it is copied, never linked.
+      - target: ContainerDesktopMCP
+        embed: true
+        link: false
+        codeSign: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Helpers
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI
@@ -131,6 +140,42 @@ targets:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 
+  # `cd-mcp`: stdio MCP server that drives the `container` CLI without the GUI.
+  # Shares the app's CLI layer and models by compiling the same files (the test
+  # bundle's trick) — none of them import SwiftUI or AppKit.
+  ContainerDesktopMCP:
+    type: tool
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: ContainerDesktopMCP
+      - path: ContainerGUI/Models
+      - path: ContainerGUI/Common/JSONValue.swift
+      - path: ContainerGUI/CLI/ContainerCLI.swift
+      - path: ContainerGUI/CLI/ProcessRunner.swift
+      - path: ContainerGUI/CLI/ProcessLineReader.swift
+      - path: ContainerGUI/CLI/BinaryResolver.swift
+      - path: ContainerGUI/CLI/CLIError.swift
+      - path: ContainerGUI/CLI/ElevatedCommand.swift
+      - path: ContainerGUI/CLI/RunCommandBuilder.swift
+      - path: ContainerGUI/Features/Kubernetes/K8sCommands.swift
+      - path: ContainerGUI/Features/VirtualMachines/VirtualMachine.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMULauncher.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUSocket.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUClients.swift
+      - path: ContainerGUI/Features/VirtualMachines/OEMText.swift
+      - path: ContainerGUI/Features/VirtualMachines/VMEngine.swift
+      - path: ContainerGUI/Common/RFB/RFBClient.swift
+      - path: ContainerGUI/Common/RFB/RFBProtocol.swift
+    settings:
+      base:
+        PRODUCT_NAME: cd-mcp
+        PRODUCT_BUNDLE_IDENTIFIER: com.containerdesktop.ContainerGUI.mcp
+        SKIP_INSTALL: YES
+        # Gives the bare executable an Info.plist section, so it can report its version.
+        GENERATE_INFOPLIST_FILE: YES
+        CREATE_INFOPLIST_SECTION_IN_BINARY: YES
+
   # Self-contained logic test bundle: compiles the model + CLI sources directly
   # and bundles the captured fixtures, so it runs headless without a GUI host.
   ContainerGUITests:
@@ -167,6 +212,21 @@ targets:
       - path: ContainerGUI/Features/Machines/MachineCommands.swift
       - path: ContainerGUI/Features/Machines/MachineTemplate.swift
       - path: ContainerGUI/Features/Machines/MachineDesktop.swift
+      - path: ContainerGUI/Features/VirtualMachines/VirtualMachine.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMULauncher.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUSocket.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUClients.swift
+      - path: ContainerGUI/Features/VirtualMachines/OEMText.swift
+      - path: ContainerGUI/Features/VirtualMachines/VMEngine.swift
+      - path: ContainerGUI/Common/RFB/RFBProtocol.swift
+      - path: ContainerGUI/Common/RFB/RFBKeys.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/WindowsSetupMedia.swift
+      - path: ContainerGUI/Features/VirtualMachines/WindowsDisplayHelper.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/WindowsInstaller.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/WindowsQEMUArguments.swift
+      - path: ContainerGUI/Features/VirtualMachines/VMThumbnail.swift
+      - path: ContainerGUI/Features/VirtualMachines/Provisioning/LinuxCloudInit.swift
+      - path: ContainerGUI/Common/RFB/RFBClient.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift
@@ -177,6 +237,9 @@ targets:
       - path: ContainerGUI/Widget/WidgetSnapshot.swift
       - path: ContainerGUI/Terminal/TerminalEngine.swift
       - path: ContainerGUI/Compose
+      - path: ContainerGUI/App/MCPSetup.swift
+      - path: ContainerDesktopMCP
+        excludes: [main.swift]
       - path: Fixtures
         buildPhase: resources
         type: folder

@@ -67,6 +67,13 @@ struct ContainerGUIApp: App {
             }
         }
 
+        // One window per virtual machine; opening it again focuses the existing one.
+        WindowGroup("Podgląd maszyny", id: VMPreviewWindow.windowID, for: String.self) { $vmID in
+            if let vmID { VMPreviewWindow(vmID: vmID) }
+        }
+        .defaultSize(width: 1024, height: 700)
+        .commandsRemoved()
+
         MenuBarExtra {
             MenuBarContent(updater: updaterController.updater)
                 .environment(model)
@@ -89,7 +96,7 @@ struct ContainerGUIApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView()
+            SettingsView(updater: updaterController.updater)
                 .environment(model)
         }
     }

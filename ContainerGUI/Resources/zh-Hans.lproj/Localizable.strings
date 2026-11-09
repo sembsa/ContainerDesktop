@@ -1004,3 +1004,190 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop 免费，并将一直免费。如果它为你节省了时间，欢迎支持它的开发。";
 "Sponsoruj na GitHubie" = "在 GitHub 上赞助";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "新增：可以在“帮助”菜单和设置中通过 Ko-fi 或 GitHub Sponsors 支持本程序的开发。程序免费，并将一直免费——没有提醒，也没有弹窗。";
+
+/* Virtual machines and the VNC preview */
+"Serwer VNC zamknął połączenie." = "VNC 服务器关闭了连接。";
+"Błędne hasło VNC." = "VNC 密码错误。";
+"Serwer VNC wymaga nieobsługiwanego uwierzytelniania." = "VNC 服务器要求不受支持的身份验证方式。";
+"To nie jest serwer VNC." = "这不是 VNC 服务器。";
+"Serwer VNC wysłał nieznany komunikat." = "VNC 服务器发送了未知消息。";
+"Serwer VNC użył nieobsługiwanego kodowania." = "VNC 服务器使用了不受支持的编码。";
+"Podgląd maszyny" = "虚拟机预览";
+"Łączenie…" = "正在连接…";
+"Rozłączono" = "已断开连接";
+"Nie znaleziono maszyny." = "未找到虚拟机。";
+"Maszyna nie jest uruchomiona." = "虚拟机未运行。";
+"Maszyny wirtualne" = "虚拟机";
+"Podgląd" = "预览";
+/* MCP server */
+"Agenci AI (MCP)" = "AI 智能体（MCP）";
+"Ścieżka pomocnika" = "辅助程序路径";
+"Dodaj do Claude Code" = "添加到 Claude Code";
+"Kopiuj konfigurację" = "复制配置";
+"Skopiowano konfigurację do schowka." = "配置已复制到剪贴板。";
+"Dodano do Claude Code." = "已添加到 Claude Code。";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "未找到 claude 命令。请安装 Claude Code，或使用“复制配置”。";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "AI 智能体（Claude Code、Codex、Cursor…）可以通过应用内置的 MCP 服务器管理容器、镜像、卷、网络和机器。无需打开应用窗口即可使用。";
+
+/* Virtual machines — section and engine */
+"Nie znaleziono QEMU. Zainstaluj je poleceniem brew install qemu." = "未找到 QEMU。请使用 brew install qemu 安装。";
+"Maszyna już działa." = "虚拟机已在运行。";
+"Na dysku tej maszyny opiera się klon „%@”. Uruchomienie jej uszkodziłoby klon." = "克隆“%@”基于此虚拟机的磁盘。启动它会损坏该克隆。";
+"Brak wolnego portu VNC." = "没有可用的 VNC 端口。";
+"Nie udało się uruchomić QEMU (błąd %d)." = "无法启动 QEMU(错误 %d)。";
+"QEMU zakończyło działanie zaraz po starcie: %@" = "QEMU 启动后立即退出:%@";
+"Nie można połączyć się z %@ (%@)." = "无法连接到 %@(%@)。";
+"QEMU zamknęło połączenie." = "QEMU 关闭了连接。";
+"QEMU nie odpowiedziało na czas." = "QEMU 未及时响应。";
+"Najpierw zatrzymaj maszynę." = "请先停止虚拟机。";
+"Agent gościa nie odpowiada." = "客户机代理无响应。";
+"Wirtualne maszyny" = "虚拟机";
+"Nowość" = "新功能";
+"Sklonuj maszynę" = "克隆虚拟机";
+"Sklonuj" = "克隆";
+"Klon dostaje cienki dysk nałożony na dysk maszyny „%@” — powstaje w sekundę i zajmuje tylko to, co zmieni. Oryginał staje się jego bazą i nie da się go już uruchomić." = "克隆会获得一个叠加在“%@”磁盘之上的精简磁盘——一秒即可创建,只占用其更改的部分。原虚拟机将成为它的基础,之后无法再启动。";
+"klon" = "克隆";
+"VNC" = "VNC";
+"Sklonuj…" = "克隆…";
+"Pokaż w Finderze" = "在访达中显示";
+"%@ (klon)" = "%@(克隆)";
+"Windows i Linux w pełnej maszynie wirtualnej, którą możesz oddać agentowi AI." = "在完整的虚拟机中运行 Windows 和 Linux,并可交给 AI 代理使用。";
+"Pełny system" = "完整系统";
+"Prawdziwy Windows 11 na ARM, z własnym pulpitem, siecią i dyskiem." = "真正的 ARM 版 Windows 11,拥有自己的桌面、网络和磁盘。";
+"Podgląd na żywo" = "实时预览";
+"Ekran maszyny w oknie aplikacji — z myszą i klawiaturą." = "在应用窗口中显示虚拟机屏幕——支持鼠标和键盘。";
+"Migawki" = "快照";
+"Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "在实验前保存状态,一键即可恢复。";
+"Utwórz maszynę Windows…" = "创建 Windows 虚拟机…";
+"Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "需要 QEMU——请使用 brew install qemu 安装。";
+"Nowa migawka" = "新建快照";
+"Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "虚拟机正在运行,因此快照也会保存其内存——虚拟机将暂停几秒钟。";
+"Migawka zapisze stan dysku." = "快照将保存磁盘状态。";
+"Przywrócić migawkę?" = "恢复快照?";
+"Maszyna wróci do stanu z migawki „%@”. Wszystko, co zmieniło się od tamtej pory, przepadnie. Działająca maszyna zostanie na chwilę wyłączona i uruchomiona ponownie." = "虚拟机将恢复到快照“%@”时的状态。此后的所有更改都将丢失。正在运行的虚拟机会被短暂关闭并重新启动。";
+"Migawka „%@” zostanie usunięta." = "快照“%@”将被删除。";
+"Wymusić zatrzymanie?" = "强制停止?";
+"Wymuś zatrzymanie" = "强制停止";
+"To jak wyciągnięcie wtyczki: niezapisane dane w maszynie przepadną." = "这相当于拔掉电源:虚拟机中未保存的数据将会丢失。";
+"Procesory" = "处理器";
+"Klon maszyny" = "克隆自";
+"Katalog" = "文件夹";
+"Wczytywanie…" = "正在加载…";
+"Brak migawek. Migawka zapisuje dysk — a gdy maszyna działa, także pamięć — i pozwala wrócić do tego stanu." = "没有快照。快照会保存磁盘(虚拟机运行时还会保存内存),以便日后恢复到该状态。";
+"Utwórz migawkę" = "创建快照";
+"Tylko dysk" = "仅磁盘";
+"Dysk i pamięć" = "磁盘和内存";
+"Przywróć migawkę" = "恢复快照";
+
+/* VM preview toolbar */
+"Nie udało się" = "操作失败";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "发送 Ctrl+Alt+Del — 登录界面、锁定、任务管理器";
+"Klawisz Windows" = "Windows 键";
+"Klawisz Windows (menu Start)" = "Windows 键（开始菜单）";
+"Uruchom… (Win+R)" = "运行…（Win+R）";
+"Przełącz okna (Alt+Tab)" = "切换窗口（Alt+Tab）";
+"Zamknij okno (Alt+F4)" = "关闭窗口（Alt+F4）";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "任务管理器（Ctrl+Shift+Esc）";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "键盘快捷键";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Mac 键盘无法发送的快捷键";
+"Kursor macOS" = "macOS 指针";
+"Pokaż kursor macOS nad obrazem" = "在画面上显示 macOS 指针";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "隐藏 macOS 指针 — 只保留虚拟机系统自己的指针";
+"Kopiuj zrzut ekranu" = "拷贝截屏";
+"Kopiuj zrzut ekranu maszyny do schowka" = "将虚拟机截屏拷贝到剪贴板";
+"Zapisywanie migawki…" = "正在保存快照…";
+"Migawka zapisana" = "快照已保存";
+"Zasilanie" = "电源";
+"Zasilanie i migawki" = "电源和快照";
+"Zrzut ekranu skopiowany" = "截屏已拷贝";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "无法下载 virtio-win 驱动程序：%@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "缺少 QEMU 的 UEFI 固件。请安装 QEMU：brew install qemu";
+"niepełny plik" = "文件不完整";
+"Obraz ISO" = "ISO 映像";
+"Nie wybrano" = "未选择";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "从 Microsoft 下载 Windows 11 ARM64";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "选择“Windows 11 (multi-edition ISO for Arm64)”。将安装专业版，语言与映像一致。";
+"Konto w systemie Windows" = "Windows 帐户";
+"Hasło" = "密码";
+"Wylosuj nowe hasło" = "生成新密码";
+"Procesory: %lld" = "处理器：%lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "磁盘随写入增长 — 全新的 Windows 约占 20 GB。";
+"Utwórz i zainstaluj" = "创建并安装";
+"Podaj nazwę." = "请输入名称。";
+"Wybierz obraz ISO." = "请选择 ISO 映像。";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "用户名：最多 20 个字符，不能包含 \" / \\ [ ] : ; | = , + * ? < >。";
+"Podaj hasło." = "请输入密码。";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "正在下载 virtio-win 驱动程序（877 MB，仅一次）…";
+"Przygotowanie nośnika instalacyjnego…" = "正在准备安装介质…";
+"Uruchamianie instalatora Windows…" = "正在启动 Windows 安装程序…";
+"Instalacja Windows trwa" = "正在安装 Windows";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "大约需要 20 分钟，无需任何点击。完成后虚拟机会自动关机 — 届时请点击“启动”。你可以关闭此窗口，甚至退出应用。";
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "允许 AI 代理控制此虚拟机";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "开启后，MCP 服务器的 vm_* 工具可以查看此虚拟机的屏幕、点击、输入、在其中运行命令、复制文件并恢复快照。未开启时这些工具会拒绝执行。";
+
+/* Settings tabs */
+"Agenci AI" = "AI 智能体";
+"Aktualizacje" = "更新";
+"Wsparcie" = "支持";
+"Wersja" = "版本";
+"Folder maszyn" = "虚拟机文件夹";
+"Pamięć podręczna sterowników" = "驱动程序缓存";
+"Nie można wyczyścić w trakcie instalacji Windows." = "Windows 安装期间无法清除。";
+"Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "virtio-win 驱动程序映像，只下载一次，供每次 Windows 安装使用。清除后会重新下载。";
+"Wyczyścić pamięć podręczną sterowników?" = "清除驱动程序缓存？";
+"Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "下次安装 Windows 时将重新下载 virtio-win 驱动程序映像。";
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "适应 Mac 屏幕";
+"Rozdzielczość" = "分辨率";
+"Zapisz i uruchom ponownie" = "保存并重新启动";
+"Ustawienia maszyny" = "虚拟机设置";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "删除虚拟机";
+"Instalacja trwa…" = "正在安装…";
+"%lld CPU" = "%lld 个 CPU";
+"Więcej" = "更多";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "“%@”将被永久删除，连同其磁盘和所有快照。将释放 %@。";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "克隆“%@”基于此虚拟机的磁盘。请先删除该克隆。";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "虚拟机正在运行——处理器、内存和分辨率将在其重新启动后更改。";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "处理器、内存和分辨率将在下次启动时更改。";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "系统安装完成后即可更改分辨率。";
+/* Linux VMs */
+"Pulpit (GNOME)" = "桌面（GNOME）";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS，来自官方云镜像（600 MB，只下载一次）。不带桌面约半分钟即可就绪，带桌面约 3 分钟。";
+"Konto w systemie Linux" = "Linux 账户";
+"Język systemu" = "系统语言";
+"Klawiatura" = "键盘";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "用户名：小写字母、数字、- 和 _，最多 32 个字符。";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "正在下载 Ubuntu 镜像（600 MB，仅一次）…";
+"Przygotowanie dysku…" = "正在准备磁盘…";
+"Uruchamianie maszyny…" = "正在启动虚拟机…";
+"Konfiguracja Ubuntu trwa" = "正在配置 Ubuntu";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "安装桌面约需 3 分钟。完成后虚拟机会自动关机——之后点击“启动”即可。你可以关闭此窗口，甚至退出应用。";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "约需半分钟。完成后虚拟机会自动关机——之后点击“启动”即可。你可以关闭此窗口，甚至退出应用。";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "无法下载 Ubuntu 镜像：%@";
+"suma kontrolna się nie zgadza" = "校验和不匹配";
+
+/* VM empty state */
+"Utwórz maszynę Ubuntu…" = "创建 Ubuntu 虚拟机…";
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "分辨率适应窗口";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "让虚拟机的分辨率跟随窗口大小";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "停止适应 — 恢复固定的 1280×800 分辨率";
+"Nie udało się dopasować rozdzielczości: %@" = "无法调整分辨率：%@";
+
+/* What's new in 0.20.0 */
+"Beta" = "测试版";
+"Wirtualne maszyny (eksperymentalne)" = "虚拟机（实验性）";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "新增板块：在 QEMU 中运行完整的 Windows 11 和 Ubuntu。Windows 可从你的 ISO 自动安装，约需 12 分钟；带桌面的 Ubuntu 约需 3 分钟。此功能为实验性且仍在开发中 — 需要 QEMU（brew install qemu），各版本之间可能会有变化。";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "在应用窗口中显示虚拟机屏幕，支持鼠标、键盘、Ctrl+Alt+Del 和快照。分辨率随窗口调整。";
+"Agenci AI przez MCP" = "通过 MCP 使用 AI 代理";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code 等代理可以操作本应用 — 容器、镜像、网络 — 以及你允许的虚拟机。设置 → AI 代理。";
+"Ustawienia w zakładkach" = "标签式设置";
+"Ustawienia urosły, więc dostały zakładki." = "设置项变多了，所以改成了标签页。";

@@ -1004,3 +1004,190 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój.";
 "Sponsoruj na GitHubie" = "Sponsoruj na GitHubie";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien.";
+
+/* Virtual machines and the VNC preview */
+"Serwer VNC zamknął połączenie." = "Serwer VNC zamknął połączenie.";
+"Błędne hasło VNC." = "Błędne hasło VNC.";
+"Serwer VNC wymaga nieobsługiwanego uwierzytelniania." = "Serwer VNC wymaga nieobsługiwanego uwierzytelniania.";
+"To nie jest serwer VNC." = "To nie jest serwer VNC.";
+"Serwer VNC wysłał nieznany komunikat." = "Serwer VNC wysłał nieznany komunikat.";
+"Serwer VNC użył nieobsługiwanego kodowania." = "Serwer VNC użył nieobsługiwanego kodowania.";
+"Podgląd maszyny" = "Podgląd maszyny";
+"Łączenie…" = "Łączenie…";
+"Rozłączono" = "Rozłączono";
+"Nie znaleziono maszyny." = "Nie znaleziono maszyny.";
+"Maszyna nie jest uruchomiona." = "Maszyna nie jest uruchomiona.";
+"Maszyny wirtualne" = "Maszyny wirtualne";
+"Podgląd" = "Podgląd";
+/* MCP server */
+"Agenci AI (MCP)" = "Agenci AI (MCP)";
+"Ścieżka pomocnika" = "Ścieżka pomocnika";
+"Dodaj do Claude Code" = "Dodaj do Claude Code";
+"Kopiuj konfigurację" = "Kopiuj konfigurację";
+"Skopiowano konfigurację do schowka." = "Skopiowano konfigurację do schowka.";
+"Dodano do Claude Code." = "Dodano do Claude Code.";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”.";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu.";
+
+/* Virtual machines — section and engine */
+"Nie znaleziono QEMU. Zainstaluj je poleceniem brew install qemu." = "Nie znaleziono QEMU. Zainstaluj je poleceniem brew install qemu.";
+"Maszyna już działa." = "Maszyna już działa.";
+"Na dysku tej maszyny opiera się klon „%@”. Uruchomienie jej uszkodziłoby klon." = "Na dysku tej maszyny opiera się klon „%@”. Uruchomienie jej uszkodziłoby klon.";
+"Brak wolnego portu VNC." = "Brak wolnego portu VNC.";
+"Nie udało się uruchomić QEMU (błąd %d)." = "Nie udało się uruchomić QEMU (błąd %d).";
+"QEMU zakończyło działanie zaraz po starcie: %@" = "QEMU zakończyło działanie zaraz po starcie: %@";
+"Nie można połączyć się z %@ (%@)." = "Nie można połączyć się z %@ (%@).";
+"QEMU zamknęło połączenie." = "QEMU zamknęło połączenie.";
+"QEMU nie odpowiedziało na czas." = "QEMU nie odpowiedziało na czas.";
+"Najpierw zatrzymaj maszynę." = "Najpierw zatrzymaj maszynę.";
+"Agent gościa nie odpowiada." = "Agent gościa nie odpowiada.";
+"Wirtualne maszyny" = "Wirtualne maszyny";
+"Nowość" = "Nowość";
+"Sklonuj maszynę" = "Sklonuj maszynę";
+"Sklonuj" = "Sklonuj";
+"Klon dostaje cienki dysk nałożony na dysk maszyny „%@” — powstaje w sekundę i zajmuje tylko to, co zmieni. Oryginał staje się jego bazą i nie da się go już uruchomić." = "Klon dostaje cienki dysk nałożony na dysk maszyny „%@” — powstaje w sekundę i zajmuje tylko to, co zmieni. Oryginał staje się jego bazą i nie da się go już uruchomić.";
+"klon" = "klon";
+"VNC" = "VNC";
+"Sklonuj…" = "Sklonuj…";
+"Pokaż w Finderze" = "Pokaż w Finderze";
+"%@ (klon)" = "%@ (klon)";
+"Windows i Linux w pełnej maszynie wirtualnej, którą możesz oddać agentowi AI." = "Windows i Linux w pełnej maszynie wirtualnej, którą możesz oddać agentowi AI.";
+"Pełny system" = "Pełny system";
+"Prawdziwy Windows 11 na ARM, z własnym pulpitem, siecią i dyskiem." = "Prawdziwy Windows 11 na ARM, z własnym pulpitem, siecią i dyskiem.";
+"Podgląd na żywo" = "Podgląd na żywo";
+"Ekran maszyny w oknie aplikacji — z myszą i klawiaturą." = "Ekran maszyny w oknie aplikacji — z myszą i klawiaturą.";
+"Migawki" = "Migawki";
+"Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem.";
+"Utwórz maszynę Windows…" = "Utwórz maszynę Windows…";
+"Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "Wymaga QEMU — zainstaluj je poleceniem brew install qemu.";
+"Nowa migawka" = "Nowa migawka";
+"Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu.";
+"Migawka zapisze stan dysku." = "Migawka zapisze stan dysku.";
+"Przywrócić migawkę?" = "Przywrócić migawkę?";
+"Maszyna wróci do stanu z migawki „%@”. Wszystko, co zmieniło się od tamtej pory, przepadnie. Działająca maszyna zostanie na chwilę wyłączona i uruchomiona ponownie." = "Maszyna wróci do stanu z migawki „%@”. Wszystko, co zmieniło się od tamtej pory, przepadnie. Działająca maszyna zostanie na chwilę wyłączona i uruchomiona ponownie.";
+"Migawka „%@” zostanie usunięta." = "Migawka „%@” zostanie usunięta.";
+"Wymusić zatrzymanie?" = "Wymusić zatrzymanie?";
+"Wymuś zatrzymanie" = "Wymuś zatrzymanie";
+"To jak wyciągnięcie wtyczki: niezapisane dane w maszynie przepadną." = "To jak wyciągnięcie wtyczki: niezapisane dane w maszynie przepadną.";
+"Procesory" = "Procesory";
+"Klon maszyny" = "Klon maszyny";
+"Katalog" = "Katalog";
+"Wczytywanie…" = "Wczytywanie…";
+"Brak migawek. Migawka zapisuje dysk — a gdy maszyna działa, także pamięć — i pozwala wrócić do tego stanu." = "Brak migawek. Migawka zapisuje dysk — a gdy maszyna działa, także pamięć — i pozwala wrócić do tego stanu.";
+"Utwórz migawkę" = "Utwórz migawkę";
+"Tylko dysk" = "Tylko dysk";
+"Dysk i pamięć" = "Dysk i pamięć";
+"Przywróć migawkę" = "Przywróć migawkę";
+
+/* VM preview toolbar */
+"Nie udało się" = "Nie udało się";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań";
+"Klawisz Windows" = "Klawisz Windows";
+"Klawisz Windows (menu Start)" = "Klawisz Windows (menu Start)";
+"Uruchom… (Win+R)" = "Uruchom… (Win+R)";
+"Przełącz okna (Alt+Tab)" = "Przełącz okna (Alt+Tab)";
+"Zamknij okno (Alt+F4)" = "Zamknij okno (Alt+F4)";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "Menedżer zadań (Ctrl+Shift+Esc)";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "Skróty klawiszowe";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Skróty, których nie da się wysłać z klawiatury Maca";
+"Kursor macOS" = "Kursor macOS";
+"Pokaż kursor macOS nad obrazem" = "Pokaż kursor macOS nad obrazem";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie";
+"Kopiuj zrzut ekranu" = "Kopiuj zrzut ekranu";
+"Kopiuj zrzut ekranu maszyny do schowka" = "Kopiuj zrzut ekranu maszyny do schowka";
+"Zapisywanie migawki…" = "Zapisywanie migawki…";
+"Migawka zapisana" = "Migawka zapisana";
+"Zasilanie" = "Zasilanie";
+"Zasilanie i migawki" = "Zasilanie i migawki";
+"Zrzut ekranu skopiowany" = "Zrzut ekranu skopiowany";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "Nie udało się pobrać sterowników virtio-win: %@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu";
+"niepełny plik" = "niepełny plik";
+"Obraz ISO" = "Obraz ISO";
+"Nie wybrano" = "Nie wybrano";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "Pobierz Windows 11 ARM64 ze strony Microsoftu";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu.";
+"Konto w systemie Windows" = "Konto w systemie Windows";
+"Hasło" = "Hasło";
+"Wylosuj nowe hasło" = "Wylosuj nowe hasło";
+"Procesory: %lld" = "Procesory: %lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB.";
+"Utwórz i zainstaluj" = "Utwórz i zainstaluj";
+"Podaj nazwę." = "Podaj nazwę.";
+"Wybierz obraz ISO." = "Wybierz obraz ISO.";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >.";
+"Podaj hasło." = "Podaj hasło.";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "Pobieranie sterowników virtio-win (877 MB, jednorazowo)…";
+"Przygotowanie nośnika instalacyjnego…" = "Przygotowanie nośnika instalacyjnego…";
+"Uruchamianie instalatora Windows…" = "Uruchamianie instalatora Windows…";
+"Instalacja Windows trwa" = "Instalacja Windows trwa";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "Pozwól agentowi AI sterować tą maszyną";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają.";
+
+/* Settings tabs */
+"Agenci AI" = "Agenci AI";
+"Aktualizacje" = "Aktualizacje";
+"Wsparcie" = "Wsparcie";
+"Wersja" = "Wersja";
+"Folder maszyn" = "Folder maszyn";
+"Pamięć podręczna sterowników" = "Pamięć podręczna sterowników";
+"Nie można wyczyścić w trakcie instalacji Windows." = "Nie można wyczyścić w trakcie instalacji Windows.";
+"Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie.";
+"Wyczyścić pamięć podręczną sterowników?" = "Wyczyścić pamięć podręczną sterowników?";
+"Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows.";
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "Dopasuj do ekranu Maca";
+"Rozdzielczość" = "Rozdzielczość";
+"Zapisz i uruchom ponownie" = "Zapisz i uruchom ponownie";
+"Ustawienia maszyny" = "Ustawienia maszyny";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "Usuń maszynę";
+"Instalacja trwa…" = "Instalacja trwa…";
+"%lld CPU" = "%lld CPU";
+"Więcej" = "Więcej";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@.";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon.";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu.";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu.";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "Rozdzielczość można zmienić po zakończeniu instalacji systemu.";
+/* Linux VMs */
+"Pulpit (GNOME)" = "Pulpit (GNOME)";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach.";
+"Konto w systemie Linux" = "Konto w systemie Linux";
+"Język systemu" = "Język systemu";
+"Klawiatura" = "Klawiatura";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków.";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…";
+"Przygotowanie dysku…" = "Przygotowanie dysku…";
+"Uruchamianie maszyny…" = "Uruchamianie maszyny…";
+"Konfiguracja Ubuntu trwa" = "Konfiguracja Ubuntu trwa";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację.";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "Nie udało się pobrać obrazu Ubuntu: %@";
+"suma kontrolna się nie zgadza" = "suma kontrolna się nie zgadza";
+
+/* VM empty state */
+"Utwórz maszynę Ubuntu…" = "Utwórz maszynę Ubuntu…";
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "Dopasuj rozdzielczość do okna";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Dopasuj rozdzielczość maszyny do rozmiaru okna";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800";
+"Nie udało się dopasować rozdzielczości: %@" = "Nie udało się dopasować rozdzielczości: %@";
+
+/* What's new in 0.20.0 */
+"Beta" = "Beta";
+"Wirtualne maszyny (eksperymentalne)" = "Wirtualne maszyny (eksperymentalne)";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami.";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna.";
+"Agenci AI przez MCP" = "Agenci AI przez MCP";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI.";
+"Ustawienia w zakładkach" = "Ustawienia w zakładkach";
+"Ustawienia urosły, więc dostały zakładki." = "Ustawienia urosły, więc dostały zakładki.";

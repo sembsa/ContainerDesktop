@@ -8,6 +8,9 @@ struct SidebarView: View {
     /// Machines sat under "Konfiguracja", which they are not: a machine is
     /// something you run things inside, like a container.
     private let environments: [AppModel.Section] = [.machines]
+    /// QEMU machines get a group of their own: they are new, and they are not
+    /// run by the container service like everything above them.
+    private let virtualization: [AppModel.Section] = [.virtualMachines]
     private let secondary: [AppModel.Section] = [.registries, .system]
 
     var body: some View {
@@ -27,6 +30,26 @@ struct SidebarView: View {
             Section("Środowiska") {
                 ForEach(environments) { section in
                     sidebarRow(section)
+                }
+            }
+            // The badge sits on the group header: beside the row title it
+            // truncated "Wirtualne maszyny" at the default sidebar width.
+            Section {
+                ForEach(virtualization) { section in
+                    sidebarRow(section)
+                }
+            } header: {
+                HStack(spacing: 6) {
+                    Text("Wirtualizacja")
+                    // The section is experimental and says so where it starts.
+                    Text("Beta")
+                        .font(.caption2.weight(.bold))
+                        .textCase(nil)
+                        .fixedSize()
+                        .padding(.horizontal, 5)
+                        .padding(.vertical, 1)
+                        .background(AppModel.Section.virtualMachines.tint.opacity(0.2), in: Capsule())
+                        .foregroundStyle(AppModel.Section.virtualMachines.tint)
                 }
             }
             Section("Orkiestracja") {

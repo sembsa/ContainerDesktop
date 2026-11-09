@@ -37,6 +37,31 @@ enum WhatsNew {
 
     static let all: [Entry] = [
         Entry(
+            version: "0.20.0",
+            items: [
+                Item(
+                    symbol: "pc",
+                    title: String(localized: "Wirtualne maszyny (eksperymentalne)"),
+                    detail: String(localized: "Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami.")
+                ),
+                Item(
+                    symbol: "play.display",
+                    title: String(localized: "Podgląd na żywo"),
+                    detail: String(localized: "Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna.")
+                ),
+                Item(
+                    symbol: "sparkles",
+                    title: String(localized: "Agenci AI przez MCP"),
+                    detail: String(localized: "Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI.")
+                ),
+                Item(
+                    symbol: "gearshape",
+                    title: String(localized: "Ustawienia w zakładkach"),
+                    detail: String(localized: "Ustawienia urosły, więc dostały zakładki.")
+                ),
+            ]
+        ),
+        Entry(
             version: "0.11.1",
             items: [
                 Item(

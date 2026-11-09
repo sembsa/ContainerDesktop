@@ -18,3 +18,4 @@ xcuserdata/
 # Agent/tooling local state
 .agents/
 skills-lock.json
+.build-verify/

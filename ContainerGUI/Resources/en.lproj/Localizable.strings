@@ -1004,3 +1004,190 @@
 "Container Desktop jest darmowy i taki zostanie. Jeśli oszczędza Ci czas, możesz wesprzeć jego rozwój." = "Container Desktop is free and will stay that way. If it saves you time, you can support its development.";
 "Sponsoruj na GitHubie" = "Sponsor on GitHub";
 "Nowe: w menu Pomoc i w Ustawieniach możesz wesprzeć rozwój programu przez Ko-fi albo GitHub Sponsors. Program jest darmowy i taki zostanie — bez przypominajek i wyskakujących okien." = "New: you can support the app's development via Ko-fi or GitHub Sponsors from the Help menu and Settings. The app is free and will stay that way — no reminders, no pop-ups.";
+
+/* Virtual machines and the VNC preview */
+"Serwer VNC zamknął połączenie." = "The VNC server closed the connection.";
+"Błędne hasło VNC." = "Wrong VNC password.";
+"Serwer VNC wymaga nieobsługiwanego uwierzytelniania." = "The VNC server requires an unsupported authentication method.";
+"To nie jest serwer VNC." = "This is not a VNC server.";
+"Serwer VNC wysłał nieznany komunikat." = "The VNC server sent an unknown message.";
+"Serwer VNC użył nieobsługiwanego kodowania." = "The VNC server used an unsupported encoding.";
+"Podgląd maszyny" = "Machine Preview";
+"Łączenie…" = "Connecting…";
+"Rozłączono" = "Disconnected";
+"Nie znaleziono maszyny." = "Machine not found.";
+"Maszyna nie jest uruchomiona." = "The machine is not running.";
+"Maszyny wirtualne" = "Virtual Machines";
+"Podgląd" = "Preview";
+/* MCP server */
+"Agenci AI (MCP)" = "AI agents (MCP)";
+"Ścieżka pomocnika" = "Helper path";
+"Dodaj do Claude Code" = "Add to Claude Code";
+"Kopiuj konfigurację" = "Copy configuration";
+"Skopiowano konfigurację do schowka." = "Configuration copied to the clipboard.";
+"Dodano do Claude Code." = "Added to Claude Code.";
+"Nie znaleziono polecenia claude. Zainstaluj Claude Code albo użyj „Kopiuj konfigurację”." = "The claude command was not found. Install Claude Code or use “Copy configuration”.";
+"Agenci AI (Claude Code, Codex, Cursor…) mogą zarządzać kontenerami, obrazami, wolumenami, sieciami i maszynami przez serwer MCP wbudowany w aplikację. Działa bez otwartego okna programu." = "AI agents (Claude Code, Codex, Cursor…) can manage containers, images, volumes, networks and machines through the MCP server built into the app. It works without the app window open.";
+
+/* Virtual machines — section and engine */
+"Nie znaleziono QEMU. Zainstaluj je poleceniem brew install qemu." = "QEMU was not found. Install it with brew install qemu.";
+"Maszyna już działa." = "The machine is already running.";
+"Na dysku tej maszyny opiera się klon „%@”. Uruchomienie jej uszkodziłoby klon." = "The clone “%@” is built on this machine's disk. Starting it would break the clone.";
+"Brak wolnego portu VNC." = "No free VNC port.";
+"Nie udało się uruchomić QEMU (błąd %d)." = "Could not start QEMU (error %d).";
+"QEMU zakończyło działanie zaraz po starcie: %@" = "QEMU exited right after starting: %@";
+"Nie można połączyć się z %@ (%@)." = "Cannot connect to %@ (%@).";
+"QEMU zamknęło połączenie." = "QEMU closed the connection.";
+"QEMU nie odpowiedziało na czas." = "QEMU did not answer in time.";
+"Najpierw zatrzymaj maszynę." = "Stop the machine first.";
+"Agent gościa nie odpowiada." = "The guest agent is not responding.";
+"Wirtualne maszyny" = "Virtual Machines";
+"Nowość" = "New";
+"Sklonuj maszynę" = "Clone Machine";
+"Sklonuj" = "Clone";
+"Klon dostaje cienki dysk nałożony na dysk maszyny „%@” — powstaje w sekundę i zajmuje tylko to, co zmieni. Oryginał staje się jego bazą i nie da się go już uruchomić." = "The clone gets a thin disk layered on the disk of “%@” — it is created in a second and takes up only what it changes. The original becomes its base and can no longer be started.";
+"klon" = "clone";
+"VNC" = "VNC";
+"Sklonuj…" = "Clone…";
+"Pokaż w Finderze" = "Show in Finder";
+"%@ (klon)" = "%@ (clone)";
+"Windows i Linux w pełnej maszynie wirtualnej, którą możesz oddać agentowi AI." = "Windows and Linux in a full virtual machine you can hand over to an AI agent.";
+"Pełny system" = "A full system";
+"Prawdziwy Windows 11 na ARM, z własnym pulpitem, siecią i dyskiem." = "Real Windows 11 on ARM, with its own desktop, network and disk.";
+"Podgląd na żywo" = "Live preview";
+"Ekran maszyny w oknie aplikacji — z myszą i klawiaturą." = "The machine's screen in an app window — with mouse and keyboard.";
+"Migawki" = "Snapshots";
+"Zapisz stan przed eksperymentem i wróć do niego jednym kliknięciem." = "Save the state before an experiment and go back to it in one click.";
+"Utwórz maszynę Windows…" = "Create Windows Machine…";
+"Wymaga QEMU — zainstaluj je poleceniem brew install qemu." = "Requires QEMU — install it with brew install qemu.";
+"Nowa migawka" = "New Snapshot";
+"Maszyna działa, więc migawka zapisze też jej pamięć — na kilka sekund zatrzyma się w miejscu." = "The machine is running, so the snapshot also saves its memory — it will pause for a few seconds.";
+"Migawka zapisze stan dysku." = "The snapshot will save the disk state.";
+"Przywrócić migawkę?" = "Restore the snapshot?";
+"Maszyna wróci do stanu z migawki „%@”. Wszystko, co zmieniło się od tamtej pory, przepadnie. Działająca maszyna zostanie na chwilę wyłączona i uruchomiona ponownie." = "The machine will go back to the state of snapshot “%@”. Everything that changed since then will be lost. A running machine is briefly turned off and started again.";
+"Migawka „%@” zostanie usunięta." = "Snapshot “%@” will be deleted.";
+"Wymusić zatrzymanie?" = "Force stop?";
+"Wymuś zatrzymanie" = "Force Stop";
+"To jak wyciągnięcie wtyczki: niezapisane dane w maszynie przepadną." = "This is like pulling the plug: unsaved data in the machine will be lost.";
+"Procesory" = "Processors";
+"Klon maszyny" = "Clone of";
+"Katalog" = "Folder";
+"Wczytywanie…" = "Loading…";
+"Brak migawek. Migawka zapisuje dysk — a gdy maszyna działa, także pamięć — i pozwala wrócić do tego stanu." = "No snapshots. A snapshot saves the disk — and, while the machine runs, its memory too — so you can return to that state.";
+"Utwórz migawkę" = "Take Snapshot";
+"Tylko dysk" = "Disk only";
+"Dysk i pamięć" = "Disk and memory";
+"Przywróć migawkę" = "Restore snapshot";
+
+/* VM preview toolbar */
+"Nie udało się" = "Something went wrong";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "Send Ctrl+Alt+Del — sign-in screen, lock, Task Manager";
+"Klawisz Windows" = "Windows Key";
+"Klawisz Windows (menu Start)" = "Windows key (Start menu)";
+"Uruchom… (Win+R)" = "Run… (Win+R)";
+"Przełącz okna (Alt+Tab)" = "Switch Windows (Alt+Tab)";
+"Zamknij okno (Alt+F4)" = "Close Window (Alt+F4)";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "Task Manager (Ctrl+Shift+Esc)";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "Keyboard Shortcuts";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Shortcuts a Mac keyboard can't send";
+"Kursor macOS" = "macOS Pointer";
+"Pokaż kursor macOS nad obrazem" = "Show the macOS pointer over the screen";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "Hide the macOS pointer — only the guest's own pointer remains";
+"Kopiuj zrzut ekranu" = "Copy Screenshot";
+"Kopiuj zrzut ekranu maszyny do schowka" = "Copy a screenshot of the machine to the clipboard";
+"Zapisywanie migawki…" = "Saving snapshot…";
+"Migawka zapisana" = "Snapshot saved";
+"Zasilanie" = "Power";
+"Zasilanie i migawki" = "Power and snapshots";
+"Zrzut ekranu skopiowany" = "Screenshot copied";
+
+/* Windows install assistant */
+"Nie udało się pobrać sterowników virtio-win: %@" = "Couldn't download the virtio-win drivers: %@";
+"Brak firmware UEFI QEMU. Zainstaluj QEMU: brew install qemu" = "QEMU's UEFI firmware is missing. Install QEMU: brew install qemu";
+"niepełny plik" = "incomplete file";
+"Obraz ISO" = "ISO Image";
+"Nie wybrano" = "None selected";
+"Pobierz Windows 11 ARM64 ze strony Microsoftu" = "Download Windows 11 ARM64 from Microsoft";
+"Wybierz „Windows 11 (multi-edition ISO for Arm64)”. Instalowana jest edycja Pro, w języku obrazu." = "Choose “Windows 11 (multi-edition ISO for Arm64)”. The Pro edition is installed, in the image's language.";
+"Konto w systemie Windows" = "Windows Account";
+"Hasło" = "Password";
+"Wylosuj nowe hasło" = "Generate a new password";
+"Procesory: %lld" = "Processors: %lld";
+"%lld GB" = "%lld GB";
+"Dysk rośnie w miarę zapisu — świeży Windows zajmuje ok. 20 GB." = "The disk grows as data is written — a fresh Windows takes about 20 GB.";
+"Utwórz i zainstaluj" = "Create and Install";
+"Podaj nazwę." = "Enter a name.";
+"Wybierz obraz ISO." = "Choose an ISO image.";
+"Nazwa użytkownika: do 20 znaków, bez \" / \\ [ ] : ; | = , + * ? < >." = "User name: up to 20 characters, without \" / \\ [ ] : ; | = , + * ? < >.";
+"Podaj hasło." = "Enter a password.";
+"Pobieranie sterowników virtio-win (877 MB, jednorazowo)…" = "Downloading the virtio-win drivers (877 MB, once)…";
+"Przygotowanie nośnika instalacyjnego…" = "Preparing the setup media…";
+"Uruchamianie instalatora Windows…" = "Starting Windows Setup…";
+"Instalacja Windows trwa" = "Windows Is Installing";
+"Potrwa ok. 20 minut i nie wymaga żadnych kliknięć. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about 20 minutes and needs no clicks. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "Allow the AI agent to control this machine";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "The MCP server's vm_* tools can then see this machine's screen, click, type, run commands in it, copy files and restore snapshots. Without this permission they refuse.";
+
+/* Settings tabs */
+"Agenci AI" = "AI Agents";
+"Aktualizacje" = "Updates";
+"Wsparcie" = "Support";
+"Wersja" = "Version";
+"Folder maszyn" = "Machines Folder";
+"Pamięć podręczna sterowników" = "Driver Cache";
+"Nie można wyczyścić w trakcie instalacji Windows." = "Can't clear while Windows is installing.";
+"Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "The virtio-win driver image, downloaded once and used by every Windows install. If cleared, it is downloaded again.";
+"Wyczyścić pamięć podręczną sterowników?" = "Clear the driver cache?";
+"Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "The virtio-win driver image will be downloaded again on the next Windows install.";
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "Fit to the Mac's Screen";
+"Rozdzielczość" = "Resolution";
+"Zapisz i uruchom ponownie" = "Save and Restart";
+"Ustawienia maszyny" = "Machine Settings";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "Delete Machine";
+"Instalacja trwa…" = "Installing…";
+"%lld CPU" = "%lld CPU";
+"Więcej" = "More";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "“%@” will be gone for good — its disk and all its snapshots with it. This frees %@.";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "The clone “%@” is built on this machine's disk. Delete the clone first.";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "The machine is running — processors, memory and resolution change once it restarts.";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "Processors, memory and resolution change the next time the machine starts.";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "The resolution can be changed once the system has finished installing.";
+/* Linux VMs */
+"Pulpit (GNOME)" = "Desktop (GNOME)";
+"Ubuntu 24.04 LTS z oficjalnego obrazu chmurowego (600 MB, pobierany raz). Bez pulpitu maszyna jest gotowa po pół minuty, z pulpitem — po ok. 3 minutach." = "Ubuntu 24.04 LTS from the official cloud image (600 MB, downloaded once). Without a desktop the machine is ready in half a minute, with one in about 3 minutes.";
+"Konto w systemie Linux" = "Linux account";
+"Język systemu" = "System language";
+"Klawiatura" = "Keyboard";
+"Nazwa użytkownika: małe litery, cyfry, - i _, do 32 znaków." = "Username: lowercase letters, digits, - and _, up to 32 characters.";
+"Pobieranie obrazu Ubuntu (600 MB, jednorazowo)…" = "Downloading the Ubuntu image (600 MB, once)…";
+"Przygotowanie dysku…" = "Preparing the disk…";
+"Uruchamianie maszyny…" = "Starting the machine…";
+"Konfiguracja Ubuntu trwa" = "Ubuntu Is Being Set Up";
+"Instalacja pulpitu potrwa ok. 3 minut. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "Installing the desktop takes about 3 minutes. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+"Potrwa ok. pół minuty. Na koniec maszyna sama się wyłączy — uruchom ją wtedy przyciskiem Uruchom. Możesz zamknąć to okno, a nawet aplikację." = "It takes about half a minute. When it's done the machine turns itself off — then start it with Start. You can close this window, or even the app.";
+"Nie udało się pobrać obrazu Ubuntu: %@" = "Couldn't download the Ubuntu image: %@";
+"suma kontrolna się nie zgadza" = "the checksum does not match";
+
+/* VM empty state */
+"Utwórz maszynę Ubuntu…" = "Create Ubuntu Machine…";
+/* Live resize */
+"Dopasuj rozdzielczość do okna" = "Fit Resolution to Window";
+"Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Make the machine's resolution follow the window size";
+"Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Stop fitting — return to the fixed 1280×800 resolution";
+"Nie udało się dopasować rozdzielczości: %@" = "Could not fit the resolution: %@";
+
+/* What's new in 0.20.0 */
+"Beta" = "Beta";
+"Wirtualne maszyny (eksperymentalne)" = "Virtual Machines (Experimental)";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "A new section: full Windows 11 and Ubuntu in QEMU. Windows installs itself from your ISO in about 12 minutes, Ubuntu with a desktop in about 3. This feature is experimental and still a work in progress — it needs QEMU (brew install qemu), and things may change between versions.";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "The machine's screen in an app window, with mouse, keyboard, Ctrl+Alt+Del and snapshots. The resolution follows the window.";
+"Agenci AI przez MCP" = "AI Agents via MCP";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code and other agents can drive the app — containers, images, networks — and the machines you allow. Settings → AI Agents.";
+"Ustawienia w zakładkach" = "Settings in Tabs";
+"Ustawienia urosły, więc dostały zakładki." = "Settings grew, so they got tabs.";

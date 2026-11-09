@@ -49,6 +49,24 @@ Adding a sidebar section means touching **five** places: `AppModel.Section` (cas
 - **Writes and reloads are on different clocks.** WidgetKit budgets roughly 40–70 reloads a day, so `reloadAllTimelines()` is requested only when state a widget shows actually changes (and at most once a minute). The file itself is rewritten every 30s regardless, because CPU percentages only exist from the second sample onwards — tying the write to the reload means they never reach the widget at all.
 - The extension is a separate bundle, so it has **its own** `Resources/*.lproj/Localizable.strings` (same convention: Polish source strings as keys).
 
+### MCP server (`cd-mcp`)
+
+`ContainerDesktopMCP/` is a `tool` target embedded at `ContainerGUI.app/Contents/Helpers/cd-mcp` (copy phase, `link: false`). It is a stdio MCP server that runs without the GUI and compiles the app's CLI layer and models directly (listed in `project.yml`), so none of those files may import SwiftUI/AppKit.
+
+- stdout is protocol only — log with `log()` (stderr). The JSON-RPC layer (`MCPServer.swift`) is hand-written; tool failures are `isError` results, bad arguments are `-32602`.
+- Add tools to `ContainerTools.all`; VM tools go in `VMTools.all`. Keep argv in `ContainerArgv` (pure, tested in `MCPServerTests`).
+- `CLIError` text is Polish without a strings table, so `MCPServer.describe` renders errors in English for agents.
+- Settings → "Agenci AI (MCP)" runs `claude mcp add --scope user …`; never run that from tests — it edits the user's real Claude Code config.
+
+### Linux VMs (QEMU)
+
+`Features/VirtualMachines/Provisioning/Linux*` builds an Ubuntu 24.04 machine from the pinned ARM64 cloud image (SHA-256 checked, cached in `vms/../cache`, APFS-cloned per machine — no backing file on the cache) plus a cloud-init `cidata` seed. cloud-init ends with `power_state: poweroff`, so "done" is QEMU exiting, exactly as for Windows (`finishIfNeeded`).
+
+- **The seed must be virtio-blk, not USB** (`ExtraDrive.virtio`). USB storage enumerates after cloud-init's ds-identify has looked, so it disables itself and the machine boots unconfigured, with no network.
+- Linux keeps the RTC in UTC: the launcher passes `base=localtime` only for Windows.
+- With the desktop, NetworkManager takes the NIC, and networkd's wait-online held boot (and gdm) for 2 minutes until the seed disabled it.
+- GNOME (Wayland) on virtio-gpu follows a VNC `SetDesktopSize` (type 251, with `-308` advertised): QEMU answers status 4 "forwarded", then the guest re-modes to the exact size. `RFBClient` does not send it yet.
+
 ### Kubernetes and Helm
 
 `Features/Kubernetes/` drives the `container k8s` plugin (container 1.2.1+, EXPERIMENTAL); `Features/Helm/` drives the separate `helm` binary.
