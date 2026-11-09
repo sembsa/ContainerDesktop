@@ -30,25 +30,25 @@ actor QMPClient {
 
     /// `query-status`'s `status`: "running", "paused", "shutdown", …
     func status() async throws -> String {
-        try await socket.transact { socket in
+        try await call { socket in
             (try socket.execute("query-status") as? [String: Any])?["status"] as? String ?? "unknown"
         }
     }
 
     /// The ACPI power button: the guest decides whether and how to shut down.
     func powerdown() async throws {
-        try await socket.transact { _ = try $0.execute("system_powerdown") }
+        try await call { _ = try $0.execute("system_powerdown") }
     }
 
     /// Resumes a machine started with `-S`.
     func cont() async throws {
-        try await socket.transact { _ = try $0.execute("cont") }
+        try await call { _ = try $0.execute("cont") }
     }
 
     /// Pulls the plug.
     func quit() async throws {
         do {
-            try await socket.transact { _ = try $0.execute("quit") }
+            try await call { _ = try $0.execute("quit") }
         } catch QEMUSocket.Failure.closed {
             // QEMU may hang up before the reply arrives; that is the point.
         }
@@ -56,12 +56,12 @@ actor QMPClient {
     }
 
     func setVNCPassword(_ password: String) async throws {
-        try await socket.transact { _ = try $0.execute("change-vnc-password", ["password": password]) }
+        try await call { _ = try $0.execute("change-vnc-password", ["password": password]) }
     }
 
     /// An HMP command through QMP, returning what the monitor would print.
     func hmp(_ commandLine: String) async throws -> String {
-        try await socket.transact {
+        try await call {
             try $0.execute("human-monitor-command", ["command-line": commandLine]) as? String ?? ""
         }
     }
@@ -95,6 +95,30 @@ actor QMPClient {
     /// guest's memory, so this can take a minute.
     private func runJob(_ command: String, _ arguments: [String: any Sendable],
                         timeout: Duration = .seconds(600)) async throws {
+        do {
+            try await pollJob(command, arguments, timeout: timeout)
+        } catch {
+            await socket.close()
+            throw error
+        }
+        await socket.close()
+    }
+
+    /// One request, then the connection is let go: the `-qmp` chardev serves a
+    /// single client, and holding it would hang anyone else's QMP tool
+    /// (the spike's qmp.py included) while the app is open.
+    private func call<T: Sendable>(_ body: @escaping @Sendable (QEMUSocket) throws -> T) async throws -> T {
+        do {
+            let value = try await socket.transact(body)
+            await socket.close()
+            return value
+        } catch {
+            await socket.close()
+            throw error
+        }
+    }
+
+    private func pollJob(_ command: String, _ arguments: [String: any Sendable], timeout: Duration) async throws {
         let id = "cd-\(UUID().uuidString.prefix(8))"
         try await socket.transact { socket in
             var args: [String: Any] = arguments
