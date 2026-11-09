@@ -85,7 +85,7 @@ struct VirtualMachinesView: View {
                 }
             }
             TableColumn("CPU") { Text("\($0.cpus)").foregroundStyle(.secondary) }
-            TableColumn("Pamięć") { Text(Format.bytes(Int64($0.memoryMiB) * 1_048_576)).foregroundStyle(.secondary) }
+            TableColumn("Pamięć") { Text($0.memoryText).foregroundStyle(.secondary) }
             TableColumn("VNC") { vm in
                 Text(vm.isRunning ? "127.0.0.1:\(vm.vncPort)" as String : "—")
                     .font(.body.monospacedDigit())
@@ -325,7 +325,7 @@ struct VirtualMachineDetailView: View {
             Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 6) {
                 infoRow(String(localized: "System"), vm.isWindows ? "Windows" : "Linux")
                 infoRow(String(localized: "Procesory"), "\(vm.cpus)")
-                infoRow(String(localized: "Pamięć"), Format.bytes(Int64(vm.memoryMiB) * 1_048_576))
+                infoRow(String(localized: "Pamięć"), vm.memoryText)
                 infoRow(String(localized: "Dysk"), vm.disk)
                 infoRow(String(localized: "VNC"), vm.isRunning ? "127.0.0.1:\(vm.vncPort)" : "—")
                 if let base = vm.backingMachine {

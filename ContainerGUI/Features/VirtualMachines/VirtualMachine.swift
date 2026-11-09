@@ -84,6 +84,11 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
 
     var isWindows: Bool { os.lowercased() == "windows" }
 
+    /// "8 GB" for 8192 MiB — binary units, as the guest counts them.
+    var memoryText: String {
+        ByteCountFormatter.string(fromByteCount: Int64(memoryMiB) * 1_048_576, countStyle: .memory)
+    }
+
     /// The machine's own directory.
     var directory: URL { VirtualMachineStore.directory.appending(path: id) }
 
