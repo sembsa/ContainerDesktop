@@ -66,13 +66,12 @@ struct SidebarView: View {
                         .foregroundStyle(.secondary)
                 }
                 if section == .virtualMachines {
-                    Text("Nowość")
-                        .font(.caption2.weight(.bold))
-                        .fixedSize()
-                        .padding(.horizontal, 5)
-                        .padding(.vertical, 1)
-                        .background(section.tint.opacity(0.2), in: Capsule())
-                        .foregroundStyle(section.tint)
+                    // An icon, not a word: "Nowość" beside the title truncated it to
+                    // "Wirtualne masz…" at the default sidebar width.
+                    Image(systemName: "sparkles")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.yellow)
+                        .iconHelp(String(localized: "Nowość"))
                 }
                 if section == .kubernetes, !model.kubernetes.clusters.isEmpty {
                     Text("\(model.kubernetes.clusters.count)")
