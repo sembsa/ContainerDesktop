@@ -1079,3 +1079,7 @@
 "Tylko dysk" = "Tylko dysk";
 "Dysk i pamięć" = "Dysk i pamięć";
 "Przywróć migawkę" = "Przywróć migawkę";
+
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "Pozwól agentowi AI sterować tą maszyną";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają.";

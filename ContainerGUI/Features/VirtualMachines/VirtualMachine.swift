@@ -49,10 +49,12 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
     /// Set on a linked clone: the machine whose disk this one's is layered on.
     /// That machine must not run again, or the clone's disk stops making sense.
     var backingMachine: String?
+    /// Opt-in for the `vm_*` MCP tools: off unless the user switches it on.
+    var agentControl = false
     var isRunning = false
 
     private enum CodingKeys: String, CodingKey {
-        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine
+        case name, os, cpus, memoryMiB, disk, extraDrives, vncPort, vncPassword, backingMachine, agentControl
     }
 
     init(name: String, os: String = "windows", cpus: Int = 4, memoryMiB: Int = 8192,
@@ -80,6 +82,7 @@ struct VirtualMachine: Identifiable, Hashable, Codable, Sendable {
         vncPort = try c.decodeIfPresent(UInt16.self, forKey: .vncPort) ?? vncPort
         vncPassword = try c.decodeIfPresent(String.self, forKey: .vncPassword) ?? ""
         backingMachine = try c.decodeIfPresent(String.self, forKey: .backingMachine)
+        agentControl = try c.decodeIfPresent(Bool.self, forKey: .agentControl) ?? false
     }
 
     var isWindows: Bool { os.lowercased() == "windows" }

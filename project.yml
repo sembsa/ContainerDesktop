@@ -159,6 +159,14 @@ targets:
       - path: ContainerGUI/CLI/ElevatedCommand.swift
       - path: ContainerGUI/CLI/RunCommandBuilder.swift
       - path: ContainerGUI/Features/Kubernetes/K8sCommands.swift
+      - path: ContainerGUI/Features/VirtualMachines/VirtualMachine.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMULauncher.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUSocket.swift
+      - path: ContainerGUI/Features/VirtualMachines/QEMUClients.swift
+      - path: ContainerGUI/Features/VirtualMachines/OEMText.swift
+      - path: ContainerGUI/Features/VirtualMachines/VMEngine.swift
+      - path: ContainerGUI/Common/RFB/RFBClient.swift
+      - path: ContainerGUI/Common/RFB/RFBProtocol.swift
     settings:
       base:
         PRODUCT_NAME: cd-mcp
@@ -212,6 +220,7 @@ targets:
       - path: ContainerGUI/Features/VirtualMachines/VMEngine.swift
       - path: ContainerGUI/Common/RFB/RFBProtocol.swift
       - path: ContainerGUI/Common/RFB/RFBKeys.swift
+      - path: ContainerGUI/Common/RFB/RFBClient.swift
       - path: ContainerGUI/Terminal/TerminalTarget.swift
       - path: ContainerGUI/CLI/ClusterKubeconfig.swift
       - path: ContainerGUI/CLI/KubectlCommands.swift

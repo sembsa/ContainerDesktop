@@ -1079,3 +1079,7 @@
 "Tylko dysk" = "仅磁盘";
 "Dysk i pamięć" = "磁盘和内存";
 "Przywróć migawkę" = "恢复快照";
+
+/* MCP VM tools */
+"Pozwól agentowi AI sterować tą maszyną" = "允许 AI 代理控制此虚拟机";
+"Narzędzia vm_* serwera MCP mogą wtedy widzieć ekran tej maszyny, klikać, pisać, uruchamiać w niej polecenia, kopiować pliki i przywracać migawki. Bez tej zgody odmawiają." = "开启后，MCP 服务器的 vm_* 工具可以查看此虚拟机的屏幕、点击、输入、在其中运行命令、复制文件并恢复快照。未开启时这些工具会拒绝执行。";
