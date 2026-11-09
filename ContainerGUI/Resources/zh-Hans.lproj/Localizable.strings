@@ -1181,3 +1181,13 @@
 "Dopasuj rozdzielczość maszyny do rozmiaru okna" = "让虚拟机的分辨率跟随窗口大小";
 "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "停止适应 — 恢复固定的 1280×800 分辨率";
 "Nie udało się dopasować rozdzielczości: %@" = "无法调整分辨率：%@";
+
+/* What's new in 0.20.0 */
+"Beta" = "测试版";
+"Wirtualne maszyny (eksperymentalne)" = "虚拟机（实验性）";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "新增板块：在 QEMU 中运行完整的 Windows 11 和 Ubuntu。Windows 可从你的 ISO 自动安装，约需 12 分钟；带桌面的 Ubuntu 约需 3 分钟。此功能为实验性且仍在开发中 — 需要 QEMU（brew install qemu），各版本之间可能会有变化。";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "在应用窗口中显示虚拟机屏幕，支持鼠标、键盘、Ctrl+Alt+Del 和快照。分辨率随窗口调整。";
+"Agenci AI przez MCP" = "通过 MCP 使用 AI 代理";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code 等代理可以操作本应用 — 容器、镜像、网络 — 以及你允许的虚拟机。设置 → AI 代理。";
+"Ustawienia w zakładkach" = "标签式设置";
+"Ustawienia urosły, więc dostały zakładki." = "设置项变多了，所以改成了标签页。";

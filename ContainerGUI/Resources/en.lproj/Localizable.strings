@@ -1181,3 +1181,13 @@
 "Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Make the machine's resolution follow the window size";
 "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Stop fitting — return to the fixed 1280×800 resolution";
 "Nie udało się dopasować rozdzielczości: %@" = "Could not fit the resolution: %@";
+
+/* What's new in 0.20.0 */
+"Beta" = "Beta";
+"Wirtualne maszyny (eksperymentalne)" = "Virtual Machines (Experimental)";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "A new section: full Windows 11 and Ubuntu in QEMU. Windows installs itself from your ISO in about 12 minutes, Ubuntu with a desktop in about 3. This feature is experimental and still a work in progress — it needs QEMU (brew install qemu), and things may change between versions.";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "The machine's screen in an app window, with mouse, keyboard, Ctrl+Alt+Del and snapshots. The resolution follows the window.";
+"Agenci AI przez MCP" = "AI Agents via MCP";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code and other agents can drive the app — containers, images, networks — and the machines you allow. Settings → AI Agents.";
+"Ustawienia w zakładkach" = "Settings in Tabs";
+"Ustawienia urosły, więc dostały zakładki." = "Settings grew, so they got tabs.";

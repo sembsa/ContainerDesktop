@@ -41,7 +41,8 @@ struct SidebarView: View {
             } header: {
                 HStack(spacing: 6) {
                     Text("Wirtualizacja")
-                    Text("Nowość")
+                    // The section is experimental and says so where it starts.
+                    Text("Beta")
                         .font(.caption2.weight(.bold))
                         .textCase(nil)
                         .fixedSize()

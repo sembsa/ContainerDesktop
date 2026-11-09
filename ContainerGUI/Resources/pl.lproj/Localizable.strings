@@ -1181,3 +1181,13 @@
 "Dopasuj rozdzielczość maszyny do rozmiaru okna" = "Dopasuj rozdzielczość maszyny do rozmiaru okna";
 "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800" = "Przestań dopasowywać — wróć do stałej rozdzielczości 1280×800";
 "Nie udało się dopasować rozdzielczości: %@" = "Nie udało się dopasować rozdzielczości: %@";
+
+/* What's new in 0.20.0 */
+"Beta" = "Beta";
+"Wirtualne maszyny (eksperymentalne)" = "Wirtualne maszyny (eksperymentalne)";
+"Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami." = "Nowa zakładka: pełny Windows 11 i Ubuntu w QEMU. Windows instaluje się sam z Twojego ISO w ok. 12 minut, Ubuntu z pulpitem w ok. 3. Funkcja jest eksperymentalna i wciąż w trakcie prac — wymaga QEMU (brew install qemu), a rzeczy mogą się zmieniać między wersjami.";
+"Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna." = "Ekran maszyny w oknie aplikacji, z myszą, klawiaturą, Ctrl+Alt+Del i migawkami. Rozdzielczość dopasowuje się do okna.";
+"Agenci AI przez MCP" = "Agenci AI przez MCP";
+"Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI." = "Claude Code i inni agenci mogą sterować aplikacją — kontenerami, obrazami, siecią — oraz maszynami, na które pozwolisz. Ustawienia → Agenci AI.";
+"Ustawienia w zakładkach" = "Ustawienia w zakładkach";
+"Ustawienia urosły, więc dostały zakładki." = "Ustawienia urosły, więc dostały zakładki.";
