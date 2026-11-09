@@ -9,7 +9,9 @@ import SwiftUI
 @MainActor
 final class RFBDisplayView: NSView {
 
-    var client: RFBClient?
+    var client: RFBClient? {
+        didSet { window?.invalidateCursorRects(for: self) }
+    }
     private(set) var framebufferSize = CGSize.zero
     private var buttons: UInt8 = 0
     /// What each held key sent on the way down, so the release matches even if
@@ -27,9 +29,39 @@ final class RFBDisplayView: NSView {
 
     required init?(coder: NSCoder) { fatalError("not used from a nib") }
 
+    /// The last frame, for copying a screenshot.
+    private(set) var currentImage: CGImage?
+
     func show(_ image: CGImage) {
-        framebufferSize = CGSize(width: image.width, height: image.height)
+        let size = CGSize(width: image.width, height: image.height)
+        if size != framebufferSize {
+            framebufferSize = size
+            window?.invalidateCursorRects(for: self)
+        }
+        currentImage = image
         layer?.contents = image
+    }
+
+    // MARK: - Cursor
+
+    /// The guest draws its own pointer into the framebuffer, so a second, Mac
+    /// one on top of it is just noise — and it is never where the guest thinks
+    /// the pointer is during a lag. Hidden over the picture only, so the
+    /// letterbox bars and the toolbar still show the normal cursor.
+    var hidesLocalCursor = true {
+        didSet { window?.invalidateCursorRects(for: self) }
+    }
+
+    private static let invisibleCursor = NSCursor(image: NSImage(size: NSSize(width: 1, height: 1)), hotSpot: .zero)
+
+    override func resetCursorRects() {
+        guard hidesLocalCursor, client != nil, !imageRect.isEmpty else { return }
+        addCursorRect(imageRect, cursor: Self.invisibleCursor)
+    }
+
+    override func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        window?.invalidateCursorRects(for: self)
     }
 
     // MARK: - Mouse

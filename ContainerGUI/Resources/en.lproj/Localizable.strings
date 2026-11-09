@@ -1079,3 +1079,27 @@
 "Tylko dysk" = "Disk only";
 "Dysk i pamięć" = "Disk and memory";
 "Przywróć migawkę" = "Restore snapshot";
+
+/* VM preview toolbar */
+"Nie udało się" = "Something went wrong";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "Send Ctrl+Alt+Del — sign-in screen, lock, Task Manager";
+"Klawisz Windows" = "Windows Key";
+"Klawisz Windows (menu Start)" = "Windows key (Start menu)";
+"Uruchom… (Win+R)" = "Run… (Win+R)";
+"Przełącz okna (Alt+Tab)" = "Switch Windows (Alt+Tab)";
+"Zamknij okno (Alt+F4)" = "Close Window (Alt+F4)";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "Task Manager (Ctrl+Shift+Esc)";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "Keyboard Shortcuts";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Shortcuts a Mac keyboard can't send";
+"Kursor macOS" = "macOS Pointer";
+"Pokaż kursor macOS nad obrazem" = "Show the macOS pointer over the screen";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "Hide the macOS pointer — only the guest's own pointer remains";
+"Kopiuj zrzut ekranu" = "Copy Screenshot";
+"Kopiuj zrzut ekranu maszyny do schowka" = "Copy a screenshot of the machine to the clipboard";
+"Zapisywanie migawki…" = "Saving snapshot…";
+"Migawka zapisana" = "Snapshot saved";
+"Zasilanie" = "Power";
+"Zasilanie i migawki" = "Power and snapshots";
+"Zrzut ekranu skopiowany" = "Screenshot copied";

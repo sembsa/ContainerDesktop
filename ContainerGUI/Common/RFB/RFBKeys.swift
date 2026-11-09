@@ -34,6 +34,23 @@ enum RFBKeys {
         55: (0xffeb, .command), 54: (0xffec, .command), // Super_L, Super_R
     ]
 
+    /// Combinations a Mac keyboard cannot send, or that macOS would take for itself.
+    enum Combo: CaseIterable {
+        case ctrlAltDelete, windows, run, altTab, altF4, taskManager, escape
+
+        var keysyms: [UInt32] {
+            switch self {
+            case .ctrlAltDelete: [0xffe3, 0xffe9, 0xffff]
+            case .windows: [0xffeb]
+            case .run: [0xffeb, 0x72]               // Win+R
+            case .altTab: [0xffe9, 0xff09]
+            case .altF4: [0xffe9, 0xffc1]
+            case .taskManager: [0xffe3, 0xffe1, 0xff1b] // Ctrl+Shift+Esc
+            case .escape: [0xff1b]
+            }
+        }
+    }
+
     /// The keysym for a key press, or nil for keys this viewer does not map.
     static func keysym(keyCode: UInt16, charactersIgnoringModifiers: String?) -> UInt32? {
         if let special = special[keyCode] { return special }

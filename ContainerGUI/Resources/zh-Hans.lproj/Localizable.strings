@@ -1079,3 +1079,27 @@
 "Tylko dysk" = "仅磁盘";
 "Dysk i pamięć" = "磁盘和内存";
 "Przywróć migawkę" = "恢复快照";
+
+/* VM preview toolbar */
+"Nie udało się" = "操作失败";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "发送 Ctrl+Alt+Del — 登录界面、锁定、任务管理器";
+"Klawisz Windows" = "Windows 键";
+"Klawisz Windows (menu Start)" = "Windows 键（开始菜单）";
+"Uruchom… (Win+R)" = "运行…（Win+R）";
+"Przełącz okna (Alt+Tab)" = "切换窗口（Alt+Tab）";
+"Zamknij okno (Alt+F4)" = "关闭窗口（Alt+F4）";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "任务管理器（Ctrl+Shift+Esc）";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "键盘快捷键";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Mac 键盘无法发送的快捷键";
+"Kursor macOS" = "macOS 指针";
+"Pokaż kursor macOS nad obrazem" = "在画面上显示 macOS 指针";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "隐藏 macOS 指针 — 只保留虚拟机系统自己的指针";
+"Kopiuj zrzut ekranu" = "拷贝截屏";
+"Kopiuj zrzut ekranu maszyny do schowka" = "将虚拟机截屏拷贝到剪贴板";
+"Zapisywanie migawki…" = "正在保存快照…";
+"Migawka zapisana" = "快照已保存";
+"Zasilanie" = "电源";
+"Zasilanie i migawki" = "电源和快照";
+"Zrzut ekranu skopiowany" = "截屏已拷贝";

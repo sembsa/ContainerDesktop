@@ -1079,3 +1079,27 @@
 "Tylko dysk" = "Tylko dysk";
 "Dysk i pamięć" = "Dysk i pamięć";
 "Przywróć migawkę" = "Przywróć migawkę";
+
+/* VM preview toolbar */
+"Nie udało się" = "Nie udało się";
+"Ctrl+Alt+Del" = "Ctrl+Alt+Del";
+"Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań" = "Wyślij Ctrl+Alt+Del — ekran logowania, blokada, menedżer zadań";
+"Klawisz Windows" = "Klawisz Windows";
+"Klawisz Windows (menu Start)" = "Klawisz Windows (menu Start)";
+"Uruchom… (Win+R)" = "Uruchom… (Win+R)";
+"Przełącz okna (Alt+Tab)" = "Przełącz okna (Alt+Tab)";
+"Zamknij okno (Alt+F4)" = "Zamknij okno (Alt+F4)";
+"Menedżer zadań (Ctrl+Shift+Esc)" = "Menedżer zadań (Ctrl+Shift+Esc)";
+"Escape" = "Escape";
+"Skróty klawiszowe" = "Skróty klawiszowe";
+"Skróty, których nie da się wysłać z klawiatury Maca" = "Skróty, których nie da się wysłać z klawiatury Maca";
+"Kursor macOS" = "Kursor macOS";
+"Pokaż kursor macOS nad obrazem" = "Pokaż kursor macOS nad obrazem";
+"Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie" = "Ukryj kursor macOS — zostaje tylko kursor systemu w maszynie";
+"Kopiuj zrzut ekranu" = "Kopiuj zrzut ekranu";
+"Kopiuj zrzut ekranu maszyny do schowka" = "Kopiuj zrzut ekranu maszyny do schowka";
+"Zapisywanie migawki…" = "Zapisywanie migawki…";
+"Migawka zapisana" = "Migawka zapisana";
+"Zasilanie" = "Zasilanie";
+"Zasilanie i migawki" = "Zasilanie i migawki";
+"Zrzut ekranu skopiowany" = "Zrzut ekranu skopiowany";

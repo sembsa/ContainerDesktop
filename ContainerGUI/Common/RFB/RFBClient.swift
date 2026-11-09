@@ -64,6 +64,12 @@ actor RFBClient {
         send(RFB.keyEvent(keysym: keysym, down: down))
     }
 
+    /// Presses the keys in order and releases them in reverse, like a person would.
+    nonisolated func sendCombo(_ keysyms: [UInt32]) {
+        keysyms.forEach { sendKey($0, down: true) }
+        keysyms.reversed().forEach { sendKey($0, down: false) }
+    }
+
     nonisolated func sendPointer(buttons: UInt8, x: Int, y: Int) {
         send(RFB.pointerEvent(buttons: buttons, x: x, y: y))
     }
