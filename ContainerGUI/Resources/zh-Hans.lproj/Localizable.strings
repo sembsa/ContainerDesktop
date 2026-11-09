@@ -1142,3 +1142,19 @@
 "Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "virtio-win 驱动程序映像，只下载一次，供每次 Windows 安装使用。清除后会重新下载。";
 "Wyczyścić pamięć podręczną sterowników?" = "清除驱动程序缓存？";
 "Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "下次安装 Windows 时将重新下载 virtio-win 驱动程序映像。";
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "适应 Mac 屏幕";
+"Rozdzielczość" = "分辨率";
+"Zapisz i uruchom ponownie" = "保存并重新启动";
+"Ustawienia maszyny" = "虚拟机设置";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "删除虚拟机";
+"Instalacja trwa…" = "正在安装…";
+"%lld CPU" = "%lld 个 CPU";
+"Więcej" = "更多";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "“%@”将被永久删除，连同其磁盘和所有快照。将释放 %@。";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "克隆“%@”基于此虚拟机的磁盘。请先删除该克隆。";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "虚拟机正在运行——处理器、内存和分辨率将在其重新启动后更改。";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "处理器、内存和分辨率将在下次启动时更改。";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "系统安装完成后即可更改分辨率。";

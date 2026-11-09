@@ -1142,3 +1142,19 @@
 "Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie." = "Obraz sterowników virtio-win, pobierany raz i używany przy każdej instalacji Windows. Po wyczyszczeniu zostanie pobrany ponownie.";
 "Wyczyścić pamięć podręczną sterowników?" = "Wyczyścić pamięć podręczną sterowników?";
 "Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows." = "Obraz sterowników virtio-win zostanie pobrany ponownie przy następnej instalacji Windows.";
+/* VM cards and settings */
+"Dopasuj do ekranu Maca" = "Dopasuj do ekranu Maca";
+"Rozdzielczość" = "Rozdzielczość";
+"Zapisz i uruchom ponownie" = "Zapisz i uruchom ponownie";
+"Ustawienia maszyny" = "Ustawienia maszyny";
+"Windows 11…" = "Windows 11…";
+"Ubuntu Linux…" = "Ubuntu Linux…";
+"Usuń maszynę" = "Usuń maszynę";
+"Instalacja trwa…" = "Instalacja trwa…";
+"%lld CPU" = "%lld CPU";
+"Więcej" = "Więcej";
+"Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@." = "Maszyna „%@” zniknie na zawsze — razem z dyskiem i wszystkimi migawkami. Zwolni się %@.";
+"Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon." = "Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon.";
+"Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu." = "Maszyna działa — procesory, pamięć i rozdzielczość zmienią się po jej ponownym uruchomieniu.";
+"Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu." = "Procesory, pamięć i rozdzielczość zmienią się przy następnym uruchomieniu.";
+"Rozdzielczość można zmienić po zakończeniu instalacji systemu." = "Rozdzielczość można zmienić po zakończeniu instalacji systemu.";

@@ -47,9 +47,12 @@ enum VMEngine {
         case notRunning
         case mustBeStopped
         case agentUnavailable
+        case backsAClone(String)
 
         var errorDescription: String? {
             switch self {
+            case .backsAClone(let clone):
+                String(format: String(localized: "Na dysku tej maszyny opiera się klon „%@”. Najpierw usuń klon."), clone)
             case .notRunning: String(localized: "Maszyna nie jest uruchomiona.")
             case .mustBeStopped: String(localized: "Najpierw zatrzymaj maszynę.")
             case .agentUnavailable: String(localized: "Agent gościa nie odpowiada.")
@@ -72,10 +75,7 @@ enum VMEngine {
         guard VirtualMachineStore.runningPID(pidFile: paths.pidFile) == nil else {
             throw QEMULauncher.Failure.alreadyRunning
         }
-        if let clone = VirtualMachineStore.scan(dir.deletingLastPathComponent())
-            .first(where: { $0.backingMachine == dir.lastPathComponent }) {
-            throw QEMULauncher.Failure.backsAClone(clone.name)
-        }
+        if let clone = clone(layeredOn: dir) { throw QEMULauncher.Failure.backsAClone(clone.name) }
         guard let display = QEMULauncher.freeVNCDisplay() else { throw QEMULauncher.Failure.noFreeDisplay }
 
         var vm = vm
@@ -174,10 +174,7 @@ enum VMEngine {
 
     static func restoreSnapshot(_ tag: String, of vm: VirtualMachine, in directory: URL? = nil) async throws {
         let dir = directory ?? vm.directory
-        if let clone = VirtualMachineStore.scan(dir.deletingLastPathComponent())
-            .first(where: { $0.backingMachine == dir.lastPathComponent }) {
-            throw QEMULauncher.Failure.backsAClone(clone.name)
-        }
+        if let clone = clone(layeredOn: dir) { throw QEMULauncher.Failure.backsAClone(clone.name) }
         // A running QEMU cannot load state in place (see `QMPClient.loadSnapshot`),
         // so the machine is pulled down and started again into the snapshot.
         let wasRunning = isRunning(dir)
@@ -251,7 +248,38 @@ enum VMEngine {
         }
     }
 
+    // MARK: - Delete
+
+    /// Removes the machine's directory — disk, snapshots (they live inside the
+    /// qcow2) and all. Refuses a running machine and one a clone is layered on.
+    static func delete(_ vm: VirtualMachine, in directory: URL? = nil) throws {
+        let dir = directory ?? vm.directory
+        guard !isRunning(dir) else { throw Failure.mustBeStopped }
+        if let clone = clone(layeredOn: dir) { throw Failure.backsAClone(clone.name) }
+        let paths = QEMULauncher.paths(for: dir)
+        if paths.socketDirectory != dir { try? FileManager.default.removeItem(at: paths.socketDirectory) }
+        try FileManager.default.removeItem(at: dir)
+    }
+
+    /// Bytes the machine's directory actually takes: qcow2 files are sparse,
+    /// so allocated rather than logical sizes.
+    static func sizeOnDisk(_ directory: URL) -> Int64 {
+        let keys: [URLResourceKey] = [.totalFileAllocatedSizeKey]
+        guard let files = FileManager.default.enumerator(at: directory, includingPropertiesForKeys: keys) else { return 0 }
+        return files.reduce(Int64(0)) { sum, item in
+            let size = (try? (item as? URL)?.resourceValues(forKeys: Set(keys)))?.totalFileAllocatedSize
+            return sum + Int64(size ?? 0)
+        }
+    }
+
     // MARK: - Helpers
+
+    /// The clone whose disk is layered on this machine's, if any: such a
+    /// machine must neither run, be restored nor be deleted.
+    static func clone(layeredOn dir: URL) -> VirtualMachine? {
+        VirtualMachineStore.scan(dir.deletingLastPathComponent())
+            .first { $0.backingMachine == dir.lastPathComponent }
+    }
 
     static func diskPath(_ vm: VirtualMachine, _ dir: URL) -> String {
         vm.disk.hasPrefix("/") ? vm.disk : dir.appending(path: vm.disk).path

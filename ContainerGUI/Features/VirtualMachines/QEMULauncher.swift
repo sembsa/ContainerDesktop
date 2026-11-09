@@ -1,3 +1,4 @@
+import CoreGraphics
 import Darwin
 import Foundation
 
@@ -89,7 +90,8 @@ enum QEMULauncher {
     /// then aborts in the child — observed); `-rtc base=localtime`, because
     /// Windows keeps the RTC in local time and was an hour off without it; and
     /// the disk gets a node name so snapshot jobs can name it.
-    static func arguments(for vm: VirtualMachine, paths: Paths, vncDisplay: Int) -> [String] {
+    static func arguments(for vm: VirtualMachine, paths: Paths, vncDisplay: Int,
+                          screen: CGSize = CGDisplayBounds(CGMainDisplayID()).size) -> [String] {
         let dir = paths.directory
         func file(_ path: String) -> String {
             escape(path.hasPrefix("/") ? path : dir.appending(path: path).path)
@@ -101,7 +103,7 @@ enum QEMULauncher {
             "-rtc", "base=localtime",
             "-drive", "if=pflash,format=raw,readonly=on,file=\(escape(firmwareCode))",
             "-drive", "if=pflash,format=raw,file=\(file("vars.fd"))",
-            "-device", vm.display == .virtioGPU ? "virtio-gpu-pci,xres=1280,yres=800" : "ramfb",
+            "-device", vm.display == .virtioGPU ? virtioGPU(vm.resolution, screen: screen) : "ramfb",
             "-device", "qemu-xhci", "-device", "usb-kbd", "-device", "usb-tablet",
             // During Windows Setup the disk ignores the guest's flushes: Setup
             // flushes constantly, QEMU turns each into F_FULLFSYNC on macOS, and
@@ -129,6 +131,25 @@ enum QEMULauncher {
             "-qmp", "unix:\(escape(paths.qmp)),server=on,wait=off",
         ]
         return args
+    }
+
+    /// "1920x1200" as written; "fit" as the screen in points, scaled down to
+    /// fit 2560×1600 and rounded down to a multiple of 8; anything else 1280×800.
+    static func displaySize(_ resolution: String, screen: CGSize) -> (width: Int, height: Int) {
+        if resolution == "fit", screen.width >= 640, screen.height >= 480 {
+            let scale = min(1, 2560 / screen.width, 1600 / screen.height)
+            return (Int(screen.width * scale) / 8 * 8, Int(screen.height * scale) / 8 * 8)
+        }
+        let parts = resolution.split(separator: "x").compactMap { Int($0) }
+        guard parts.count == 2, (640...7680).contains(parts[0]), (480...4320).contains(parts[1]) else {
+            return (1280, 800)
+        }
+        return (parts[0], parts[1])
+    }
+
+    static func virtioGPU(_ resolution: String, screen: CGSize) -> String {
+        let size = displaySize(resolution, screen: screen)
+        return "virtio-gpu-pci,xres=\(size.width),yres=\(size.height)"
     }
 
     // MARK: - VNC display
